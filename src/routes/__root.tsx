@@ -74,14 +74,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Synthetica — Expert Research Desk for Enterprise IT" },
+      { title: "decipher.ms — Research desk for Microsoft clients" },
       {
         name: "description",
         content:
           "Direct access to senior IT procurement, licensing, and architecture analysts. Submit a question, receive a written briefing in under 48 hours.",
       },
       { name: "author", content: "Synthetica Research" },
-      { property: "og:title", content: "Synthetica — Expert Research Desk for Enterprise IT" },
+      { property: "og:title", content: "decipher.ms — Research desk for Microsoft clients" },
       {
         property: "og:description",
         content:
@@ -89,6 +89,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "decipher.ms — Research desk for Microsoft clients" },
+      { name: "description", content: "decipher.ms is a one-operator advisory practice run by a former Microsoft Principal Engineer. Eleven years inside, now independent." },
+      { property: "og:description", content: "decipher.ms is a one-operator advisory practice run by a former Microsoft Principal Engineer. Eleven years inside, now independent." },
+      { name: "twitter:description", content: "decipher.ms is a one-operator advisory practice run by a former Microsoft Principal Engineer. Eleven years inside, now independent." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/0328a30c-f355-4431-83fc-8124f1a24ba1" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/0328a30c-f355-4431-83fc-8124f1a24ba1" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
