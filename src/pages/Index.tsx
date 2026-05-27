@@ -66,10 +66,10 @@ const Index = () => {
       <Helmet>
         <title>decipher.ms — Independent Microsoft advisory</title>
         <meta name="description" content="Independent Microsoft advisory by a former Principal Engineer. Straight answers on M365, Azure, Dynamics, and Copilot — no reseller incentives." />
-        <link rel="canonical" href="https://decipherms.lovable.app/" />
+        <link rel="canonical" href="https://decipher.ms/" />
         <meta property="og:title" content="decipher.ms — Independent Microsoft advisory" />
         <meta property="og:description" content="Straight answers on M365, Azure, Dynamics, and Copilot from a former Microsoft Principal Engineer." />
-        <meta property="og:url" content="https://decipherms.lovable.app/" />
+        <meta property="og:url" content="https://decipher.ms/" />
         <meta property="og:type" content="website" />
       </Helmet>
       {/* NAV */}

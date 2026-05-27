@@ -51,10 +51,10 @@ const About = () => {
       <Helmet>
         <title>About Pedro Paulo Vezza Campos — decipher.ms</title>
         <meta name="description" content="Founder of decipher.ms. Former Microsoft Principal Engineer and Tech Lead on the M365 Substrate AI Platform with 11 years inside Microsoft." />
-        <link rel="canonical" href="https://decipherms.lovable.app/about" />
+        <link rel="canonical" href="https://decipher.ms/about" />
         <meta property="og:title" content="About the Founder — decipher.ms" />
         <meta property="og:description" content="Pedro Paulo Vezza Campos — former Microsoft Principal Engineer, Tech Lead on the M365 Substrate AI Platform, now running an independent Microsoft advisory." />
-        <meta property="og:url" content="https://decipherms.lovable.app/about" />
+        <meta property="og:url" content="https://decipher.ms/about" />
         <meta property="og:type" content="profile" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
@@ -62,11 +62,11 @@ const About = () => {
           "name": "Pedro Paulo Vezza Campos",
           "jobTitle": "Founder, decipher.ms",
           "description": "Former Microsoft Principal Software Engineer and Tech Lead on the M365 Substrate AI Platform.",
-          "url": "https://decipherms.lovable.app/about",
+          "url": "https://decipher.ms/about",
           "worksFor": {
             "@type": "Organization",
             "name": "decipher.ms",
-            "url": "https://decipherms.lovable.app/"
+            "url": "https://decipher.ms/"
           },
           "alumniOf": {
             "@type": "Organization",
