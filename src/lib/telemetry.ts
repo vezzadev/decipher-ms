@@ -18,9 +18,19 @@ type VitalMetric =
   | LCPMetricWithAttribution
   | TTFBMetricWithAttribution;
 
-const IKEY = "b122de9d-24eb-4bdc-adc7-4d0a68490740";
-const INGESTION_ENDPOINT = "https://westus2-2.in.applicationinsights.azure.com";
 const SDK_VERSION = "decipher-ms-client:1.0";
+
+interface TelemetryConfig {
+  iKey: string;
+  ingestionEndpoint: string;
+  environment: string;
+}
+
+declare global {
+  interface Window {
+    __telemetryConfig?: TelemetryConfig;
+  }
+}
 
 interface Envelope {
   name: string;
@@ -36,18 +46,7 @@ function randomHex(bytes: number): string {
   return Array.from(arr, (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-function resolveEnvironment(): string {
-  const h = window.location.hostname;
-  if (h === "decipher.ms" || h === "www.decipher.ms") return "production";
-  const preview = h.match(/^([a-z0-9-]+)-decipher-ms\.[^.]+\.workers\.dev$/i);
-  if (preview) return `preview:${preview[1]}`;
-  if (h.endsWith(".workers.dev")) return "preview";
-  return "development";
-}
-
-const ENVIRONMENT = resolveEnvironment();
-const CLOUD_ROLE = `decipher-ms-client-${ENVIRONMENT}`;
-
+let config: TelemetryConfig | null = null;
 const operationId = randomHex(16);
 let pageviewId = randomHex(8);
 let queue: Envelope[] = [];
@@ -57,14 +56,15 @@ function makeEnvelope(
   baseType: string,
   baseData: Record<string, unknown>,
   extraTags: Record<string, string> = {},
-): Envelope {
+): Envelope | null {
+  if (!config) return null;
   return {
     name: `Microsoft.ApplicationInsights.${baseType.replace(/Data$/, "")}`,
     time: new Date().toISOString(),
-    iKey: IKEY,
+    iKey: config.iKey,
     tags: {
       "ai.operation.id": operationId,
-      "ai.cloud.role": CLOUD_ROLE,
+      "ai.cloud.role": `decipher-ms-client-${config.environment}`,
       "ai.internal.sdkVersion": SDK_VERSION,
       ...extraTags,
     },
@@ -73,8 +73,8 @@ function makeEnvelope(
 }
 
 function send(envelopes: Envelope[]): void {
-  if (envelopes.length === 0) return;
-  const url = `${INGESTION_ENDPOINT}/v2.1/track`;
+  if (!config || envelopes.length === 0) return;
+  const url = `${config.ingestionEndpoint}/v2.1/track`;
   const payload = envelopes.map((e) => JSON.stringify(e)).join("\n");
   fetch(url, {
     method: "POST",
@@ -85,7 +85,8 @@ function send(envelopes: Envelope[]): void {
   }).catch(() => {});
 }
 
-function enqueue(envelope: Envelope): void {
+function enqueue(envelope: Envelope | null): void {
+  if (!envelope) return;
   queue.push(envelope);
   if (flushTimer !== null) return;
   flushTimer = window.setTimeout(() => {
@@ -127,6 +128,7 @@ function referrerOrigin(): string {
 }
 
 export function trackPageview(path: string, name: string): void {
+  if (!config) return;
   pageviewId = randomHex(8);
   enqueue(
     makeEnvelope("PageviewData", {
@@ -134,16 +136,17 @@ export function trackPageview(path: string, name: string): void {
       name,
       url: window.location.origin + path,
       duration: formatDuration(performance.now()),
-      properties: { environment: ENVIRONMENT, referrer: referrerOrigin() },
+      properties: { environment: config.environment, referrer: referrerOrigin() },
     }),
   );
 }
 
 export function trackEvent(name: string, properties?: Record<string, string>): void {
+  if (!config) return;
   enqueue(
     makeEnvelope(
       "EventData",
-      { name, properties: { environment: ENVIRONMENT, ...(properties ?? {}) } },
+      { name, properties: { environment: config.environment, ...(properties ?? {}) } },
       { "ai.operation.parentId": pageviewId },
     ),
   );
@@ -175,12 +178,17 @@ function attributionProps(metric: VitalMetric): Record<string, string> {
     return out;
   }
   if (metric.name === "FCP") {
-    return { loadState: metric.attribution.loadState };
+    const out: Record<string, string> = {};
+    if (metric.attribution.loadState) {
+      out.loadState = metric.attribution.loadState;
+    }
+    return out;
   }
   return {};
 }
 
 function trackVital(metric: VitalMetric): void {
+  if (!config) return;
   enqueue(
     makeEnvelope(
       "MetricData",
@@ -194,7 +202,7 @@ function trackVital(metric: VitalMetric): void {
           },
         ],
         properties: {
-          environment: ENVIRONMENT,
+          environment: config.environment,
           rating: metric.rating,
           navigationType: metric.navigationType,
           path: window.location.pathname,
@@ -207,6 +215,7 @@ function trackVital(metric: VitalMetric): void {
 }
 
 function trackException(error: unknown, properties?: Record<string, string>): void {
+  if (!config) return;
   const e = error instanceof Error ? error : new Error(String(error));
   enqueue(
     makeEnvelope(
@@ -222,7 +231,7 @@ function trackException(error: unknown, properties?: Record<string, string>): vo
           },
         ],
         severityLevel: 3,
-        properties: { environment: ENVIRONMENT, ...(properties ?? {}) },
+        properties: { environment: config.environment, ...(properties ?? {}) },
       },
       { "ai.operation.parentId": pageviewId },
     ),
@@ -234,6 +243,8 @@ let initialized = false;
 export function initTelemetry(): void {
   if (initialized) return;
   initialized = true;
+  config = window.__telemetryConfig ?? null;
+  if (!config) return;
 
   onCLS(trackVital);
   onINP(trackVital);

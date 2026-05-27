@@ -11,7 +11,7 @@ but App Insights is the source of truth).
 | Thing | Where |
 | --- | --- |
 | App Insights resource | `ai-decipherms-wu2-1` in `rg-decipherms-wu2-1`, sub `240ae4d5-0160-4b5d-b078-e8e3074cecc2` |
-| Instrumentation key | `b122de9d-24eb-4bdc-adc7-4d0a68490740` (hard-coded in `src/lib/telemetry.ts`) |
+| Connection string | `APPLICATIONINSIGHTS_CONNECTION_STRING` Worker secret. Worker parses it (`worker/telemetry.ts:parseConnString`) and injects `{iKey, ingestionEndpoint, environment}` into HTML responses as `window.__telemetryConfig` for the client to consume. Set per environment via `npx wrangler secret put APPLICATIONINSIGHTS_CONNECTION_STRING`. |
 | App ID for Logs API | `00575dd1-2f5b-47ad-845d-a706d47fbfe4` |
 | Dashboard | [Azure portal dashboard](https://portal.azure.com/#@vezza.dev/dashboard/arm/subscriptions/240ae4d5-0160-4b5d-b078-e8e3074cecc2/resourcegroups/rg-decipherms-wu2-1/providers/microsoft.portal/dashboards/00575dd1-2f5b-47ad-845d-a706d47fbfe4-dashboard) — mirrors Cloudflare RUM tiles (page views, visits, web vitals p75 + rating split + top offending elements, browsers, OS, countries, exceptions). 7d window by default. |
 | Cloudflare RUM (parallel) | [siteTag c1ccb0d6…](https://dash.cloudflare.com/d1db42c1ac42b3aee886f219b8f56e16/web-analytics/overview?siteTag~in=c1ccb0d6146e49e1a9d2bbf4d4bbccfa&excludeBots=Yes) |
@@ -19,7 +19,7 @@ but App Insights is the source of truth).
 ### Tables
 
 - `pageViews` — `trackPageview` from `src/lib/telemetry.ts`. URL, duration (perf.now at fire time), `client_CountryOrRegion`/`client_Browser`/`client_OS` auto-enriched at ingest.
-- `customMetrics` — Web Vitals (LCP/INP/CLS/FCP/TTFB) sent as `MetricData` envelopes. `customDimensions` carries `rating`, `navigationType`, and attribution: `element` (CSS selector for LCP target / largest CLS shift source / INP interaction target), `elementUrl` (LCP resource), `interactionType` (INP), `loadState`, `largestShiftValue` (CLS).
+- `customMetrics` — Web Vitals (LCP/INP/CLS/FCP/TTFB) sent as `MetricData` envelopes. `customDimensions` carries `environment`, `rating`, `navigationType`, `path` (page pathname), and attribution: `element` (CSS selector for LCP target / largest CLS shift source / INP interaction target), `elementUrl` (LCP resource), `interactionType` (INP), `loadState`, `largestShiftValue` (CLS).
 - `customEvents` — `trackEvent` calls (e.g. briefing form interactions).
 - `exceptions` — unhandled errors and rejections from window-level handlers in `initTelemetry()`.
 

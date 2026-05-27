@@ -327,7 +327,10 @@ def vital_block(y_base, metric, *, with_element):
     return out
 
 
-# y=16-23: LCP, y=24-31: INP, y=32-39: CLS, y=40-43: FCP, y=44-47: TTFB
+# Per-vital blocks (8 rows each): rating row 0-3, drilldown row 4-7.
+# y=16-23: LCP, y=24-31: INP, y=32-39: CLS,
+# y=40-44: FCP (header + 4-row drilldown), y=45-49: TTFB (header + 4-row drilldown),
+# y=50-54: Errors header + chart row.
 parts.extend(vital_block(16, "LCP", with_element=True))
 parts.extend(vital_block(24, "INP", with_element=True))
 parts.extend(vital_block(32, "CLS", with_element=True))
