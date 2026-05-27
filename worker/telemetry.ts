@@ -23,7 +23,10 @@ function resolveEnvironment(hostname: string): string {
   return "development";
 }
 
-function parseConnString(s: string): ParsedConnString {
+function parseConnString(s: unknown): ParsedConnString {
+  if (typeof s !== "string" || s.length === 0) {
+    throw new Error("APPLICATIONINSIGHTS_CONNECTION_STRING is empty or not a string");
+  }
   const map: Record<string, string> = {};
   for (const part of s.split(";")) {
     const eq = part.indexOf("=");
@@ -68,7 +71,11 @@ export class Telemetry {
   }
 
   drainRequestProperties(): Record<string, string> {
-    return { ...this.requestProperties };
+    const copy = { ...this.requestProperties };
+    for (const k of Object.keys(this.requestProperties)) {
+      delete this.requestProperties[k];
+    }
+    return copy;
   }
 
   readonly environment: string;

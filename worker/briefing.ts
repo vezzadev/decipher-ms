@@ -121,7 +121,6 @@ export async function handleBriefing(
   const tsSpanId = tel.newSpanId();
   const ts = await timed(() => verifyTurnstile(env, parsed.turnstileToken, remoteIp));
   const depProps: Record<string, string> = {};
-  if (remoteIp) depProps.remoteIp = remoteIp;
   if (ts.ok) {
     depProps.errorCodes = ts.value.errorCodes.join(",") || "(none)";
     if (ts.value.hostname) depProps.hostname = ts.value.hostname;

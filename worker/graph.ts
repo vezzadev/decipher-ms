@@ -110,7 +110,7 @@ export async function sendBriefingEmail(
     name: "Graph sendMail",
     type: "HTTP",
     target: "graph.microsoft.com",
-    data: `POST /v1.0/users/${env.GRAPH_MAILBOX}/sendMail`,
+    data: "POST /v1.0/users/<mailbox>/sendMail",
     durationMs: Date.now() - start,
     resultCode: String(res.status),
     success: res.ok,
