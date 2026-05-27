@@ -34,7 +34,7 @@ jobs:
             exit 0
           fi
 
-          git fetch origin lovable:lovable main:main
+          git fetch origin lovable:lovable
           git checkout lovable
 
           if git merge-base --is-ancestor main lovable; then
