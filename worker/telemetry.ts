@@ -17,6 +17,8 @@ const SDK_VERSION = "decipher-ms:1.0";
 
 function resolveEnvironment(hostname: string): string {
   if (hostname === "decipher.ms" || hostname === "www.decipher.ms") return "production";
+  const previewMatch = hostname.match(/^([a-z0-9-]+)-decipher-ms\.[^.]+\.workers\.dev$/i);
+  if (previewMatch) return `preview:${previewMatch[1]}`;
   if (hostname.endsWith(".workers.dev")) return "preview";
   return "development";
 }
