@@ -91,6 +91,8 @@ const About = () => {
         </div>
       </nav>
 
+      <main>
+
       {/* HERO */}
       <header className="px-6 py-20 md:py-28 max-w-[1600px] mx-auto">
         <div className="grid lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-16 items-start">
@@ -280,6 +282,8 @@ const About = () => {
       </section>
 
       {/* FOOTER */}
+      </main>
+
       <footer className="p-6">
         <div className="bg-background border-t-4 border-foreground pt-12 md:pt-16">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 mb-16 px-6">
