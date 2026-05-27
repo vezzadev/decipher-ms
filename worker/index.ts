@@ -10,7 +10,7 @@ export default {
     ctx: ExecutionContext,
   ): Promise<Response> {
     const url = new URL(request.url);
-    const tel = new Telemetry(env, ctx);
+    const tel = new Telemetry(env, ctx, url.hostname);
     const requestId = tel.newSpanId();
     const start = Date.now();
 
@@ -40,7 +40,7 @@ export default {
       durationMs,
       responseCode: String(response.status),
       success: !errored && response.status < 400,
-      properties: tel.drainRequestProperties(),
+      properties: { environment: tel.environment, ...tel.drainRequestProperties() },
     });
     tel.flush();
     return response;

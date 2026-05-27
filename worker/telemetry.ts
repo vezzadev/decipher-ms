@@ -13,8 +13,13 @@ interface ParsedConnString {
   ingestionEndpoint: string;
 }
 
-const CLOUD_ROLE = "decipher-ms-worker";
 const SDK_VERSION = "decipher-ms:1.0";
+
+function resolveEnvironment(hostname: string): string {
+  if (hostname === "decipher.ms" || hostname === "www.decipher.ms") return "production";
+  if (hostname.endsWith(".workers.dev")) return "preview";
+  return "development";
+}
 
 function parseConnString(s: string): ParsedConnString {
   const map: Record<string, string> = {};
@@ -64,10 +69,16 @@ export class Telemetry {
     return { ...this.requestProperties };
   }
 
+  readonly environment: string;
+  private readonly cloudRole: string;
+
   constructor(
     env: Env,
     private readonly ctx: ExecutionContext,
+    hostname: string,
   ) {
+    this.environment = resolveEnvironment(hostname);
+    this.cloudRole = `decipher-ms-${this.environment}`;
     try {
       this.conn = parseConnString(env.APPLICATIONINSIGHTS_CONNECTION_STRING);
     } catch (err) {
@@ -84,7 +95,7 @@ export class Telemetry {
     if (!this.conn) return;
     const tags: Record<string, string> = {
       "ai.operation.id": this.operationId,
-      "ai.cloud.role": CLOUD_ROLE,
+      "ai.cloud.role": this.cloudRole,
       "ai.internal.sdkVersion": SDK_VERSION,
     };
     if (parentId) tags["ai.operation.parentId"] = parentId;
