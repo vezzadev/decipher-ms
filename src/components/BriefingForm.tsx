@@ -27,7 +27,7 @@ export default function BriefingForm() {
   const [values, setValues] = useState<FormState>(initial);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const update = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setValues((v) => ({ ...v, [k]: e.target.value }));
@@ -46,6 +46,7 @@ export default function BriefingForm() {
       return;
     }
     setErrors({});
+    setServerError(null);
     setSubmitting(true);
     const { error } = await supabase.from("briefing_requests").insert({
       name: parsed.data.name,
@@ -57,12 +58,11 @@ export default function BriefingForm() {
     });
     setSubmitting(false);
     if (error) {
-      toast.error("Could not submit. Please try again.");
+      setServerError("Could not submit. Please try again.");
       return;
     }
     setSubmitted(true);
     setValues(initial);
-    toast.success("Briefing request received. An analyst will respond within one business day.");
   };
 
   return (
