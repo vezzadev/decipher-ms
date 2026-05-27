@@ -1,0 +1,75 @@
+name: Rebase lovable on main
+
+on:
+  push:
+    branches: [lovable]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  rebase:
+    runs-on: ubuntu-slim
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Rebase lovable onto main
+        id: rebase
+        continue-on-error: true
+        run: |
+          if ! git ls-remote --exit-code --heads origin lovable >/dev/null; then
+            echo "No 'lovable' branch on origin yet — nothing to rebase."
+            echo "skipped=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git fetch origin lovable:lovable main:main
+          git checkout lovable
+
+          if git merge-base --is-ancestor main lovable; then
+            echo "lovable already contains all of main."
+            exit 0
+          fi
+
+          if ! git rebase main; then
+            echo "::error::Rebase hit conflicts."
+            git rebase --abort
+            exit 1
+          fi
+
+          git push origin lovable --force-with-lease
+
+      - name: Open conflict issue
+        if: steps.rebase.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "lovable rebase on main failed — manual resolve needed" \
+            --assignee pedropaulovc \
+            --body "$(cat <<'EOF'
+          The scheduled rebase of `lovable` onto `main` hit conflicts and aborted.
+
+          To resolve:
+          ```bash
+          git fetch origin
+          git checkout lovable
+          git rebase origin/main
+          # resolve conflicts
+          git push origin lovable --force-with-lease
+          ```
+
+          Run details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          EOF
+          )"
