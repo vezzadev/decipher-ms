@@ -66,7 +66,7 @@ const Index = () => {
             href="#"
             className="font-serif text-3xl md:text-4xl font-black tracking-tighter uppercase italic"
           >
-            Synthetica
+            decipher.ms
           </a>
           <div className="hidden md:flex gap-8 text-[11px] font-extrabold uppercase tracking-[0.2em]">
             <a href="#desk" className="hover:text-accent transition-colors">
