@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+!.env.example
 
 # Wrangler / Cloudflare
 .wrangler/
@@ -18,6 +21,9 @@ dist-ssr
 
 # Playwright CLI artifacts
 .playwright-cli/
+
+# TypeScript incremental build info
+*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*

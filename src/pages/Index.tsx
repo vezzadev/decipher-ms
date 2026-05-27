@@ -22,21 +22,21 @@ const services = [
     name: "Technical Brief",
     cadence: "In-depth report",
     price: "$3,500",
-    desc: "Long-form brief on a Microsoft product or licensing decision. $2,500 if publishable.",
+    desc: "Long-form brief on a Microsoft cloud, AI, or security decision. $2,500 if publishable.",
   },
 ];
 
 const topics = [
-  "Dynamics 365 Sales vs Customer Service licensing",
+  "Securing Azure ML for AI/ML workloads",
+  "Least-privilege Azure RBAC at production scale",
+  "SOC 2 readiness for Azure and Azure ML",
+  "Low-privilege access patterns for data scientists",
+  "GitHub Copilot rollout: governance and controls",
   "Migrating Dynamics 365 RSO to multi-tenant",
-  "M365 E3 versus E5 — what's the real delta?",
-  "Which Copilot should I buy?",
-  "Microsoft Purview for data governance",
-  "Cross-tenant domain sharing in M365",
-  "SOC 2 with Azure RBAC and Zero Trust",
-  "GDPR, data residency, and M365 tenants",
-  "Microsoft Priva for privacy compliance",
-  "Endpoint security and compliance in Intune",
+  "Deploying Dynamics 365 to Azure Government (GCC)",
+  "Resource scheduling optimization at scale",
+  "Microsoft Purview integration for compliance",
+  "Network isolation for M365 and Copilot data",
 ];
 
 const why = [
@@ -44,13 +44,13 @@ const why = [
     n: "01",
     title: ["Insider", "Perspective"],
     body:
-      "Led by a former Microsoft engineer from the M365 Substrate AI Platform — the team that builds the products you license.",
+      "Led by a former Microsoft engineer from the M365 Substrate AI Platform — the team that builds the AI/ML and security platforms behind Microsoft 365.",
   },
   {
     n: "02",
-    title: ["Zero Reseller", "Incentives"],
+    title: ["Vendor", "Independence"],
     body:
-      "We don't resell licenses or take kickbacks. Our only motivation is giving you the right answer.",
+      "We don't resell, partner, or take referral fees. Our only motivation is giving you the right technical answer.",
   },
   {
     n: "03",
@@ -65,10 +65,10 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
       <Helmet>
         <title>decipher.ms — Independent Microsoft advisory</title>
-        <meta name="description" content="Independent Microsoft advisory by a former Principal Engineer. Straight answers on M365, Azure, Dynamics, and Copilot — no reseller incentives." />
+        <meta name="description" content="Independent Microsoft advisory by a former Principal Engineer. Straight answers on cloud security, AI/ML platform architecture, and Dynamics engineering — vendor-neutral." />
         <link rel="canonical" href="https://decipher.ms/" />
         <meta property="og:title" content="decipher.ms — Independent Microsoft advisory" />
-        <meta property="og:description" content="Straight answers on M365, Azure, Dynamics, and Copilot from a former Microsoft Principal Engineer." />
+        <meta property="og:description" content="Straight answers on Azure security, AI/ML platforms, and Dynamics engineering from a former Microsoft Principal Engineer." />
         <meta property="og:url" content="https://decipher.ms/" />
         <meta property="og:type" content="website" />
       </Helmet>
@@ -106,9 +106,9 @@ const Index = () => {
               DECIDE.
             </h1>
             <p className="text-xl md:text-2xl font-semibold max-w-lg leading-tight tracking-tight text-foreground/80">
-              Microsoft's licensing and product matrix is built to confuse. We give you clear,
-              unbiased answers — from a former Microsoft engineer who spent years inside the
-              company building the platforms you're being sold.
+              Microsoft's cloud, AI, and security stack is a moving target. We give you clear,
+              unbiased answers — from a former Microsoft engineer who spent years inside,
+              building the platforms your teams now run on.
             </p>
           </div>
           <div className="flex flex-col">
@@ -117,8 +117,8 @@ const Index = () => {
                 A recent question
               </span>
               <blockquote className="font-serif italic font-black leading-[0.95] text-3xl md:text-4xl xl:text-5xl border-l-4 border-accent pl-5">
-                "We have 4,200 seats on M365 E3 and our reseller is pushing E5 plus Copilot.
-                What's the real ROI math?"
+                "Our SOC 2 auditors are flagging Azure RBAC on production.
+                Forty-seven services, no clear least-privilege model. Where do we start?"
               </blockquote>
               <div className="grid grid-cols-3 gap-4 text-[10px] uppercase tracking-widest">
                 <div>
@@ -130,7 +130,7 @@ const Index = () => {
                   <p className="font-black mt-1">12-page brief</p>
                 </div>
                 <div>
-                  <p className="opacity-50">Reseller fees</p>
+                  <p className="opacity-50">Vendor fees</p>
                   <p className="font-black mt-1">$0</p>
                 </div>
               </div>
@@ -155,13 +155,13 @@ const Index = () => {
           </h2>
           <div className="space-y-6 text-lg md:text-xl leading-relaxed text-foreground/70 font-medium">
             <p>
-              Microsoft sells more than 400 SKUs. Resellers earn commission on the ones you buy.
-              Search engines surface marketing copy. Internal IT teams rarely have time to keep up
-              with what changed last quarter.
+              Azure, Azure ML, Copilot, Purview, Defender, Dynamics. Most teams learn this surface
+              from docs, marketing pages, and conferences. The folks who actually build these
+              platforms work inside Microsoft — and their answers stay there.
             </p>
             <p>
-              You end up overpaying, locked in, or stuck with a product that technically does what
-              you asked — but not what you needed.
+              You end up with architectures that don't quite hold up to audit, AI rollouts that
+              surface compliance fires, or migrations that take twice as long as they should.
             </p>
             <p className="text-foreground font-black font-serif italic text-2xl md:text-3xl">
               decipher.ms exists to give you a straight answer.
@@ -258,8 +258,8 @@ const Index = () => {
       <section className="border-t-4 border-foreground px-6 py-24 md:py-32">
         <div className="max-w-[1600px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-16">
           <Stat n="5d" l="Median turnaround" />
-          <Stat n="$0" l="Reseller commissions" />
-          <Stat n="400+" l="Microsoft SKUs covered" />
+          <Stat n="$0" l="Vendor referral fees" />
+          <Stat n="11yr" l="Inside Microsoft" />
           <Stat n="1" l="Former Microsoft engineer" />
         </div>
       </section>
@@ -313,7 +313,7 @@ const Index = () => {
             </h2>
             <p className="text-background/60 text-lg max-w-md">
               Tell us the decision you're working on. You'll hear back from a former Microsoft
-              engineer — no sales call, no gatekeeping, no reseller agenda.
+              engineer — no sales call, no gatekeeping, no vendor agenda.
             </p>
           </div>
           <BriefingForm />

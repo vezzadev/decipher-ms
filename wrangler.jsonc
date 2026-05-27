@@ -2,8 +2,28 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "decipher-ms",
   "compatibility_date": "2026-05-17",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "worker/index.ts",
   "assets": {
     "directory": "./dist",
     "not_found_handling": "single-page-application",
+    "binding": "ASSETS",
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "decipher-ms-db",
+      "database_id": "7fa5214b-5743-43cb-86e1-b679428f1d17",
+    },
+  ],
+  "vars": {
+    "GRAPH_TENANT_ID": "9851f48a-3472-4e99-8605-0b61ceabae38",
+    "GRAPH_APP_ID": "56bdec0b-a492-4228-9445-28fbad31dbad",
+    "GRAPH_MAILBOX": "noreply@decipher.ms",
+    "GRAPH_TO": "pedro@decipher.ms",
+    "GRAPH_BCC": "pedro@vezza.com.br",
+    "OIDC_ISSUER": "https://decipher.ms",
+    "OIDC_SUBJECT": "decipher-ms-worker",
+    "OIDC_KID": "key-1",
   },
 }

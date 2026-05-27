@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
 
 
 const schema = z.object({
@@ -33,7 +32,7 @@ export default function BriefingForm() {
     setValues((v) => ({ ...v, [k]: e.target.value }));
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     const parsed = schema.safeParse(values);
     if (!parsed.success) {
@@ -48,16 +47,27 @@ export default function BriefingForm() {
     setErrors({});
     setServerError(null);
     setSubmitting(true);
-    const { error } = await supabase.from("briefing_requests").insert({
-      name: parsed.data.name,
-      email: parsed.data.email,
-      company: parsed.data.company,
-      role: parsed.data.role || null,
-      topic: parsed.data.topic,
-      details: parsed.data.details,
-    });
+    let res: Response;
+    try {
+      res = await fetch("/api/briefing", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: parsed.data.name,
+          email: parsed.data.email,
+          company: parsed.data.company,
+          role: parsed.data.role || null,
+          topic: parsed.data.topic,
+          details: parsed.data.details,
+        }),
+      });
+    } catch {
+      setSubmitting(false);
+      setServerError("Network error. Please try again.");
+      return;
+    }
     setSubmitting(false);
-    if (error) {
+    if (!res.ok) {
       setServerError("Could not submit. Please try again.");
       return;
     }
@@ -73,7 +83,7 @@ export default function BriefingForm() {
         <Field label="Company" name="company" value={values.company} onChange={update("company")} error={errors.company} />
         <Field label="Role (optional)" name="role" value={values.role ?? ""} onChange={update("role")} error={errors.role} />
       </div>
-      <Field label="Question topic" name="topic" value={values.topic} onChange={update("topic")} error={errors.topic} placeholder="e.g. Microsoft EA renewal strategy" />
+      <Field label="Question topic" name="topic" value={values.topic} onChange={update("topic")} error={errors.topic} placeholder="e.g. Securing Azure ML for SOC 2" />
       <div>
         <label htmlFor="details" className="block text-[10px] font-black uppercase tracking-[0.3em] text-background/60 mb-3">
           Question details
