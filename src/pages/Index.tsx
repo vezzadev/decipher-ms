@@ -7,6 +7,7 @@ import analyst3 from "@/assets/analyst-3.jpg";
 import analyst4 from "@/assets/analyst-4.jpg";
 import analyst5 from "@/assets/analyst-5.jpg";
 import analyst6 from "@/assets/analyst-6.jpg";
+import BriefingForm from "@/components/BriefingForm";
 
 const analysts = [
   { name: "Marcus Thorne", coverage: "SAP / ERP Strategy", img: analyst1 },
@@ -77,6 +78,9 @@ const Index = () => {
             </a>
             <a href="#archive" className="hover:text-accent transition-colors">
               Archive
+            </a>
+            <a href="#briefing" className="hover:text-accent transition-colors">
+              Briefing
             </a>
             <a href="#access" className="hover:text-accent transition-colors">
               Access
