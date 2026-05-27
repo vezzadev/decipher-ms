@@ -7,6 +7,9 @@ on:
 jobs:
   gate:
     name: Awaiting human review
+    # Skip bot reviews (e.g. copilot-pull-request-reviewer) so they can't flip
+    # the gate check to failure. Allowlist is enforced again inside the step.
+    if: contains(fromJSON('["pedropaulovc", "pedrovezzadev"]'), github.event.review.user.login)
     runs-on: ubuntu-slim
     steps:
       - name: Verify approver identity
