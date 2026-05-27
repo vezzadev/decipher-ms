@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+
 
 const schema = z.object({
   name: z.string().trim().min(1, "Required").max(120),
