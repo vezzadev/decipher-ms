@@ -1,4 +1,22 @@
-import { onCLS, onINP, onLCP, onFCP, onTTFB, type Metric } from "web-vitals";
+import {
+  onCLS,
+  onINP,
+  onLCP,
+  onFCP,
+  onTTFB,
+  type CLSMetricWithAttribution,
+  type FCPMetricWithAttribution,
+  type INPMetricWithAttribution,
+  type LCPMetricWithAttribution,
+  type TTFBMetricWithAttribution,
+} from "web-vitals/attribution";
+
+type VitalMetric =
+  | CLSMetricWithAttribution
+  | FCPMetricWithAttribution
+  | INPMetricWithAttribution
+  | LCPMetricWithAttribution
+  | TTFBMetricWithAttribution;
 
 const IKEY = "b122de9d-24eb-4bdc-adc7-4d0a68490740";
 const INGESTION_ENDPOINT = "https://westus2-2.in.applicationinsights.azure.com";
@@ -131,7 +149,38 @@ export function trackEvent(name: string, properties?: Record<string, string>): v
   );
 }
 
-function trackVital(metric: Metric): void {
+function attributionProps(metric: VitalMetric): Record<string, string> {
+  if (metric.name === "LCP") {
+    const a = metric.attribution;
+    const out: Record<string, string> = {};
+    if (a.target) out.element = a.target;
+    if (a.url) out.elementUrl = a.url;
+    return out;
+  }
+  if (metric.name === "CLS") {
+    const a = metric.attribution;
+    const out: Record<string, string> = {};
+    if (a.largestShiftTarget) out.element = a.largestShiftTarget;
+    if (a.largestShiftValue !== undefined) {
+      out.largestShiftValue = a.largestShiftValue.toFixed(4);
+    }
+    if (a.loadState) out.loadState = a.loadState;
+    return out;
+  }
+  if (metric.name === "INP") {
+    const a = metric.attribution;
+    const out: Record<string, string> = {};
+    if (a.interactionTarget) out.element = a.interactionTarget;
+    if (a.interactionType) out.interactionType = a.interactionType;
+    return out;
+  }
+  if (metric.name === "FCP") {
+    return { loadState: metric.attribution.loadState };
+  }
+  return {};
+}
+
+function trackVital(metric: VitalMetric): void {
   enqueue(
     makeEnvelope(
       "MetricData",
@@ -148,6 +197,8 @@ function trackVital(metric: Metric): void {
           environment: ENVIRONMENT,
           rating: metric.rating,
           navigationType: metric.navigationType,
+          path: window.location.pathname,
+          ...attributionProps(metric),
         },
       },
       { "ai.operation.parentId": pageviewId },
