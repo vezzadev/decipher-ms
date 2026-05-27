@@ -199,22 +199,34 @@ export async function handleBriefing(
 
   ctx.waitUntil(
     (async () => {
+      let emailSent = false;
       try {
         await sendBriefingEmail(env, parsed, tel, parentId);
+        emailSent = true;
         tel.trackEvent(parentId, "briefing_email_sent", {
           requestId: String(insert.id),
         });
-        await env.DB.prepare(
-          "UPDATE briefing_requests SET email_sent = 1 WHERE id = ?",
-        )
-          .bind(insert.id)
-          .run();
       } catch (err) {
         console.error("Email send failed", err);
         tel.trackException(parentId, err, {
           stage: "sendBriefingEmail",
           requestId: String(insert.id),
         });
+      }
+      if (emailSent) {
+        try {
+          await env.DB.prepare(
+            "UPDATE briefing_requests SET email_sent = 1 WHERE id = ?",
+          )
+            .bind(insert.id)
+            .run();
+        } catch (err) {
+          console.error("DB update after email send failed", err);
+          tel.trackException(parentId, err, {
+            stage: "markEmailSent",
+            requestId: String(insert.id),
+          });
+        }
       }
       await tel.flushNow();
     })(),

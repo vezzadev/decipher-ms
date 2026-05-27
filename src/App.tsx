@@ -11,7 +11,10 @@ const queryClient = new QueryClient();
 function RouteTracker() {
   const location = useLocation();
   useEffect(() => {
-    trackPageview(location.pathname, document.title || location.pathname);
+    const handle = requestAnimationFrame(() => {
+      trackPageview(location.pathname, document.title || location.pathname);
+    });
+    return () => cancelAnimationFrame(handle);
   }, [location.pathname]);
   return null;
 }

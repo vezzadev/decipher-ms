@@ -28,11 +28,27 @@ async function getAccessToken(
   });
   const spanId = tel.newSpanId();
   const start = Date.now();
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    body,
-  });
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body,
+    });
+  } catch (err) {
+    tel.trackDependency({
+      id: spanId,
+      parentId,
+      name: "Entra token",
+      type: "HTTP",
+      target: "login.microsoftonline.com",
+      data: `POST /${env.GRAPH_TENANT_ID}/oauth2/v2.0/token`,
+      durationMs: Date.now() - start,
+      resultCode: "error",
+      success: false,
+    });
+    throw err;
+  }
   tel.trackDependency({
     id: spanId,
     parentId,
@@ -96,14 +112,30 @@ export async function sendBriefingEmail(
   const url = `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(env.GRAPH_MAILBOX)}/sendMail`;
   const spanId = tel.newSpanId();
   const start = Date.now();
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${token}`,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(buildMessage(env, data)),
-  });
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(buildMessage(env, data)),
+    });
+  } catch (err) {
+    tel.trackDependency({
+      id: spanId,
+      parentId,
+      name: "Graph sendMail",
+      type: "HTTP",
+      target: "graph.microsoft.com",
+      data: "POST /v1.0/users/<mailbox>/sendMail",
+      durationMs: Date.now() - start,
+      resultCode: "error",
+      success: false,
+    });
+    throw err;
+  }
   tel.trackDependency({
     id: spanId,
     parentId,

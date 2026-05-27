@@ -99,6 +99,15 @@ function formatDuration(ms: number): string {
   return `${d}.${pad(h)}:${pad(m)}:${pad(s)}.${frac}`;
 }
 
+function referrerOrigin(): string {
+  if (!document.referrer) return "";
+  try {
+    return new URL(document.referrer).origin;
+  } catch {
+    return "";
+  }
+}
+
 export function trackPageview(path: string, name: string): void {
   pageviewId = randomHex(8);
   enqueue(
@@ -107,7 +116,7 @@ export function trackPageview(path: string, name: string): void {
       name,
       url: window.location.origin + path,
       duration: formatDuration(performance.now()),
-      properties: { environment: ENVIRONMENT, referrer: document.referrer },
+      properties: { environment: ENVIRONMENT, referrer: referrerOrigin() },
     }),
   );
 }

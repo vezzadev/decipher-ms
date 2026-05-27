@@ -3,6 +3,14 @@ import { handleBriefing } from "./briefing";
 import { discoveryDocument, jwks } from "./oidc";
 import { Telemetry } from "./telemetry";
 
+const STATIC_ASSET_EXT = /\.(?:js|css|map|png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|otf)$/i;
+
+function isStaticAssetPath(pathname: string): boolean {
+  if (pathname.startsWith("/assets/")) return true;
+  if (pathname === "/favicon.ico") return true;
+  return STATIC_ASSET_EXT.test(pathname);
+}
+
 export default {
   async fetch(
     request: Request,
@@ -10,6 +18,7 @@ export default {
     ctx: ExecutionContext,
   ): Promise<Response> {
     const url = new URL(request.url);
+    const skipTelemetry = isStaticAssetPath(url.pathname);
     const tel = new Telemetry(env, ctx, url.hostname);
     const requestId = tel.newSpanId();
     const start = Date.now();
@@ -28,9 +37,13 @@ export default {
       }
     } catch (err) {
       errored = true;
-      tel.trackException(requestId, err, { route: url.pathname });
+      if (!skipTelemetry) {
+        tel.trackException(requestId, err, { route: url.pathname });
+      }
       response = new Response("Internal error", { status: 500 });
     }
+
+    if (skipTelemetry) return response;
 
     const durationMs = Date.now() - start;
     tel.trackRequest({
