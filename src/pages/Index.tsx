@@ -335,7 +335,7 @@ const Index = () => {
             </div>
           </div>
           <div className="mt-24 md:mt-32 pt-10 border-t border-background/10 flex flex-col md:flex-row justify-between gap-6 text-[10px] font-black uppercase tracking-[0.4em] opacity-50">
-            <span>© 2026 Synthetica Research</span>
+            <span>© 2026 decipher.ms</span>
             <div className="flex gap-12">
               <a href="#" className="hover:text-accent">
                 Legal
