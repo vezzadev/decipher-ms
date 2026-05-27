@@ -16,6 +16,9 @@ dist-ssr
 .wrangler/
 .dev.vars
 
+# Playwright CLI artifacts
+.playwright-cli/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
