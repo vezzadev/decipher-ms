@@ -185,25 +185,27 @@ export class Telemetry {
   }
 
   flush(): void {
+    const p = this.flushNow();
+    if (p) this.ctx.waitUntil(p);
+  }
+
+  async flushNow(): Promise<void> {
     if (!this.conn || this.envelopes.length === 0) return;
     const payload = this.envelopes.map((e) => JSON.stringify(e)).join("\n");
     this.envelopes = [];
     const url = `${this.conn.ingestionEndpoint}/v2.1/track`;
-    this.ctx.waitUntil(
-      fetch(url, {
+    try {
+      const res = await fetch(url, {
         method: "POST",
         headers: { "content-type": "application/x-json-stream" },
         body: payload,
-      })
-        .then(async (res) => {
-          if (!res.ok) {
-            console.error("AI ingestion failed:", res.status, await res.text());
-          }
-        })
-        .catch((err) => {
-          console.error("AI ingestion error:", err);
-        }),
-    );
+      });
+      if (!res.ok) {
+        console.error("AI ingestion failed:", res.status, await res.text());
+      }
+    } catch (err) {
+      console.error("AI ingestion error:", err);
+    }
   }
 }
 

@@ -199,27 +199,26 @@ export async function handleBriefing(
   });
 
   ctx.waitUntil(
-    sendBriefingEmail(env, parsed, tel, parentId)
-      .then(() => {
+    (async () => {
+      try {
+        await sendBriefingEmail(env, parsed, tel, parentId);
         tel.trackEvent(parentId, "briefing_email_sent", {
           requestId: String(insert.id),
         });
-        return env.DB.prepare(
+        await env.DB.prepare(
           "UPDATE briefing_requests SET email_sent = 1 WHERE id = ?",
         )
           .bind(insert.id)
           .run();
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Email send failed", err);
         tel.trackException(parentId, err, {
           stage: "sendBriefingEmail",
           requestId: String(insert.id),
         });
-      })
-      .finally(() => {
-        tel.flush();
-      }),
+      }
+      await tel.flushNow();
+    })(),
   );
 
   return Response.json({ ok: true, id: insert.id });
