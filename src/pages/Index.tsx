@@ -98,7 +98,7 @@ const Index = () => {
             <span className="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8">
               Independent Microsoft advisory
             </span>
-            <h1 className="font-serif text-6xl sm:text-7xl md:text-8xl xl:text-7xl 2xl:text-8xl font-black leading-[0.85] tracking-tighter mb-10 break-words lg:text-7xl">
+            <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl xl:text-7xl 2xl:text-8xl font-black leading-[0.85] tracking-tighter mb-10 break-words lg:text-7xl">
               DECODE
               <br />
               <span className="text-accent italic">MICROSOFT.</span>
