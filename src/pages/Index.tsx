@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import pillarBriefings from "@/assets/pillar-briefings.jpg";
 import pillarAnalyst from "@/assets/pillar-analyst.jpg";
 import pillarIntelligence from "@/assets/pillar-intelligence.jpg";
@@ -8,10 +7,6 @@ import analyst3 from "@/assets/analyst-3.jpg";
 import analyst4 from "@/assets/analyst-4.jpg";
 import analyst5 from "@/assets/analyst-5.jpg";
 import analyst6 from "@/assets/analyst-6.jpg";
-
-export const Route = createFileRoute("/")({
-  component: LandingPage,
-});
 
 const analysts = [
   { name: "Marcus Thorne", coverage: "SAP / ERP Strategy", img: analyst1 },
@@ -25,8 +20,7 @@ const analysts = [
 const inquiries = [
   {
     id: "8442",
-    title:
-      "Negotiating Oracle Java SE Universal Subscription renewal across 4,000 employee seats.",
+    title: "Negotiating Oracle Java SE Universal Subscription renewal across 4,000 employee seats.",
     excerpt:
       "Client faced a 3× price increase under the new per-employee metric. We mapped three migration paths to OpenJDK plus a contractual lever based on their legacy footprint that recovered 62% of the proposed uplift.",
     analyst: "Naomi Reyes",
@@ -45,8 +39,7 @@ const inquiries = [
   },
   {
     id: "8820",
-    title:
-      "Evaluating SAP RISE migration: hidden compute overheads in the S/4HANA cloud edition.",
+    title: "Evaluating SAP RISE migration: hidden compute overheads in the S/4HANA cloud edition.",
     excerpt:
       "Recovered three undocumented compute surcharges in the RISE pricing schedule and benchmarked them against a self-managed S/4HANA on hyperscaler — finding a 19% TCO delta the AE had not disclosed.",
     analyst: "Marcus Thorne",
@@ -63,20 +56,31 @@ const coverage = [
   { n: "05", t: "Risk", d: "Supply chain resilience and technical debt." },
 ];
 
-function LandingPage() {
+const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
       {/* NAV */}
       <nav className="border-b-4 border-foreground px-6 py-6 flex justify-between items-center sticky top-0 bg-background/95 backdrop-blur z-50">
         <div className="flex items-center gap-12">
-          <a href="#" className="font-serif text-3xl md:text-4xl font-black tracking-tighter uppercase italic">
+          <a
+            href="#"
+            className="font-serif text-3xl md:text-4xl font-black tracking-tighter uppercase italic"
+          >
             Synthetica
           </a>
           <div className="hidden md:flex gap-8 text-[11px] font-extrabold uppercase tracking-[0.2em]">
-            <a href="#desk" className="hover:text-accent transition-colors">Desk</a>
-            <a href="#analysts" className="hover:text-accent transition-colors">Analysts</a>
-            <a href="#archive" className="hover:text-accent transition-colors">Archive</a>
-            <a href="#access" className="hover:text-accent transition-colors">Access</a>
+            <a href="#desk" className="hover:text-accent transition-colors">
+              Desk
+            </a>
+            <a href="#analysts" className="hover:text-accent transition-colors">
+              Analysts
+            </a>
+            <a href="#archive" className="hover:text-accent transition-colors">
+              Archive
+            </a>
+            <a href="#access" className="hover:text-accent transition-colors">
+              Access
+            </a>
           </div>
         </div>
         <button className="px-6 py-3 bg-foreground text-background text-xs font-black uppercase tracking-widest hover:bg-accent transition-all">
@@ -129,15 +133,33 @@ function LandingPage() {
       {/* PILLARS */}
       <section id="desk" className="border-t-4 border-foreground">
         <div className="grid md:grid-cols-3">
-          <Pillar n="01" title={["Written", "Briefings"]} hover="hover:bg-accent" img={pillarBriefings} alt="Sample written briefing document">
-            Submit a specific technical question. Receive a 1,500-word memorandum with
-            data-backed recommendations and contractual citations within one business day.
+          <Pillar
+            n="01"
+            title={["Written", "Briefings"]}
+            hover="hover:bg-accent"
+            img={pillarBriefings}
+            alt="Sample written briefing document"
+          >
+            Submit a specific technical question. Receive a 1,500-word memorandum with data-backed
+            recommendations and contractual citations within one business day.
           </Pillar>
-          <Pillar n="02" title={["Analyst", "Direct"]} hover="hover:bg-foreground" img={pillarAnalyst} alt="Senior analyst portrait">
-            Schedule a 30-minute deep dive with the principal analyst on your case. No sales
-            reps, no account managers — peer-to-peer technical counsel.
+          <Pillar
+            n="02"
+            title={["Analyst", "Direct"]}
+            hover="hover:bg-foreground"
+            img={pillarAnalyst}
+            alt="Senior analyst portrait"
+          >
+            Schedule a 30-minute deep dive with the principal analyst on your case. No sales reps,
+            no account managers — peer-to-peer technical counsel.
           </Pillar>
-          <Pillar n="03" title={["Vendor", "Intelligence"]} hover="hover:bg-accent" img={pillarIntelligence} alt="Vendor intelligence network">
+          <Pillar
+            n="03"
+            title={["Vendor", "Intelligence"]}
+            hover="hover:bg-accent"
+            img={pillarIntelligence}
+            alt="Vendor intelligence network"
+          >
             Bi-weekly curation of vendor landscape shifts, deprecation alerts, and contract
             negotiation leverage relevant to your stack.
           </Pillar>
@@ -179,7 +201,10 @@ function LandingPage() {
       </section>
 
       {/* INQUIRIES */}
-      <section id="archive" className="border-t-4 border-foreground bg-secondary/40 px-6 py-24 md:py-32">
+      <section
+        id="archive"
+        className="border-t-4 border-foreground bg-secondary/40 px-6 py-24 md:py-32"
+      >
         <div className="max-w-4xl mx-auto">
           <div className="mb-16">
             <span className="font-serif italic text-accent text-xl md:text-2xl block mb-3">
@@ -234,7 +259,10 @@ function LandingPage() {
           </div>
           <div className="grid md:grid-cols-5 gap-px bg-foreground border border-foreground">
             {coverage.map((c) => (
-              <div key={c.n} className="bg-background p-8 group hover:bg-accent hover:text-background transition-colors">
+              <div
+                key={c.n}
+                className="bg-background p-8 group hover:bg-accent hover:text-background transition-colors"
+              >
                 <span className="font-serif italic text-2xl block mb-8 text-accent group-hover:text-background">
                   {c.n}.
                 </span>
@@ -250,8 +278,8 @@ function LandingPage() {
       <section className="bg-accent text-background py-28 md:py-40 px-6">
         <div className="max-w-6xl mx-auto">
           <p className="font-serif text-4xl sm:text-5xl md:text-7xl font-black italic leading-[0.95] tracking-tighter">
-            "Gartner-level depth, with the speed of an internal Slack message. We stopped
-            paying three other advisories the day we joined."
+            "Gartner-level depth, with the speed of an internal Slack message. We stopped paying
+            three other advisories the day we joined."
           </p>
           <div className="mt-12 flex items-center gap-6">
             <div className="h-0.5 w-24 bg-background"></div>
@@ -309,15 +337,19 @@ function LandingPage() {
           <div className="mt-24 md:mt-32 pt-10 border-t border-background/10 flex flex-col md:flex-row justify-between gap-6 text-[10px] font-black uppercase tracking-[0.4em] opacity-50">
             <span>© 2026 Synthetica Research</span>
             <div className="flex gap-12">
-              <a href="#" className="hover:text-accent">Legal</a>
-              <a href="#" className="hover:text-accent">Privacy</a>
+              <a href="#" className="hover:text-accent">
+                Legal
+              </a>
+              <a href="#" className="hover:text-accent">
+                Privacy
+              </a>
             </div>
           </div>
         </div>
       </footer>
     </div>
   );
-}
+};
 
 function Pillar({
   n,
@@ -375,9 +407,7 @@ function Stat({ n, l }: { n: string; l: string }) {
 function FooterCol({ title, items }: { title: string; items: string[] }) {
   return (
     <div>
-      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">
-        {title}
-      </p>
+      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">{title}</p>
       <ul className="space-y-3 text-base font-bold">
         {items.map((i) => (
           <li key={i}>
@@ -390,3 +420,5 @@ function FooterCol({ title, items }: { title: string; items: string[] }) {
     </div>
   );
 }
+
+export default Index;
