@@ -1,8 +1,8 @@
 name: Rebase lovable on main
 
 on:
-  schedule:
-    - cron: "0 4 * * *"
+  push:
+    branches: [lovable]
   workflow_dispatch:
 
 permissions:
