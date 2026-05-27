@@ -14,7 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      briefing_requests: {
+        Row: {
+          company: string
+          created_at: string
+          details: string
+          email: string
+          id: string
+          name: string
+          role: string | null
+          topic: string
+        }
+        Insert: {
+          company: string
+          created_at?: string
+          details: string
+          email: string
+          id?: string
+          name: string
+          role?: string | null
+          topic: string
+        }
+        Update: {
+          company?: string
+          created_at?: string
+          details?: string
+          email?: string
+          id?: string
+          name?: string
+          role?: string | null
+          topic?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
