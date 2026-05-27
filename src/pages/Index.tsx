@@ -68,7 +68,7 @@ const Index = () => {
           href="#"
           className="font-serif text-3xl md:text-4xl font-black tracking-tighter uppercase italic"
         >
-          decipher<span className="text-accent">.ms</span>
+          decipher<span className="text-accent pl-1">.ms</span>
         </a>
         <div className="hidden md:flex gap-8 text-[11px] font-extrabold uppercase tracking-[0.2em]">
           <a href="#services" className="hover:text-accent transition-colors">Services</a>
