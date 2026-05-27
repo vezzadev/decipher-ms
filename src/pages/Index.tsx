@@ -320,6 +320,8 @@ const Index = () => {
         </div>
       </section>
 
+      </main>
+
       {/* FOOTER */}
       <footer className="p-6">
         <div className="bg-background border-t-4 border-foreground pt-12 md:pt-16">
