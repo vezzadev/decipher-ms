@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import BriefingForm from "@/components/BriefingForm";
 
 const services = [
@@ -62,6 +63,15 @@ const why = [
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
+      <Helmet>
+        <title>decipher.ms — Independent Microsoft advisory</title>
+        <meta name="description" content="Independent Microsoft advisory by a former Principal Engineer. Straight answers on M365, Azure, Dynamics, and Copilot — no reseller incentives." />
+        <link rel="canonical" href="https://decipher.ms/" />
+        <meta property="og:title" content="decipher.ms — Independent Microsoft advisory" />
+        <meta property="og:description" content="Straight answers on M365, Azure, Dynamics, and Copilot from a former Microsoft Principal Engineer." />
+        <meta property="og:url" content="https://decipher.ms/" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       {/* NAV */}
       <nav className="border-b-4 border-foreground px-6 py-6 flex justify-between items-center sticky top-0 bg-background/95 backdrop-blur z-50">
         <a
@@ -79,14 +89,16 @@ const Index = () => {
         </div>
       </nav>
 
+      <main>
+
       {/* HERO */}
       <header className="px-6 py-20 md:py-28 max-w-[1600px] mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-          <div className="border-l-8 border-foreground pl-6 md:pl-10">
+          <div className="border-l-8 border-foreground pl-6 md:pl-10 min-w-0">
             <span className="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8">
               Independent Microsoft advisory
             </span>
-            <h1 className="font-serif text-6xl sm:text-7xl md:text-8xl xl:text-9xl font-black leading-[0.85] tracking-tighter mb-10">
+            <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl xl:text-7xl 2xl:text-8xl font-black leading-[0.85] tracking-tighter mb-10 break-words lg:text-7xl">
               DECODE
               <br />
               <span className="text-accent italic">MICROSOFT.</span>
@@ -307,6 +319,8 @@ const Index = () => {
           <BriefingForm />
         </div>
       </section>
+
+      </main>
 
       {/* FOOTER */}
       <footer className="p-6">

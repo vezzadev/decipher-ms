@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import pedro from "@/assets/pedro.jpg";
 
 const roles = [
@@ -47,6 +48,32 @@ const expertise = [
 const About = () => {
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
+      <Helmet>
+        <title>About Pedro Paulo Vezza Campos — decipher.ms</title>
+        <meta name="description" content="Founder of decipher.ms. Former Microsoft Principal Engineer and Tech Lead on the M365 Substrate AI Platform with 11 years inside Microsoft." />
+        <link rel="canonical" href="https://decipher.ms/about" />
+        <meta property="og:title" content="About the Founder — decipher.ms" />
+        <meta property="og:description" content="Pedro Paulo Vezza Campos — former Microsoft Principal Engineer, Tech Lead on the M365 Substrate AI Platform, now running an independent Microsoft advisory." />
+        <meta property="og:url" content="https://decipher.ms/about" />
+        <meta property="og:type" content="profile" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "Pedro Paulo Vezza Campos",
+          "jobTitle": "Founder, decipher.ms",
+          "description": "Former Microsoft Principal Software Engineer and Tech Lead on the M365 Substrate AI Platform.",
+          "url": "https://decipher.ms/about",
+          "worksFor": {
+            "@type": "Organization",
+            "name": "decipher.ms",
+            "url": "https://decipher.ms/"
+          },
+          "alumniOf": {
+            "@type": "Organization",
+            "name": "Microsoft"
+          }
+        })}</script>
+      </Helmet>
       {/* NAV */}
       <nav className="border-b-4 border-foreground px-6 py-6 flex justify-between items-center sticky top-0 bg-background/95 backdrop-blur z-50">
         <Link
@@ -63,6 +90,8 @@ const About = () => {
           <Link to="/" className="hover:text-accent transition-colors">Briefing</Link>
         </div>
       </nav>
+
+      <main>
 
       {/* HERO */}
       <header className="px-6 py-20 md:py-28 max-w-[1600px] mx-auto">
@@ -83,7 +112,7 @@ const About = () => {
             <p className="mt-6 text-base text-foreground/60 max-w-lg">
               I built decipher.ms because the best Microsoft answers shouldn't be locked inside Microsoft.
             </p>
-            <p className="mt-4 text-sm text-foreground/40 font-medium">
+            <p className="mt-4 text-sm text-foreground/70 font-medium">
               Greater Seattle Area · Remote
             </p>
           </div>
@@ -253,6 +282,8 @@ const About = () => {
       </section>
 
       {/* FOOTER */}
+      </main>
+
       <footer className="p-6">
         <div className="bg-background border-t-4 border-foreground pt-12 md:pt-16">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 mb-16 px-6">
