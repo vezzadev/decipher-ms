@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import pedro from "@/assets/pedro.jpg";
 
 const roles = [
   {
