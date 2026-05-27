@@ -1,5 +1,6 @@
 import type { Env } from "./env";
 import { mintFederatedAssertion } from "./jwt";
+import type { Telemetry } from "./telemetry";
 
 interface BriefingPayload {
   name: string;
@@ -10,7 +11,11 @@ interface BriefingPayload {
   details: string;
 }
 
-async function getAccessToken(env: Env): Promise<string> {
+async function getAccessToken(
+  env: Env,
+  tel: Telemetry,
+  parentId: string,
+): Promise<string> {
   const assertion = await mintFederatedAssertion(env);
   const url = `https://login.microsoftonline.com/${env.GRAPH_TENANT_ID}/oauth2/v2.0/token`;
   const body = new URLSearchParams({
@@ -21,10 +26,39 @@ async function getAccessToken(env: Env): Promise<string> {
       "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
     client_assertion: assertion,
   });
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    body,
+  const spanId = tel.newSpanId();
+  const start = Date.now();
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body,
+    });
+  } catch (err) {
+    tel.trackDependency({
+      id: spanId,
+      parentId,
+      name: "Entra token",
+      type: "HTTP",
+      target: "login.microsoftonline.com",
+      data: `POST /${env.GRAPH_TENANT_ID}/oauth2/v2.0/token`,
+      durationMs: Date.now() - start,
+      resultCode: "error",
+      success: false,
+    });
+    throw err;
+  }
+  tel.trackDependency({
+    id: spanId,
+    parentId,
+    name: "Entra token",
+    type: "HTTP",
+    target: "login.microsoftonline.com",
+    data: `POST /${env.GRAPH_TENANT_ID}/oauth2/v2.0/token`,
+    durationMs: Date.now() - start,
+    resultCode: String(res.status),
+    success: res.ok,
   });
   if (!res.ok) {
     throw new Error(`Entra token: ${res.status} ${await res.text()}`);
@@ -71,16 +105,47 @@ function buildMessage(env: Env, data: BriefingPayload) {
 export async function sendBriefingEmail(
   env: Env,
   data: BriefingPayload,
+  tel: Telemetry,
+  parentId: string,
 ): Promise<void> {
-  const token = await getAccessToken(env);
+  const token = await getAccessToken(env, tel, parentId);
   const url = `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(env.GRAPH_MAILBOX)}/sendMail`;
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${token}`,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(buildMessage(env, data)),
+  const spanId = tel.newSpanId();
+  const start = Date.now();
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(buildMessage(env, data)),
+    });
+  } catch (err) {
+    tel.trackDependency({
+      id: spanId,
+      parentId,
+      name: "Graph sendMail",
+      type: "HTTP",
+      target: "graph.microsoft.com",
+      data: "POST /v1.0/users/<mailbox>/sendMail",
+      durationMs: Date.now() - start,
+      resultCode: "error",
+      success: false,
+    });
+    throw err;
+  }
+  tel.trackDependency({
+    id: spanId,
+    parentId,
+    name: "Graph sendMail",
+    type: "HTTP",
+    target: "graph.microsoft.com",
+    data: "POST /v1.0/users/<mailbox>/sendMail",
+    durationMs: Date.now() - start,
+    resultCode: String(res.status),
+    success: res.ok,
   });
   if (!res.ok) {
     throw new Error(`Graph sendMail: ${res.status} ${await res.text()}`);
