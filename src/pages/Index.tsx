@@ -329,7 +329,7 @@ const Index = () => {
                 items={["Microsoft", "Oracle / SAP", "Cloud Architecture", "Negotiation"]}
               />
               <FooterCol
-                title="Synthetica"
+                title="decipher.ms"
                 items={["The Network", "Methodology", "Ethics", "Contact"]}
               />
             </div>
