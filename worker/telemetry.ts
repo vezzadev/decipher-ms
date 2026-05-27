@@ -96,6 +96,15 @@ export class Telemetry {
     }
   }
 
+  clientConfig(): { iKey: string; ingestionEndpoint: string; environment: string } | null {
+    if (!this.conn) return null;
+    return {
+      iKey: this.conn.iKey,
+      ingestionEndpoint: this.conn.ingestionEndpoint,
+      environment: this.environment,
+    };
+  }
+
   newSpanId(): string {
     return randomHex(8);
   }

@@ -45,6 +45,21 @@ export default {
 
     if (skipTelemetry) return response;
 
+    if ((response.headers.get("content-type") ?? "").includes("text/html")) {
+      const config = tel.clientConfig();
+      if (config) {
+        const script =
+          `<script>window.__telemetryConfig=${JSON.stringify(config)}</script>`;
+        response = new HTMLRewriter()
+          .on("head", {
+            element(el) {
+              el.append(script, { html: true });
+            },
+          })
+          .transform(response);
+      }
+    }
+
     const durationMs = Date.now() - start;
     tel.trackRequest({
       id: requestId,
