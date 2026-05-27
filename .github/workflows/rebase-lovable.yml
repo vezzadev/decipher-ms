@@ -2,7 +2,7 @@ name: Rebase lovable on main
 
 on:
   push:
-    branches: [lovable]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
