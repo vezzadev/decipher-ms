@@ -112,7 +112,7 @@ const About = () => {
             <p className="mt-6 text-base text-foreground/60 max-w-lg">
               I built decipher.ms because the best Microsoft answers shouldn't be locked inside Microsoft.
             </p>
-            <p className="mt-4 text-sm text-foreground/40 font-medium">
+            <p className="mt-4 text-sm text-foreground/70 font-medium">
               Greater Seattle Area · Remote
             </p>
           </div>
