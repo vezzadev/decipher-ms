@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 
 
@@ -22,11 +22,66 @@ const initial: FormState = {
   details: "",
 };
 
+const TURNSTILE_SITE_KEY = "0x4AAAAAADXZiCqy8p3HZOMu";
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        el: HTMLElement,
+        opts: {
+          sitekey: string;
+          theme?: "light" | "dark" | "auto";
+          callback: (token: string) => void;
+          "expired-callback"?: () => void;
+          "error-callback"?: () => void;
+        },
+      ) => string;
+      reset: (widgetId?: string) => void;
+    };
+  }
+}
+
 export default function BriefingForm() {
   const [values, setValues] = useState<FormState>(initial);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileEl = useRef<HTMLDivElement | null>(null);
+  const turnstileWidget = useRef<string | null>(null);
+
+  useEffect(() => {
+    const id = "cf-turnstile-script";
+    if (!document.getElementById(id)) {
+      const s = document.createElement("script");
+      s.id = id;
+      s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    }
+    let cancelled = false;
+    const renderWhenReady = () => {
+      if (cancelled) return;
+      if (!window.turnstile || !turnstileEl.current) {
+        setTimeout(renderWhenReady, 100);
+        return;
+      }
+      if (turnstileWidget.current) return;
+      turnstileWidget.current = window.turnstile.render(turnstileEl.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        theme: "light",
+        callback: (token) => setTurnstileToken(token),
+        "expired-callback": () => setTurnstileToken(null),
+        "error-callback": () => setTurnstileToken(null),
+      });
+    };
+    renderWhenReady();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const update = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setValues((v) => ({ ...v, [k]: e.target.value }));
@@ -46,6 +101,10 @@ export default function BriefingForm() {
     }
     setErrors({});
     setServerError(null);
+    if (!turnstileToken) {
+      setServerError("Please complete the challenge before submitting.");
+      return;
+    }
     setSubmitting(true);
     let res: Response;
     try {
@@ -59,6 +118,7 @@ export default function BriefingForm() {
           role: parsed.data.role || null,
           topic: parsed.data.topic,
           details: parsed.data.details,
+          turnstileToken,
         }),
       });
     } catch {
@@ -68,11 +128,22 @@ export default function BriefingForm() {
     }
     setSubmitting(false);
     if (!res.ok) {
-      setServerError("Could not submit. Please try again.");
+      let msg = "Could not submit. Please try again.";
+      try {
+        const body = (await res.json()) as { error?: string };
+        if (body?.error) msg = body.error;
+      } catch {
+        /* keep generic */
+      }
+      setServerError(msg);
+      window.turnstile?.reset(turnstileWidget.current ?? undefined);
+      setTurnstileToken(null);
       return;
     }
     setServerError("__ok__");
     setValues(initial);
+    window.turnstile?.reset(turnstileWidget.current ?? undefined);
+    setTurnstileToken(null);
   };
 
   return (
@@ -99,10 +170,11 @@ export default function BriefingForm() {
         />
         {errors.details && <p className="mt-2 text-xs text-accent font-bold">{errors.details}</p>}
       </div>
+      <div ref={turnstileEl} />
       <div className="flex flex-wrap items-center gap-6">
         <button
           type="submit"
-          disabled={submitting}
+          disabled={submitting || !turnstileToken}
           className="px-10 py-5 bg-accent text-background font-black uppercase tracking-widest text-xs hover:bg-background hover:text-foreground transition-all disabled:opacity-50"
         >
           {submitting ? "Submitting…" : "Request Briefing"}

@@ -14,6 +14,7 @@
       "binding": "DB",
       "database_name": "decipher-ms-db",
       "database_id": "7fa5214b-5743-43cb-86e1-b679428f1d17",
+      "migrations_dir": "migrations",
     },
   ],
   "vars": {
@@ -21,7 +22,6 @@
     "GRAPH_APP_ID": "56bdec0b-a492-4228-9445-28fbad31dbad",
     "GRAPH_MAILBOX": "noreply@decipher.ms",
     "GRAPH_TO": "pedro@decipher.ms",
-    "GRAPH_BCC": "pedro@vezza.com.br",
     "OIDC_ISSUER": "https://decipher.ms",
     "OIDC_SUBJECT": "decipher-ms-worker",
     "OIDC_KID": "key-1",

@@ -10,4 +10,5 @@ export interface Env {
   OIDC_SUBJECT: string;
   OIDC_KID: string;
   OIDC_PRIVATE_KEY: string;
+  TURNSTILE_SECRET_KEY: string;
 }

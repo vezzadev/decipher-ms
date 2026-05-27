@@ -82,7 +82,7 @@ export async function sendBriefingEmail(
     },
     body: JSON.stringify(buildMessage(env, data)),
   });
-  if (!res.ok && res.status !== 202) {
+  if (!res.ok) {
     throw new Error(`Graph sendMail: ${res.status} ${await res.text()}`);
   }
 }

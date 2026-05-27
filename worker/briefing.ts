@@ -10,6 +10,10 @@ interface BriefingInput {
   details: string;
 }
 
+interface BriefingPayload extends BriefingInput {
+  turnstileToken: string;
+}
+
 function badRequest(message: string): Response {
   return Response.json({ error: message }, { status: 400 });
 }
@@ -18,7 +22,7 @@ function isNonEmptyString(v: unknown, max: number): v is string {
   return typeof v === "string" && v.trim().length > 0 && v.length <= max;
 }
 
-function parseInput(raw: unknown): BriefingInput | string {
+function parseInput(raw: unknown): BriefingPayload | string {
   if (!raw || typeof raw !== "object") return "Body must be JSON object";
   const r = raw as Record<string, unknown>;
   if (!isNonEmptyString(r.name, 120)) return "name required (<=120 chars)";
@@ -29,6 +33,8 @@ function parseInput(raw: unknown): BriefingInput | string {
   if (!isNonEmptyString(r.topic, 200)) return "topic required (<=200)";
   if (!isNonEmptyString(r.details, 4000) || r.details.trim().length < 10)
     return "details required (10-4000 chars)";
+  if (!isNonEmptyString(r.turnstileToken, 2048))
+    return "turnstile challenge required";
   const role =
     typeof r.role === "string" && r.role.trim().length > 0
       ? r.role.trim().slice(0, 120)
@@ -40,7 +46,26 @@ function parseInput(raw: unknown): BriefingInput | string {
     role,
     topic: r.topic.trim(),
     details: r.details.trim(),
+    turnstileToken: r.turnstileToken,
   };
+}
+
+async function verifyTurnstile(
+  env: Env,
+  token: string,
+  remoteIp: string | null,
+): Promise<boolean> {
+  const body = new FormData();
+  body.append("secret", env.TURNSTILE_SECRET_KEY);
+  body.append("response", token);
+  if (remoteIp) body.append("remoteip", remoteIp);
+  const res = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    { method: "POST", body },
+  );
+  if (!res.ok) return false;
+  const json = (await res.json()) as { success: boolean };
+  return json.success === true;
 }
 
 export async function handleBriefing(
@@ -59,6 +84,10 @@ export async function handleBriefing(
   }
   const parsed = parseInput(raw);
   if (typeof parsed === "string") return badRequest(parsed);
+
+  const remoteIp = request.headers.get("cf-connecting-ip");
+  const turnstileOk = await verifyTurnstile(env, parsed.turnstileToken, remoteIp);
+  if (!turnstileOk) return badRequest("turnstile verification failed");
 
   const insert = await env.DB.prepare(
     "INSERT INTO briefing_requests (name, email, company, role, topic, details) VALUES (?, ?, ?, ?, ?, ?) RETURNING id",
