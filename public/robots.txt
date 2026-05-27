@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://decipherms.lovable.app/sitemap.xml
+Sitemap: https://decipher.ms/sitemap.xml
