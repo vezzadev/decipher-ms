@@ -39,9 +39,10 @@ const roles = [
 
 const expertise = [
   "Cloud Security & Compliance (SOC 2, Azure RBAC, Zero Trust)",
-  "AI/ML Platform Engineering & Infrastructure",
+  "AI/ML Platform Engineering on Azure ML",
+  "Privacy & Compliance Programs (CSP, Purview)",
+  "Resource Scheduling Optimization & Operations Research",
   "Enterprise Software Architecture & SRE",
-  "Microsoft Licensing — M365, Azure, Dynamics, Copilot",
   "Technical Leadership & Cross-Team Collaboration",
 ];
 
