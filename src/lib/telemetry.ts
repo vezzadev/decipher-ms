@@ -58,8 +58,6 @@ function send(envelopes: Envelope[]): void {
   if (envelopes.length === 0) return;
   const url = `${INGESTION_ENDPOINT}/v2.1/track`;
   const payload = envelopes.map((e) => JSON.stringify(e)).join("\n");
-  const blob = new Blob([payload], { type: "text/plain" });
-  if (navigator.sendBeacon && navigator.sendBeacon(url, blob)) return;
   fetch(url, {
     method: "POST",
     body: payload,
