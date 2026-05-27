@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import BriefingForm from "@/components/BriefingForm";
 
 const services = [
@@ -62,6 +63,15 @@ const why = [
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
+      <Helmet>
+        <title>decipher.ms — Independent Microsoft advisory</title>
+        <meta name="description" content="Independent Microsoft advisory by a former Principal Engineer. Straight answers on M365, Azure, Dynamics, and Copilot — no reseller incentives." />
+        <link rel="canonical" href="https://decipherms.lovable.app/" />
+        <meta property="og:title" content="decipher.ms — Independent Microsoft advisory" />
+        <meta property="og:description" content="Straight answers on M365, Azure, Dynamics, and Copilot from a former Microsoft Principal Engineer." />
+        <meta property="og:url" content="https://decipherms.lovable.app/" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       {/* NAV */}
       <nav className="border-b-4 border-foreground px-6 py-6 flex justify-between items-center sticky top-0 bg-background/95 backdrop-blur z-50">
         <a
@@ -78,6 +88,8 @@ const Index = () => {
           <a href="#briefing" className="hover:text-accent transition-colors">Briefing</a>
         </div>
       </nav>
+
+      <main>
 
       {/* HERO */}
       <header className="px-6 py-20 md:py-28 max-w-[1600px] mx-auto">
@@ -307,6 +319,8 @@ const Index = () => {
           <BriefingForm />
         </div>
       </section>
+
+      </main>
 
       {/* FOOTER */}
       <footer className="p-6">
