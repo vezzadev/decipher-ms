@@ -94,11 +94,11 @@ const Index = () => {
       {/* HERO */}
       <header className="px-6 py-20 md:py-28 max-w-[1600px] mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-          <div className="border-l-8 border-foreground pl-6 md:pl-10">
+          <div className="border-l-8 border-foreground pl-6 md:pl-10 min-w-0">
             <span className="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8">
               Independent Microsoft advisory
             </span>
-            <h1 className="font-serif text-6xl sm:text-7xl md:text-8xl xl:text-9xl font-black leading-[0.85] tracking-tighter mb-10">
+            <h1 className="font-serif text-6xl sm:text-7xl md:text-8xl xl:text-8xl font-black leading-[0.85] tracking-tighter mb-10">
               DECODE
               <br />
               <span className="text-accent italic">MICROSOFT.</span>
