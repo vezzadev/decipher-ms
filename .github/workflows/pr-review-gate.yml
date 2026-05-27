@@ -1,0 +1,37 @@
+name: Human review gate
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  gate:
+    name: Awaiting human review
+    runs-on: ubuntu-slim
+    steps:
+      - name: Verify approver identity
+        env:
+          STATE: ${{ github.event.review.state }}
+          APPROVER: ${{ github.event.review.user.login }}
+          BODY: ${{ github.event.review.body }}
+        run: |
+          case "$APPROVER" in
+            pedropaulovc|pedrovezzadev) ;;
+            *)
+              echo "::error::Reviewer '$APPROVER' is not in the allowed list (pedropaulovc, pedrovezzadev)."
+              exit 1
+              ;;
+          esac
+
+          if [ "$STATE" = "approved" ]; then
+            echo "Approved by allowed reviewer: $APPROVER"
+            exit 0
+          fi
+
+          if [ "$STATE" = "commented" ] && printf '%s' "$BODY" | grep -qiE '(^|[^A-Za-z0-9])LGTM([^A-Za-z0-9]|$)'; then
+            echo "LGTM detected in review comment from allowed reviewer: $APPROVER"
+            exit 0
+          fi
+
+          echo "::error::Review from '$APPROVER' is state '$STATE' and does not contain LGTM (case-insensitive). Gate remains closed."
+          exit 1
