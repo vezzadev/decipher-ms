@@ -90,7 +90,7 @@ const About = () => {
 
           <div className="border-4 border-foreground">
             <img
-              src="/src/assets/pedro.jpg"
+              src={pedro}
               alt="Pedro Paulo Vezza Campos"
               className="w-full object-cover"
               loading="eager"
