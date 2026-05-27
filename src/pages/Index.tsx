@@ -7,6 +7,7 @@ import analyst3 from "@/assets/analyst-3.jpg";
 import analyst4 from "@/assets/analyst-4.jpg";
 import analyst5 from "@/assets/analyst-5.jpg";
 import analyst6 from "@/assets/analyst-6.jpg";
+import BriefingForm from "@/components/BriefingForm";
 
 const analysts = [
   { name: "Marcus Thorne", coverage: "SAP / ERP Strategy", img: analyst1 },
@@ -77,6 +78,9 @@ const Index = () => {
             </a>
             <a href="#archive" className="hover:text-accent transition-colors">
               Archive
+            </a>
+            <a href="#briefing" className="hover:text-accent transition-colors">
+              Briefing
             </a>
             <a href="#access" className="hover:text-accent transition-colors">
               Access
@@ -297,6 +301,27 @@ const Index = () => {
           <Stat n="15yr" l="Minimum analyst tenure" />
           <Stat n="2,400" l="Briefings delivered" />
           <Stat n="94%" l="Subscription renewal rate" />
+        </div>
+      </section>
+
+      {/* BRIEFING FORM */}
+      <section id="briefing" className="border-t-4 border-foreground bg-foreground text-background px-6 py-24 md:py-32">
+        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16 lg:gap-24">
+          <div className="border-l-8 border-accent pl-8">
+            <span className="inline-block text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-8">
+              Request a Briefing
+            </span>
+            <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-black italic leading-[0.95] tracking-tighter mb-8">
+              Put a question
+              <br />
+              to the desk.
+            </h2>
+            <p className="text-background/60 text-lg max-w-md">
+              Tell us the decision you're working on. An analyst with direct coverage will respond
+              within one business day — no sales call, no gatekeeping.
+            </p>
+          </div>
+          <BriefingForm />
         </div>
       </section>
 
