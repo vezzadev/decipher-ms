@@ -61,7 +61,7 @@ export default function BriefingForm() {
       setServerError("Could not submit. Please try again.");
       return;
     }
-    setSubmitted(true);
+    setServerError("__ok__");
     setValues(initial);
   };
 
@@ -97,9 +97,14 @@ export default function BriefingForm() {
         >
           {submitting ? "Submitting…" : "Request Briefing"}
         </button>
-        {submitted && (
+        {serverError === "__ok__" && (
           <span className="text-xs font-black uppercase tracking-[0.3em] text-accent">
-            Received — check your inbox.
+            Received — an analyst will respond within one business day.
+          </span>
+        )}
+        {serverError && serverError !== "__ok__" && (
+          <span className="text-xs font-black uppercase tracking-[0.3em] text-accent">
+            {serverError}
           </span>
         )}
       </div>
