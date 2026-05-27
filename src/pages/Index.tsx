@@ -291,7 +291,7 @@ const Index = () => {
               />
               <FooterCol
                 title="decipher.ms"
-                items={["Approach", "Topics", "Contact"]}
+                items={["Approach", "About", "Contact"]}
               />
             </div>
           </div>
