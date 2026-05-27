@@ -66,7 +66,7 @@ const Index = () => {
             href="#"
             className="font-serif text-3xl md:text-4xl font-black tracking-tighter uppercase italic"
           >
-            Synthetica
+            decipher.ms
           </a>
           <div className="hidden md:flex gap-8 text-[11px] font-extrabold uppercase tracking-[0.2em]">
             <a href="#desk" className="hover:text-accent transition-colors">
@@ -329,13 +329,13 @@ const Index = () => {
                 items={["Microsoft", "Oracle / SAP", "Cloud Architecture", "Negotiation"]}
               />
               <FooterCol
-                title="Synthetica"
+                title="decipher.ms"
                 items={["The Network", "Methodology", "Ethics", "Contact"]}
               />
             </div>
           </div>
           <div className="mt-24 md:mt-32 pt-10 border-t border-background/10 flex flex-col md:flex-row justify-between gap-6 text-[10px] font-black uppercase tracking-[0.4em] opacity-50">
-            <span>© 2026 Synthetica Research</span>
+            <span>© 2026 decipher.ms</span>
             <div className="flex gap-12">
               <a href="#" className="hover:text-accent">
                 Legal
