@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import BriefingForm from "@/components/BriefingForm";
 
 const services = [
@@ -248,6 +249,38 @@ const Index = () => {
           <Stat n="$0" l="Reseller commissions" />
           <Stat n="400+" l="Microsoft SKUs covered" />
           <Stat n="1" l="Former Microsoft engineer" />
+        </div>
+      </section>
+
+      {/* FOUNDER TEASER */}
+      <section className="border-t-4 border-foreground px-6 py-24 md:py-32">
+        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-20 items-start">
+          <div>
+            <span className="inline-block text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">
+              About the founder
+            </span>
+            <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.9]">
+              Pedro Paulo
+              <br />
+              <span className="text-accent italic">Vezza Campos</span>
+            </h2>
+          </div>
+          <div className="space-y-6 text-lg md:text-xl leading-relaxed text-foreground/70 font-medium">
+            <p>
+              Former Microsoft Principal Software Engineer and Tech Lead on the M365
+              Substrate AI Platform — the team behind Microsoft's AI/ML capabilities.
+            </p>
+            <p>
+              I built decipher.ms because the best Microsoft answers shouldn't be locked
+              inside Microsoft.
+            </p>
+            <Link
+              to="/about"
+              className="inline-flex items-center gap-3 text-sm font-black uppercase tracking-[0.2em] hover:text-accent transition-colors mt-4"
+            >
+              Read full bio <span>→</span>
+            </Link>
+          </div>
         </div>
       </section>
 
