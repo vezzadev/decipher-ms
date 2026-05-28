@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS briefing_requests (
   email TEXT NOT NULL,
   company TEXT NOT NULL,
   role TEXT,
+  engagement_type TEXT,
   topic TEXT NOT NULL,
   details TEXT NOT NULL,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),

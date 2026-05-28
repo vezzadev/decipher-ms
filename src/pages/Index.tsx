@@ -44,7 +44,7 @@ const why = [
     n: "01",
     title: ["Earned", "Expertise"],
     body:
-      "Led by a former Microsoft engineer from the M365 Substrate AI Platform — the team that builds the AI/ML and security platforms behind Microsoft 365.",
+      "Led by a former Microsoft engineer from the M365 Substrate AI Platform — the team that builds the foundation of all intelligent features across Microsoft 365.",
   },
   {
     n: "02",
@@ -255,12 +255,14 @@ const Index = () => {
           </div>
           <div className="space-y-6 text-lg md:text-xl leading-relaxed text-foreground/70 font-medium">
             <p>
-              Former Microsoft Principal Software Engineer and Tech Lead on the M365
-              Substrate AI Platform — the team behind Microsoft's AI/ML capabilities.
+              Eleven years inside Microsoft. Six on Dynamics 365 Resource Scheduling
+              Optimization — algorithm core, multi-tenant migration to Azure, and the
+              Azure Government deployment that ran NY State's COVID-19 testing operations.
+              More recently, platform security and AI/ML infrastructure for M365.
             </p>
             <p>
-              I built decipher.ms because the best Microsoft answers shouldn't be locked
-              inside Microsoft.
+              I built <span className="text-foreground">decipher</span><span className="text-accent">.ms</span> because
+              the best Microsoft answers shouldn't be locked inside Microsoft.
             </p>
             <Link
               to="/about"
