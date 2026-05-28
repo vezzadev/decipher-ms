@@ -315,8 +315,8 @@ const About = () => {
           <div className="pt-8 border-t border-foreground/10 flex flex-col md:flex-row justify-between gap-6 text-[10px] font-black uppercase tracking-[0.4em] opacity-50 px-6">
             <span>© 2026 Vezza LLC</span>
             <div className="flex gap-12">
-              <a href="#" className="hover:text-accent">Legal</a>
-              <a href="#" className="hover:text-accent">Privacy</a>
+              <Link to="/legal" className="hover:text-accent">Legal</Link>
+              <Link to="/privacy" className="hover:text-accent">Privacy</Link>
             </div>
           </div>
         </div>
