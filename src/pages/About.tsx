@@ -40,7 +40,7 @@ const roles = [
 const expertise = [
   "Cloud Security & Compliance (SOC 2, Azure RBAC, Zero Trust)",
   "AI/ML Platform Engineering on Azure ML",
-  "Privacy & Compliance Programs (CSP, Purview)",
+  "Secret and identity management, Entra tenant isolation",
   "Resource Scheduling Optimization & Operations Research",
   "Enterprise Software Architecture & SRE",
   "Technical Leadership & Cross-Team Collaboration",
@@ -81,7 +81,7 @@ const About = () => {
           to="/"
           className="font-serif text-3xl md:text-4xl font-black tracking-tighter uppercase italic"
         >
-          decipher<span className="text-accent pl-2">.ms</span>
+          decipher<span className="text-accent ml-[0.05em]">.ms</span>
         </Link>
         <div className="hidden md:flex gap-8 text-[11px] font-extrabold uppercase tracking-[0.2em]">
           <Link to="/" className="hover:text-accent transition-colors">Services</Link>
@@ -111,10 +111,10 @@ const About = () => {
               AI Platform — the team behind M365's AI/ML capabilities.
             </p>
             <p className="mt-6 text-base text-foreground/60 max-w-lg">
-              I built decipher.ms because the best Microsoft answers shouldn't be locked inside Microsoft.
+              I built <span className="text-foreground">decipher</span><span className="text-accent">.ms</span> because the best Microsoft answers shouldn't be locked inside Microsoft.
             </p>
             <p className="mt-4 text-sm text-foreground/70 font-medium">
-              Greater Seattle Area · Remote
+              Lives in Seattle, WA
             </p>
           </div>
 
@@ -241,7 +241,7 @@ const About = () => {
             </h3>
             <p className="text-base leading-relaxed text-foreground/70 mb-4">
               "What Makes BAG, BAG — We succeed when the customer succeeds." Issued by
-              the Dynamics 365 Products Group, July 2020.
+              the Dynamics 365 Business Applications Group, July 2020.
             </p>
             <p className="text-base italic text-foreground/50">
               "Pedro always strives to help our customers succeed, he researches new
