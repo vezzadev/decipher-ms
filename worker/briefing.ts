@@ -3,11 +3,14 @@ import { sendBriefingEmail } from "./graph";
 import type { Telemetry } from "./telemetry";
 import { timed } from "./telemetry";
 
+const ENGAGEMENT_TYPES = ["expert-call", "second-opinion", "technical-brief"] as const;
+type EngagementType = (typeof ENGAGEMENT_TYPES)[number];
+
 interface BriefingInput {
   name: string;
   email: string;
-  company: string;
   role: string | null;
+  engagementType: EngagementType;
   topic: string;
   details: string;
 }
@@ -31,7 +34,8 @@ function parseInput(raw: unknown): BriefingPayload | string {
   if (!isNonEmptyString(r.email, 255)) return "email required (<=255 chars)";
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email))
     return "email invalid";
-  if (!isNonEmptyString(r.company, 200)) return "company required (<=200)";
+  if (typeof r.engagementType !== "string" || !ENGAGEMENT_TYPES.includes(r.engagementType as EngagementType))
+    return "engagementType must be one of: " + ENGAGEMENT_TYPES.join(", ");
   if (!isNonEmptyString(r.topic, 200)) return "topic required (<=200)";
   if (!isNonEmptyString(r.details, 4000) || r.details.trim().length < 10)
     return "details required (10-4000 chars)";
@@ -44,8 +48,8 @@ function parseInput(raw: unknown): BriefingPayload | string {
   return {
     name: r.name.trim(),
     email: r.email.trim(),
-    company: r.company.trim(),
     role,
+    engagementType: r.engagementType as EngagementType,
     topic: r.topic.trim(),
     details: r.details.trim(),
     turnstileToken: r.turnstileToken,
@@ -162,13 +166,14 @@ export async function handleBriefing(
   const dbSpanId = tel.newSpanId();
   const dbStart = Date.now();
   const insert = await env.DB.prepare(
-    "INSERT INTO briefing_requests (name, email, company, role, topic, details) VALUES (?, ?, ?, ?, ?, ?) RETURNING id",
+    "INSERT INTO briefing_requests (name, email, company, role, engagement_type, topic, details) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id",
   )
     .bind(
       parsed.name,
       parsed.email,
-      parsed.company,
+      "",
       parsed.role,
+      parsed.engagementType,
       parsed.topic,
       parsed.details,
     )
@@ -194,6 +199,7 @@ export async function handleBriefing(
 
   tel.trackEvent(parentId, "briefing_received", {
     requestId: String(insert.id),
+    engagementType: parsed.engagementType,
     topic: parsed.topic,
   });
 

@@ -40,7 +40,7 @@ const roles = [
 const expertise = [
   "Cloud Security & Compliance (SOC 2, Azure RBAC, Zero Trust)",
   "AI/ML Platform Engineering on Azure ML",
-  "Privacy & Compliance Programs (CSP, Purview)",
+  "Secret and identity management, Entra tenant isolation",
   "Resource Scheduling Optimization & Operations Research",
   "Enterprise Software Architecture & SRE",
   "Technical Leadership & Cross-Team Collaboration",
@@ -81,7 +81,7 @@ const About = () => {
           to="/"
           className="font-serif text-3xl md:text-4xl font-black tracking-tighter uppercase italic"
         >
-          decipher<span className="text-accent pl-2">.ms</span>
+          decipher<span className="text-accent ml-[0.05em]">.ms</span>
         </Link>
         <div className="hidden md:flex gap-8 text-[11px] font-extrabold uppercase tracking-[0.2em]">
           <Link to="/" className="hover:text-accent transition-colors">Services</Link>
@@ -111,10 +111,10 @@ const About = () => {
               AI Platform — the team behind M365's AI/ML capabilities.
             </p>
             <p className="mt-6 text-base text-foreground/60 max-w-lg">
-              I built decipher.ms because the best Microsoft answers shouldn't be locked inside Microsoft.
+              I built <span className="text-foreground">decipher</span><span className="text-accent">.ms</span> because the best Microsoft answers shouldn't be locked inside Microsoft.
             </p>
             <p className="mt-4 text-sm text-foreground/70 font-medium">
-              Greater Seattle Area · Remote
+              Lives in Seattle, WA
             </p>
           </div>
 
@@ -241,7 +241,7 @@ const About = () => {
             </h3>
             <p className="text-base leading-relaxed text-foreground/70 mb-4">
               "What Makes BAG, BAG — We succeed when the customer succeeds." Issued by
-              the Dynamics 365 Products Group, July 2020.
+              the Dynamics 365 Business Applications Group, July 2020.
             </p>
             <p className="text-base italic text-foreground/50">
               "Pedro always strives to help our customers succeed, he researches new
@@ -274,7 +274,7 @@ const About = () => {
             on your Microsoft decision?
           </h2>
           <Link
-            to="/"
+            to="/#briefing"
             className="inline-flex items-center gap-3 bg-foreground text-background px-8 py-4 text-sm font-black uppercase tracking-[0.2em] hover:bg-accent transition-colors"
           >
             Request a briefing <span>→</span>
@@ -297,17 +297,17 @@ const About = () => {
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">Services</p>
                 <ul className="space-y-3 text-base font-bold">
-                  <li><Link to="/" className="hover:text-accent transition-colors">Expert Call</Link></li>
-                  <li><Link to="/" className="hover:text-accent transition-colors">Second Opinion</Link></li>
-                  <li><Link to="/" className="hover:text-accent transition-colors">Technical Brief</Link></li>
+                  <li><Link to="/#services" className="hover:text-accent transition-colors">Expert Call</Link></li>
+                  <li><Link to="/#services" className="hover:text-accent transition-colors">Second Opinion</Link></li>
+                  <li><Link to="/#services" className="hover:text-accent transition-colors">Technical Brief</Link></li>
                 </ul>
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">decipher.ms</p>
                 <ul className="space-y-3 text-base font-bold">
-                  <li><Link to="/" className="hover:text-accent transition-colors">Services</Link></li>
+                  <li><Link to="/#approach" className="hover:text-accent transition-colors">Approach</Link></li>
                   <li><Link to="/about" className="hover:text-accent transition-colors">About</Link></li>
-                  <li><Link to="/" className="hover:text-accent transition-colors">Briefing</Link></li>
+                  <li><Link to="/#briefing" className="hover:text-accent transition-colors">Briefing</Link></li>
                 </ul>
               </div>
             </div>
@@ -315,8 +315,8 @@ const About = () => {
           <div className="pt-8 border-t border-foreground/10 flex flex-col md:flex-row justify-between gap-6 text-[10px] font-black uppercase tracking-[0.4em] opacity-50 px-6">
             <span>© 2026 Vezza LLC</span>
             <div className="flex gap-12">
-              <a href="#" className="hover:text-accent">Legal</a>
-              <a href="#" className="hover:text-accent">Privacy</a>
+              <Link to="/legal" className="hover:text-accent">Legal</Link>
+              <Link to="/privacy" className="hover:text-accent">Privacy</Link>
             </div>
           </div>
         </div>

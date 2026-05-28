@@ -42,9 +42,9 @@ const topics = [
 const why = [
   {
     n: "01",
-    title: ["Insider", "Perspective"],
+    title: ["Earned", "Expertise"],
     body:
-      "Led by a former Microsoft engineer from the M365 Substrate AI Platform — the team that builds the AI/ML and security platforms behind Microsoft 365.",
+      "Led by a former Microsoft engineer from the M365 Substrate AI Platform — the team that builds the foundation of all intelligent features across Microsoft 365.",
   },
   {
     n: "02",
@@ -78,13 +78,13 @@ const Index = () => {
           href="#"
           className="font-serif text-3xl md:text-4xl font-black tracking-tighter uppercase italic"
         >
-          decipher<span className="text-accent pl-2">.ms</span>
+          decipher<span className="text-accent ml-[0.05em]">.ms</span>
         </a>
         <div className="hidden md:flex gap-8 text-[11px] font-extrabold uppercase tracking-[0.2em]">
           <a href="#services" className="hover:text-accent transition-colors">Services</a>
-          <a href="#approach" className="hover:text-accent transition-colors">Approach</a>
           <a href="#topics" className="hover:text-accent transition-colors">Topics</a>
-          <a href="/about" className="hover:text-accent transition-colors">About</a>
+          <a href="#approach" className="hover:text-accent transition-colors">Approach</a>
+          <a href="#founder" className="hover:text-accent transition-colors">About</a>
           <a href="#briefing" className="hover:text-accent transition-colors">Briefing</a>
         </div>
       </nav>
@@ -92,8 +92,8 @@ const Index = () => {
       <main>
 
       {/* HERO */}
-      <header className="px-6 py-20 md:py-28 max-w-[1600px] mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+      <header className="px-6 py-8 max-w-[1600px] mx-auto min-h-[calc(100svh-92px)] flex items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
           <div className="border-l-8 border-foreground pl-6 md:pl-10 min-w-0">
             <span className="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8">
               Independent Microsoft advisory
@@ -101,7 +101,7 @@ const Index = () => {
             <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl xl:text-7xl 2xl:text-8xl font-black leading-[0.85] tracking-tighter mb-10 break-words lg:text-7xl">
               DECODE
               <br />
-              <span className="text-accent italic">MICROSOFT.</span>
+              <span className="text-accent italic">MICROSOF<span className="ml-[0.06em]">T</span>.</span>
               <br />
               DECIDE.
             </h1>
@@ -112,7 +112,7 @@ const Index = () => {
             </p>
           </div>
           <div className="flex flex-col">
-            <div className="p-10 md:p-12 bg-foreground text-background flex flex-col justify-between aspect-square">
+            <div className="p-8 md:p-10 bg-foreground text-background flex flex-col justify-between gap-6">
               <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] opacity-60">
                 A recent question
               </span>
@@ -123,21 +123,21 @@ const Index = () => {
               <div className="grid grid-cols-3 gap-4 text-[10px] uppercase tracking-widest">
                 <div>
                   <p className="opacity-50">Turnaround</p>
-                  <p className="font-black mt-1">5 days</p>
+                  <p className="font-black mt-1">5–10 days</p>
                 </div>
                 <div>
                   <p className="opacity-50">Deliverable</p>
-                  <p className="font-black mt-1">12-page brief</p>
+                  <p className="font-black mt-1">5–10 page brief +<br />30 min presentation</p>
                 </div>
                 <div>
-                  <p className="opacity-50">Vendor fees</p>
+                  <p className="opacity-50">Referral commissions</p>
                   <p className="font-black mt-1">$0</p>
                 </div>
               </div>
             </div>
             <a
               href="#briefing"
-              className="group w-full py-7 md:py-8 bg-accent text-background text-lg md:text-xl font-black uppercase tracking-widest hover:bg-foreground transition-all flex justify-between px-8 md:px-10 items-center"
+              className="group w-full py-6 md:py-7 bg-accent text-background text-lg md:text-xl font-black uppercase tracking-widest hover:bg-foreground transition-all flex justify-between px-8 md:px-10 items-center"
             >
               <span>Request Briefing</span>
               <span className="transition-transform group-hover:translate-x-2">→</span>
@@ -146,33 +146,9 @@ const Index = () => {
         </div>
       </header>
 
-      {/* PROBLEM */}
-      <section className="border-t-4 border-foreground px-6 py-24 md:py-32">
-        <div className="max-w-[1600px] mx-auto grid md:grid-cols-[1fr_1.5fr] gap-12 md:gap-20 items-start">
-          <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.9]">
-            The wrong Microsoft call is{" "}
-            <span className="text-accent italic">expensive</span>.
-          </h2>
-          <div className="space-y-6 text-lg md:text-xl leading-relaxed text-foreground/70 font-medium">
-            <p>
-              Azure, Azure ML, Copilot, Purview, Defender, Dynamics. Most teams learn this surface
-              from docs, marketing pages, and conferences. The folks who actually build these
-              platforms work inside Microsoft — and their answers stay there.
-            </p>
-            <p>
-              You end up with architectures that don't quite hold up to audit, AI rollouts that
-              surface compliance fires, or migrations that take twice as long as they should.
-            </p>
-            <p className="text-foreground font-black font-serif italic text-2xl md:text-3xl">
-              decipher.ms exists to give you a straight answer.
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* SERVICES */}
-      <section id="services" className="border-t-4 border-foreground">
-        <div className="grid md:grid-cols-3">
+      <section id="services" className="border-t-4 border-foreground min-h-[calc(100svh-92px)] flex">
+        <div className="grid md:grid-cols-3 w-full">
           {services.map((s, i) => (
             <div
               key={s.name}
@@ -199,8 +175,8 @@ const Index = () => {
       </section>
 
       {/* TOPICS */}
-      <section id="topics" className="border-t-4 border-foreground bg-secondary/40 px-6 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto">
+      <section id="topics" className="border-t-4 border-foreground bg-secondary/40 px-6 py-16 md:py-20 min-h-[calc(100svh-92px)] flex items-center">
+        <div className="max-w-[1400px] mx-auto w-full">
           <div className="mb-14">
             <span className="font-serif italic text-accent text-xl md:text-2xl block mb-3">
               Inquiry Log
@@ -228,11 +204,11 @@ const Index = () => {
       </section>
 
       {/* APPROACH / WHY */}
-      <section id="approach" className="border-t-4 border-foreground bg-foreground text-background px-6 py-24 md:py-32">
-        <div className="max-w-[1600px] mx-auto">
+      <section id="approach" className="border-t-4 border-foreground bg-foreground text-background px-6 py-16 md:py-20 min-h-[calc(100svh-92px)] flex items-center">
+        <div className="max-w-[1600px] mx-auto w-full">
           <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-16 gap-6 border-b-2 border-background/20 pb-8">
             <h2 className="font-serif text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9]">
-              Why decipher
+              Why decipher<span className="text-accent ml-[0.05em]">.ms</span>
             </h2>
             <span className="font-serif italic text-xl md:text-2xl text-accent">
               Three commitments. No exceptions.
@@ -265,8 +241,8 @@ const Index = () => {
       </section>
 
       {/* FOUNDER TEASER */}
-      <section className="border-t-4 border-foreground px-6 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-20 items-start">
+      <section id="founder" className="border-t-4 border-foreground px-6 py-16 md:py-20 min-h-[calc(100svh-92px)] flex items-center">
+        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-20 items-start w-full">
           <div>
             <span className="inline-block text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">
               About the founder
@@ -279,12 +255,14 @@ const Index = () => {
           </div>
           <div className="space-y-6 text-lg md:text-xl leading-relaxed text-foreground/70 font-medium">
             <p>
-              Former Microsoft Principal Software Engineer and Tech Lead on the M365
-              Substrate AI Platform — the team behind Microsoft's AI/ML capabilities.
+              Eleven years inside Microsoft. Six on Dynamics 365 Resource Scheduling
+              Optimization — algorithm core, multi-tenant migration to Azure, and the
+              Azure Government deployment that ran NY State's COVID-19 testing operations.
+              More recently, platform security and AI/ML infrastructure for M365.
             </p>
             <p>
-              I built decipher.ms because the best Microsoft answers shouldn't be locked
-              inside Microsoft.
+              I built <span className="text-foreground">decipher</span><span className="text-accent">.ms</span> because
+              the best Microsoft answers shouldn't be locked inside Microsoft.
             </p>
             <Link
               to="/about"
@@ -299,9 +277,9 @@ const Index = () => {
       {/* BRIEFING FORM */}
       <section
         id="briefing"
-        className="border-t-4 border-foreground bg-foreground text-background px-6 py-24 md:py-32"
+        className="border-t-4 border-foreground bg-foreground text-background px-6 py-6 md:py-8 min-h-[calc(100svh-92px)] flex items-center"
       >
-        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16 lg:gap-24">
+        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16 lg:gap-24 w-full">
           <div className="border-l-8 border-accent pl-8">
             <span className="inline-block text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-8">
               Request a Briefing
@@ -334,19 +312,27 @@ const Index = () => {
             <div className="grid grid-cols-2 gap-12">
               <FooterCol
                 title="Services"
-                items={["Expert Call", "Second Opinion", "Technical Brief"]}
+                items={[
+                  { label: "Expert Call", href: "#services" },
+                  { label: "Second Opinion", href: "#services" },
+                  { label: "Technical Brief", href: "#services" },
+                ]}
               />
               <FooterCol
                 title="decipher.ms"
-                items={["Approach", "About", "Contact"]}
+                items={[
+                  { label: "Approach", href: "#approach" },
+                  { label: "About", href: "#founder" },
+                  { label: "Briefing", href: "#briefing" },
+                ]}
               />
             </div>
           </div>
           <div className="pt-8 border-t border-foreground/10 flex flex-col md:flex-row justify-between gap-6 text-[10px] font-black uppercase tracking-[0.4em] opacity-50">
             <span>© 2026 Vezza LLC</span>
             <div className="flex gap-12">
-              <a href="#" className="hover:text-accent">Legal</a>
-              <a href="#" className="hover:text-accent">Privacy</a>
+              <Link to="/legal" className="hover:text-accent">Legal</Link>
+              <Link to="/privacy" className="hover:text-accent">Privacy</Link>
             </div>
           </div>
         </div>
@@ -368,15 +354,15 @@ function Stat({ n, l }: { n: string; l: string }) {
   );
 }
 
-function FooterCol({ title, items }: { title: string; items: string[] }) {
+function FooterCol({ title, items }: { title: string; items: { label: string; href: string }[] }) {
   return (
     <div>
       <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">{title}</p>
       <ul className="space-y-3 text-base font-bold">
         {items.map((i) => (
-          <li key={i}>
-            <a href="#" className="hover:text-accent transition-colors">
-              {i}
+          <li key={i.label}>
+            <a href={i.href} className="hover:text-accent transition-colors">
+              {i.label}
             </a>
           </li>
         ))}

@@ -5,11 +5,17 @@ import type { Telemetry } from "./telemetry";
 interface BriefingPayload {
   name: string;
   email: string;
-  company: string;
   role: string | null;
+  engagementType: "expert-call" | "second-opinion" | "technical-brief";
   topic: string;
   details: string;
 }
+
+const ENGAGEMENT_LABEL: Record<BriefingPayload["engagementType"], string> = {
+  "expert-call": "Expert Call",
+  "second-opinion": "Second Opinion",
+  "technical-brief": "Technical Brief",
+};
 
 async function getAccessToken(
   env: Env,
@@ -75,11 +81,12 @@ function escapeHtml(s: string): string {
 }
 
 function buildMessage(env: Env, data: BriefingPayload) {
-  const subject = `New briefing request: ${data.topic}`;
+  const engagementLabel = ENGAGEMENT_LABEL[data.engagementType];
+  const subject = `New ${engagementLabel} request: ${data.topic}`;
   const lines = [
     `From: ${data.name} <${data.email}>`,
-    `Company: ${data.company}`,
     `Role: ${data.role ?? "-"}`,
+    `Engagement: ${engagementLabel}`,
     ``,
     `Topic: ${data.topic}`,
     ``,

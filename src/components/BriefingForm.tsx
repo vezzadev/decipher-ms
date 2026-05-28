@@ -2,11 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 
 
+const ENGAGEMENT_OPTIONS = [
+  { value: "expert-call", label: "Expert Call — 1 hour, $1,000" },
+  { value: "second-opinion", label: "Second Opinion — written review, $2,000" },
+  { value: "technical-brief", label: "Technical Brief — in-depth report, $3,500" },
+] as const;
+
 const schema = z.object({
   name: z.string().trim().min(1, "Required").max(120),
   email: z.string().trim().email("Invalid email").max(255),
-  company: z.string().trim().min(1, "Required").max(200),
   role: z.string().trim().max(120).optional().or(z.literal("")),
+  engagementType: z.enum(["expert-call", "second-opinion", "technical-brief"], {
+    errorMap: () => ({ message: "Pick an engagement type" }),
+  }),
   topic: z.string().trim().min(1, "Required").max(200),
   details: z.string().trim().min(10, "Add a bit more detail").max(4000),
 });
@@ -16,8 +24,8 @@ type FormState = z.infer<typeof schema>;
 const initial: FormState = {
   name: "",
   email: "",
-  company: "",
   role: "",
+  engagementType: "" as FormState["engagementType"],
   topic: "",
   details: "",
 };
@@ -71,7 +79,7 @@ export default function BriefingForm() {
       if (turnstileWidget.current) return;
       turnstileWidget.current = window.turnstile.render(turnstileEl.current, {
         sitekey: TURNSTILE_SITE_KEY,
-        theme: "light",
+        theme: "dark",
         callback: (token) => setTurnstileToken(token),
         "expired-callback": () => setTurnstileToken(null),
         "error-callback": () => setTurnstileToken(null),
@@ -83,7 +91,7 @@ export default function BriefingForm() {
     };
   }, []);
 
-  const update = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const update = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setValues((v) => ({ ...v, [k]: e.target.value }));
   };
 
@@ -114,8 +122,8 @@ export default function BriefingForm() {
         body: JSON.stringify({
           name: parsed.data.name,
           email: parsed.data.email,
-          company: parsed.data.company,
           role: parsed.data.role || null,
+          engagementType: parsed.data.engagementType,
           topic: parsed.data.topic,
           details: parsed.data.details,
           turnstileToken,
@@ -147,14 +155,33 @@ export default function BriefingForm() {
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-8" noValidate>
-      <div className="grid md:grid-cols-2 gap-8">
+    <form onSubmit={onSubmit} className="space-y-6" noValidate>
+      <div className="grid md:grid-cols-2 gap-6">
         <Field label="Name" name="name" value={values.name} onChange={update("name")} error={errors.name} />
         <Field label="Work email" name="email" type="email" value={values.email} onChange={update("email")} error={errors.email} />
-        <Field label="Company" name="company" value={values.company} onChange={update("company")} error={errors.company} />
         <Field label="Role (optional)" name="role" value={values.role ?? ""} onChange={update("role")} error={errors.role} />
+        <div>
+          <label htmlFor="engagementType" className="block text-[10px] font-black uppercase tracking-[0.3em] text-background/60 mb-3">
+            Engagement type
+          </label>
+          <select
+            id="engagementType"
+            name="engagementType"
+            value={values.engagementType}
+            onChange={update("engagementType")}
+            className="w-full bg-transparent border-2 border-background/20 px-4 py-3 text-background focus:outline-none focus:border-accent transition-colors font-sans"
+          >
+            <option value="" className="bg-foreground text-background">Select one…</option>
+            {ENGAGEMENT_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value} className="bg-foreground text-background">
+                {o.label}
+              </option>
+            ))}
+          </select>
+          {errors.engagementType && <p className="mt-2 text-xs text-accent font-bold">{errors.engagementType}</p>}
+        </div>
       </div>
-      <Field label="Question topic" name="topic" value={values.topic} onChange={update("topic")} error={errors.topic} placeholder="e.g. Securing Azure ML for SOC 2" />
+      <Field label="Question" name="topic" value={values.topic} onChange={update("topic")} error={errors.topic} placeholder="e.g. Securing Azure ML for SOC 2" />
       <div>
         <label htmlFor="details" className="block text-[10px] font-black uppercase tracking-[0.3em] text-background/60 mb-3">
           Question details
@@ -162,7 +189,7 @@ export default function BriefingForm() {
         <textarea
           id="details"
           name="details"
-          rows={6}
+          rows={4}
           value={values.details}
           onChange={update("details")}
           placeholder="Describe the decision you're facing, key constraints, and timeline."
@@ -170,8 +197,7 @@ export default function BriefingForm() {
         />
         {errors.details && <p className="mt-2 text-xs text-accent font-bold">{errors.details}</p>}
       </div>
-      <div ref={turnstileEl} />
-      <div className="flex flex-wrap items-center gap-6">
+      <div className="flex flex-wrap items-center justify-between gap-6">
         <button
           type="submit"
           disabled={submitting || !turnstileToken}
@@ -179,17 +205,18 @@ export default function BriefingForm() {
         >
           {submitting ? "Submitting…" : "Request Briefing"}
         </button>
-        {serverError === "__ok__" && (
-          <span className="text-xs font-black uppercase tracking-[0.3em] text-accent">
-            Received — an analyst will respond within one business day.
-          </span>
-        )}
-        {serverError && serverError !== "__ok__" && (
-          <span className="text-xs font-black uppercase tracking-[0.3em] text-accent">
-            {serverError}
-          </span>
-        )}
+        <div ref={turnstileEl} />
       </div>
+      {serverError === "__ok__" && (
+        <p className="text-xs font-black uppercase tracking-[0.3em] text-accent">
+          Received — an analyst will respond within one business day.
+        </p>
+      )}
+      {serverError && serverError !== "__ok__" && (
+        <p className="text-xs font-black uppercase tracking-[0.3em] text-accent">
+          {serverError}
+        </p>
+      )}
     </form>
   );
 }
