@@ -123,11 +123,11 @@ const Index = () => {
               <div className="grid grid-cols-3 gap-4 text-[10px] uppercase tracking-widest">
                 <div>
                   <p className="opacity-50">Turnaround</p>
-                  <p className="font-black mt-1">5 days</p>
+                  <p className="font-black mt-1">5–10 days</p>
                 </div>
                 <div>
                   <p className="opacity-50">Deliverable</p>
-                  <p className="font-black mt-1">12-page brief</p>
+                  <p className="font-black mt-1">5–10 page brief +<br />30 min presentation</p>
                 </div>
                 <div>
                   <p className="opacity-50">Vendor fees</p>
