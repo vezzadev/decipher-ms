@@ -101,7 +101,7 @@ const Index = () => {
             <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl xl:text-7xl 2xl:text-8xl font-black leading-[0.85] tracking-tighter mb-10 break-words lg:text-7xl">
               DECODE
               <br />
-              <span className="text-accent italic">MICROSOFT.</span>
+              <span className="text-accent italic">MICROSOF<span className="ml-[0.06em]">T</span>.</span>
               <br />
               DECIDE.
             </h1>
