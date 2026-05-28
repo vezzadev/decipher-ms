@@ -9,14 +9,14 @@ const prefix = home ? "" : "/";
 const pad = home ? "" : "px-6";
 
 const services = [
-  { label: "Expert Call", href: `${prefix}#services` },
-  { label: "Second Opinion", href: `${prefix}#services` },
-  { label: "Technical Brief", href: `${prefix}#services` },
+  { label: "Expert Call", href: `${prefix}#pricing` },
+  { label: "Second Opinion", href: `${prefix}#pricing` },
+  { label: "Technical Brief", href: `${prefix}#pricing` },
 ];
 const company = [
   { label: "Approach", href: `${prefix}#approach` },
-  { label: "About", href: home ? "#founder" : "/about" },
-  { label: "Briefing", href: `${prefix}#briefing` },
+  { label: "About", href: home ? "#about" : "/about" },
+  { label: "Contact", href: `${prefix}#contact` },
 ];
 ---
 
@@ -32,7 +32,7 @@ const company = [
       </div>
       <div class="grid grid-cols-2 gap-12">
         <div>
-          <p class="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">Services</p>
+          <p class="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">Pricing</p>
           <ul class="space-y-3 text-base font-bold">
             {
               services.map((i) => (

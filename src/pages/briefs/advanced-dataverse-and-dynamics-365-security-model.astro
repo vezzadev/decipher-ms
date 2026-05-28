@@ -1,0 +1,698 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/Nav.astro";
+import Footer from "@/components/Footer.astro";
+
+import objectives from "@/assets/briefs/dataverse-security/objectives.webp";
+import buildingBlocks from "@/assets/briefs/dataverse-security/building-blocks.webp";
+import inheritedRoles from "@/assets/briefs/dataverse-security/inherited-security-roles.webp";
+import accessLevels from "@/assets/briefs/dataverse-security/access-levels-key.webp";
+import appendToAppend from "@/assets/briefs/dataverse-security/append-vs-append-to.webp";
+import owningVsAccess from "@/assets/briefs/dataverse-security/owning-vs-access-teams.webp";
+import privilegeRollup from "@/assets/briefs/dataverse-security/user-team-privilege-rollup.webp";
+
+const title = "Advanced Dataverse & Dynamics 365 Security Model — decipher.ms";
+const description =
+  "A working engineer's walkthrough of the Dataverse and Dynamics 365 security model: business units, access levels, Append vs Append To, owner and access teams, hierarchy security, record sharing, and the performance traps behind them.";
+const canonical =
+  "https://decipher.ms/briefs/advanced-dataverse-and-dynamics-365-security-model";
+
+const sections = [
+  { id: "the-question", label: "The deceptively simple question" },
+  { id: "building-blocks", label: "Roles, business units, and inheritance" },
+  { id: "ownership", label: "Organization-owned vs. user/team-owned" },
+  { id: "access-levels", label: "Access levels and what they cost in SQL" },
+  { id: "append", label: "The Append / Append To trap" },
+  { id: "reorg", label: "What a reorg does to ownership" },
+  { id: "teams", label: "Owner teams vs. access teams" },
+  { id: "rollup", label: "How privileges roll up across business units" },
+  { id: "sharing", label: "Sharing and the POA table" },
+  { id: "hierarchy", label: "Hierarchy security" },
+  { id: "performance", label: "Why it gets slow" },
+  { id: "takeaways", label: "Practitioner takeaways" },
+];
+
+const articleLd = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  headline: "Advanced Dataverse & Dynamics 365 Security Model",
+  description,
+  author: {
+    "@type": "Person",
+    name: "Pedro Paulo Vezza Campos",
+    url: "https://decipher.ms/about",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "decipher.ms",
+    url: "https://decipher.ms/",
+  },
+  datePublished: "2026-05-28",
+  url: canonical,
+  about: "Microsoft Dataverse and Dynamics 365 security architecture",
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogTitle="Advanced Dataverse & Dynamics 365 Security Model"
+  ogDescription={description}
+  ogType="article"
+  ogUrl={canonical}
+  twitterTitle="Advanced Dataverse & Dynamics 365 Security Model"
+  twitterDescription={description}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(articleLd)} slot="head" />
+
+  <div class="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
+    <Nav variant="page" active="work" />
+
+    <main>
+      <!-- Hero -->
+      <header class="px-6 py-16 md:py-24 max-w-[1100px] mx-auto">
+        <div class="border-l-8 border-accent pl-6 md:pl-10">
+          <span
+            class="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8"
+          >
+            Sample Technical Brief
+          </span>
+          <h1
+            class="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[0.9] tracking-tighter mb-8"
+          >
+            Advanced Dataverse &amp;
+            <br />
+            <span class="text-accent italic">Dynamics 365</span> Security Model
+          </h1>
+          <p
+            class="text-xl md:text-2xl font-semibold max-w-2xl leading-tight tracking-tight text-foreground/80"
+          >
+            Opening a view and showing one row of data sounds trivial. By the time the platform
+            has finished asking who you are, which business unit owns the record, what your teams
+            can touch, and who shared it with you, that single read has become one of the most
+            interesting queries in the product.
+          </p>
+        </div>
+
+        <div
+          class="mt-12 grid grid-cols-2 md:grid-cols-3 gap-px bg-foreground/15 border-4 border-foreground"
+        >
+          <div class="bg-background p-5">
+            <p class="text-[10px] uppercase tracking-[0.2em] text-foreground/50">Author</p>
+            <p class="font-black mt-2 text-sm md:text-base">Pedro Paulo Vezza Campos</p>
+          </div>
+          <div class="bg-background p-5">
+            <p class="text-[10px] uppercase tracking-[0.2em] text-foreground/50">Scope</p>
+            <p class="font-black mt-2 text-sm md:text-base">Dataverse / Dynamics 365</p>
+          </div>
+          <div class="bg-background p-5">
+            <p class="text-[10px] uppercase tracking-[0.2em] text-foreground/50">Read</p>
+            <p class="font-black mt-2 text-sm md:text-base">~12 minutes</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Framing note + TOC -->
+      <section class="border-t-4 border-foreground px-6 py-14 md:py-16 bg-secondary/40">
+        <div class="max-w-[1100px] mx-auto grid lg:grid-cols-[1.3fr_1fr] gap-12 lg:gap-16">
+          <div class="space-y-5 text-base md:text-lg leading-relaxed text-foreground/80">
+            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
+              About this brief
+            </p>
+            <p>
+              This started life as an engineering training I ran for my team at Microsoft on a
+              Monday in late 2016, back when the product was called Dynamics CRM. The platform has
+              since been renamed. The data layer is now <strong>Dataverse</strong>, and it sits
+              under Dynamics 365 and Power Apps, but the security model walked through here is the
+              same one those products run on today.
+            </p>
+            <p>
+              I've kept the original shape: start from the simplest possible request, then peel
+              back one layer of the security model at a time, showing the SQL the platform
+              generates and the traps that bite real deployments. It's the brief I'd hand a team
+              before they design ownership and sharing for a new Dataverse environment.
+            </p>
+          </div>
+          <nav aria-label="Contents" class="border-4 border-foreground bg-background p-6 md:p-8">
+            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-5">
+              Contents
+            </p>
+            <ol class="space-y-2.5 text-sm font-bold">
+              {
+                sections.map((s, i) => (
+                  <li class="flex gap-3">
+                    <span class="font-serif italic text-accent shrink-0">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <a href={`#${s.id}`} class="hover:text-accent transition-colors">
+                      {s.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ol>
+          </nav>
+        </div>
+      </section>
+
+      <!-- Body -->
+      <article class="border-t-4 border-foreground px-6 py-16 md:py-20">
+        <div
+          class="max-w-[820px] mx-auto text-base md:text-lg leading-relaxed text-foreground/85 [&_p]:mb-5 [&_h2]:scroll-mt-28 [&_strong]:text-foreground [&_code]:font-mono [&_code]:text-[0.9em] [&_code]:bg-secondary [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:border [&_code]:border-foreground/15"
+        >
+          <!-- 01 -->
+          <section id="the-question">
+            <div class="flex items-baseline gap-5 mb-6">
+              <span class="font-serif italic text-2xl md:text-3xl text-accent shrink-0">01.</span>
+              <h2
+                class="font-serif text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none"
+              >
+                The deceptively simple question
+              </h2>
+            </div>
+            <p>
+              Every security conversation I've had about Dynamics starts with someone insisting it
+              can't be that hard to open a view and display some data. They're right that the
+              request is simple. They're wrong about what answering it costs.
+            </p>
+            <p>
+              The model is built from three things: <strong>security roles</strong> (the bundles
+              you assign to people), <strong>access</strong> (how widely a role reaches: your own
+              records, your business unit, the whole organization), and <strong>privileges</strong>
+              (the verbs: create, read, write, append, assign, share). Get those three straight and
+              most of the platform's behavior stops being surprising.
+            </p>
+            <figure class="my-9 border-4 border-foreground">
+              <img
+                src={objectives.src}
+                width={objectives.width}
+                height={objectives.height}
+                alt="Slide titled Objectives showing three blocks: Security Roles, Security Access, and Security Privileges"
+                loading="lazy"
+                class="w-full"
+              />
+              <figcaption
+                class="border-t-4 border-foreground px-5 py-3 text-xs font-bold uppercase tracking-[0.15em] text-foreground/60 bg-secondary/40"
+              >
+                Roles, access, and privileges: the three axes of every permission decision.
+              </figcaption>
+            </figure>
+          </section>
+
+          <!-- 02 -->
+          <section id="building-blocks" class="mt-14 pt-2">
+            <div class="flex items-baseline gap-5 mb-6">
+              <span class="font-serif italic text-2xl md:text-3xl text-accent shrink-0">02.</span>
+              <h2
+                class="font-serif text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none"
+              >
+                Roles, business units, and inheritance
+              </h2>
+            </div>
+            <p>
+              The crudest level of access is organization-wide: a role either reaches a record or
+              it doesn't. That much people expect. What trips them up is that{" "}
+              <strong>security roles are scoped to a business unit</strong>, and they inherit
+              <em>downward</em> to child business units.
+            </p>
+            <p>
+              Here's a demo that catches almost everyone. I give a user the salesperson role and
+              grant it access to an entity, then have them refresh. The record still isn't there.
+              The role looked right. The catch: the user sat in the <code>Contoso Canada</code>
+              business unit, and I'd granted the privilege on <code>Contoso USA</code>. Roles live
+              on a business unit and flow to its children, never up and never sideways. Grant on the
+              parent and the whole subtree inherits; grant on a sibling and nobody downstream sees a
+              thing. To be precise: it's the role <em>definition</em> that's available throughout the
+              subtree. How far a given privilege actually reaches into child units' records is a
+              separate dial, the access level, and that's the next section.
+            </p>
+            <figure class="my-9 border-4 border-foreground">
+              <img
+                src={inheritedRoles.src}
+                width={inheritedRoles.width}
+                height={inheritedRoles.height}
+                alt="Org chart showing Adventure Works Cycles with Sales, Marketing, and Service business units, and new security roles inherited down the Service branch"
+                loading="lazy"
+                class="w-full"
+              />
+              <figcaption
+                class="border-t-4 border-foreground px-5 py-3 text-xs font-bold uppercase tracking-[0.15em] text-foreground/60 bg-secondary/40"
+              >
+                A role granted on a business unit cascades to every child unit beneath it.
+              </figcaption>
+            </figure>
+            <p>
+              When a user holds more than one role, the platform <strong>rolls them up</strong>:
+              the effective permission is the union of every role, not the intersection. There is no
+              "most restrictive wins" here. The most <em>open</em> grant wins. If you're hunting for
+              a deny, the role system won't give you one. Denies live in plug-ins and custom
+              logic, not in roles.
+            </p>
+            <figure class="my-9 border-4 border-foreground">
+              <img
+                src={buildingBlocks.src}
+                width={buildingBlocks.width}
+                height={buildingBlocks.height}
+                alt="Dynamics 365 Security configuration page listing Users, Security Roles, Field Security Profiles, Positions, Teams, Business Units, Hierarchy Security, and Access Team Templates"
+                loading="lazy"
+                class="w-full"
+              />
+              <figcaption
+                class="border-t-4 border-foreground px-5 py-3 text-xs font-bold uppercase tracking-[0.15em] text-foreground/60 bg-secondary/40"
+              >
+                The security building blocks, all in one settings area.
+              </figcaption>
+            </figure>
+          </section>
+
+          <!-- 03 -->
+          <section id="ownership" class="mt-14 pt-2">
+            <div class="flex items-baseline gap-5 mb-6">
+              <span class="font-serif italic text-2xl md:text-3xl text-accent shrink-0">03.</span>
+              <h2
+                class="font-serif text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none"
+              >
+                Organization-owned vs. user/team-owned
+              </h2>
+            </div>
+            <p>
+              Every table picks one ownership model at creation, and you can't change it later.
+              <strong>Organization-owned</strong> tables are all-or-nothing: you either see every
+              row or none. Territory is the classic stock example, and it's deliberately rare.
+            </p>
+            <p>
+              The tables that carry the actual business (account, opportunity, case, lead) are
+              <strong>user/team-owned</strong>. That model is a strict superset: it can emulate
+              organization-owned behavior whenever you need it, plus everything below. So the rule
+              of thumb is blunt: if you aren't certain which to pick, pick user/team-owned. The
+              only reason to reach for organization-owned is a reference table where "see all or see
+              nothing" is genuinely the whole requirement.
+            </p>
+          </section>
+
+          <!-- 04 -->
+          <section id="access-levels" class="mt-14 pt-2">
+            <div class="flex items-baseline gap-5 mb-6">
+              <span class="font-serif italic text-2xl md:text-3xl text-accent shrink-0">04.</span>
+              <h2
+                class="font-serif text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none"
+              >
+                Access levels and what they cost in SQL
+              </h2>
+            </div>
+            <p>
+              For user/team-owned tables, each privilege carries a depth. From narrowest to widest:
+              <strong>none</strong>, <strong>user</strong> (your own records),
+              <strong>business unit</strong>, <strong>parent: child business units</strong>, and
+              <strong>organization</strong>. Those are the colored circles you click in the role
+              editor.
+            </p>
+            <figure class="my-9 border-4 border-foreground">
+              <img
+                src={accessLevels.src}
+                width={accessLevels.width}
+                height={accessLevels.height}
+                alt="Access level key: None Selected, User, Business Unit, Parent: Child Business Units, and Organization"
+                loading="lazy"
+                class="w-full"
+              />
+              <figcaption
+                class="border-t-4 border-foreground px-5 py-3 text-xs font-bold uppercase tracking-[0.15em] text-foreground/60 bg-secondary/40"
+              >
+                The five access depths, from your own records out to the whole organization.
+              </figcaption>
+            </figure>
+            <p>
+              Each depth maps to a recognizable shape of query. Organization access is essentially a
+              plain <code>SELECT</code> with no ownership filter. Business-unit access has the engine
+              read each row's <code>OwningBusinessUnit</code> and check it against a subquery of the
+              units you're allowed to see. The reason that's written as a subquery rather than a
+              single business-unit equality check is that the <em>same</em> query then handles the
+              parent: child case for free: widen someone's access and the subquery just
+              returns more units.
+            </p>
+            <p>
+              User-level access looks at the <code>OwnerId</code>. And here's the subtlety that
+              explains why it isn't just <code>WHERE OwnerId = @me</code>: "your own records" also
+              includes records owned by any <strong>team you belong to</strong>. Which is the natural
+              point to talk about teams.
+            </p>
+          </section>
+
+          <!-- 05 -->
+          <section id="append" class="mt-14 pt-2">
+            <div class="flex items-baseline gap-5 mb-6">
+              <span class="font-serif italic text-2xl md:text-3xl text-accent shrink-0">05.</span>
+              <h2
+                class="font-serif text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none"
+              >
+                The Append / Append To trap
+              </h2>
+            </div>
+            <p>
+              Open the role editor and you'll find two privileges that look almost identical:
+              <strong>Append</strong> and <strong>Append To</strong>. The difference is the single
+              most common source of "why is this lookup locked?" tickets.
+            </p>
+            <p>
+              Setting a lookup needs two <em>different</em> privileges, one on each side of the
+              relationship. Pointing an opportunity at an account requires <code>Append</code> on
+              opportunity (you're appending the opportunity) and <code>Append To</code> on account
+              (…to the account). Grant only one side and the lookup stays read-only even though the
+              rest of the form is editable. I built a two-table demo to prove it: with append present
+              but append-to missing, the lookup is still locked; flip on append-to and it finally
+              opens. This is also why experienced admins just check both boxes everywhere, which is
+              exactly how that habit quietly over-grants. (Many-to-many associations are the exception: those want
+              <code>Append</code> on both tables.)
+            </p>
+            <figure class="my-9 border-4 border-foreground">
+              <img
+                src={appendToAppend.src}
+                width={appendToAppend.width}
+                height={appendToAppend.height}
+                alt="Slide comparing Append and Append To privileges across Account, Opportunity, and Case rows"
+                loading="lazy"
+                class="w-full"
+              />
+              <figcaption
+                class="border-t-4 border-foreground px-5 py-3 text-xs font-bold uppercase tracking-[0.15em] text-foreground/60 bg-secondary/40"
+              >
+                Append on one side, Append To on the other. Miss either and the lookup stays locked.
+              </figcaption>
+            </figure>
+            <p>
+              The same rule reaches further than people expect. A subgrid is a relationship viewed
+              from the other side, so adding a row through a subgrid is really editing a lookup and
+              triggers the same check. I'd expect the generic <em>connection</em> table (Dataverse's
+              anything-to-anything relationship) to behave the same way, since a connection is just
+              another relationship record, though that's exactly the kind of corner that's easy to
+              leave untested.
+            </p>
+          </section>
+
+          <!-- 06 -->
+          <section id="reorg" class="mt-14 pt-2">
+            <div class="flex items-baseline gap-5 mb-6">
+              <span class="font-serif italic text-2xl md:text-3xl text-accent shrink-0">06.</span>
+              <h2
+                class="font-serif text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none"
+              >
+                What a reorg does to ownership
+              </h2>
+            </div>
+            <p>
+              A record's <code>OwningBusinessUnit</code> is set from the business unit its owner
+              belongs to. So what happens during a reorg, when an admin moves a user from one
+              business unit to another?
+            </p>
+            <p>
+              Every record that user owns gets its owning business unit rewritten to the new one, in
+              bulk, the moment you change that single lookup. It's a much heavier write than it
+              looks, and all of that data effectively moves with the person. In practice this rarely
+              bites well-designed deployments, because production records tend to be owned by
+              <strong>teams</strong>, and teams stay put when individuals move. That's a strong
+              argument for designing ownership around teams rather than individuals from day one.
+              (Modern environments soften the original constraint, too: the "record ownership across
+              business units" feature lets a record's owning business unit be set independently of
+              its owner, which wasn't possible when this model was first taught.)
+            </p>
+          </section>
+
+          <!-- 07 -->
+          <section id="teams" class="mt-14 pt-2">
+            <div class="flex items-baseline gap-5 mb-6">
+              <span class="font-serif italic text-2xl md:text-3xl text-accent shrink-0">07.</span>
+              <h2
+                class="font-serif text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none"
+              >
+                Owner teams vs. access teams
+              </h2>
+            </div>
+            <p>
+              There are two kinds of team, and they solve different problems.
+              <strong>Owner teams</strong> behave like a user: they can own records, have records
+              assigned and shared to them, and carry security roles, and they belong to a business
+              unit. They're the right tool when membership is fairly static.
+            </p>
+            <p>
+              <strong>Access teams</strong> are the less-understood option, and often the better one
+              for collaboration. They share a <em>single record</em> with a set of people, and you
+              specify the exact privileges each member gets. You enable access teams on the table,
+              create an access team <em>template</em> that names the privileges (say, read and
+              write), and drop a subgrid bound to the "Associated Record Team Members" view onto the
+              form. Adding a user to that grid shares the record with them, and the grant is
+              server-side and real, honored through the web API and any other path, not just the
+              form you configured it on. (That template-driven, per-record team is the common case;
+              Dataverse also supports user-created access teams that can be shared across many
+              records.)
+            </p>
+            <figure class="my-9 border-4 border-foreground">
+              <img
+                src={owningVsAccess.src}
+                width={owningVsAccess.width}
+                height={owningVsAccess.height}
+                alt="Comparison slide: Owning Team versus Access Team characteristics"
+                loading="lazy"
+                class="w-full"
+              />
+              <figcaption
+                class="border-t-4 border-foreground px-5 py-3 text-xs font-bold uppercase tracking-[0.15em] text-foreground/60 bg-secondary/40"
+              >
+                Owner teams scale membership; access teams scale per-record collaboration.
+              </figcaption>
+            </figure>
+            <p>
+              The documented pattern is two subgrids on the form, one read-only and one read/write,
+              so a record's collaborators are explicit. Because access is rolled up, putting someone
+              in the read/write grid still leaves them with read; the split is about clarity, not
+              subtraction. The cost is screen real estate: you're spending part of every record's
+              layout on the question of who can see it.
+            </p>
+          </section>
+
+          <!-- 08 -->
+          <section id="rollup" class="mt-14 pt-2">
+            <div class="flex items-baseline gap-5 mb-6">
+              <span class="font-serif italic text-2xl md:text-3xl text-accent shrink-0">08.</span>
+              <h2
+                class="font-serif text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none"
+              >
+                How privileges roll up across business units
+              </h2>
+            </div>
+            <p>
+              Now mix it all together and the interesting case appears. Alan sits in the Service
+              business unit with assign rights on his own records only, but read rights on every
+              case. He can read Connie's, Ben's, and his own case. But try to
+              <em>assign</em>, and only his own succeeds.
+            </p>
+            <figure class="my-9 border-4 border-foreground">
+              <img
+                src={privilegeRollup.src}
+                width={privilegeRollup.width}
+                height={privilegeRollup.height}
+                alt="Diagram of Connie, Alan, and Ben across Service and Marketing business units, illustrating which cases Alan can assign after joining the Product Development Team"
+                loading="lazy"
+                class="w-full"
+              />
+              <figcaption
+                class="border-t-4 border-foreground px-5 py-3 text-xs font-bold uppercase tracking-[0.15em] text-foreground/60 bg-secondary/40"
+              >
+                Team membership pulls another business unit's privileges into a user's effective set.
+              </figcaption>
+            </figure>
+            <p>
+              Then I enroll Alan in the Product Development team, which lives in Marketing and grants
+              assign across that whole business unit. Suddenly Alan can assign Ben's case, because
+              it's a Marketing record his new team reaches, while Connie's case, back in Service,
+              stays off-limits. Permissions rolled up <em>across</em> business units through team
+              membership, and again the union wins: the new grant adds reach, it never trims it.
+            </p>
+          </section>
+
+          <!-- 09 -->
+          <section id="sharing" class="mt-14 pt-2">
+            <div class="flex items-baseline gap-5 mb-6">
+              <span class="font-serif italic text-2xl md:text-3xl text-accent shrink-0">09.</span>
+              <h2
+                class="font-serif text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none"
+              >
+                Sharing and the POA table
+              </h2>
+            </div>
+            <p>
+              When access teams aren't configured, people fall back on sharing records by hand. Both
+              paths land in the same place: a table called <code>PrincipalObjectAccess</code>, or POA
+              for short. Each row says a principal (a user or team) holds some rights on an object,
+              and the rights are packed into a bitmask. Decode the mask and you can read off exactly
+              which of read, write, delete, append, assign, and share a given share granted.
+            </p>
+            <p>
+              The trap is cascading. Many relationships on core tables like account are marked
+              <strong>parental</strong>, and by default a parental relationship cascades sharing with
+              <em>Cascade All</em> (the behavior is configurable per relationship). Share one account
+              and you've also shared its contacts, cases, and opportunities. Now picture thousands of users sharing thousands of cascading records:
+              the POA table balloons, and it's one of the most common roots of real CRM performance
+              complaints. The usual cause is mundane: admins who won't configure proper roles or
+              access teams, so end users share records back and forth to get their jobs done.
+            </p>
+          </section>
+
+          <!-- 10 -->
+          <section id="hierarchy" class="mt-14 pt-2">
+            <div class="flex items-baseline gap-5 mb-6">
+              <span class="font-serif italic text-2xl md:text-3xl text-accent shrink-0">10.</span>
+              <h2
+                class="font-serif text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none"
+              >
+                Hierarchy security
+              </h2>
+            </div>
+            <p>
+              Hierarchy security is an optional layer on top of everything above, and it comes in two
+              flavors you have to choose between, and they don't run together.
+            </p>
+            <p>
+              <strong>Manager hierarchy</strong> gives a manager read/write access to their direct
+              reports' records. The motivating case is simple: a rep goes on vacation mid-deal and
+              the manager needs to close it without filing an admin ticket. Set a depth greater than
+              one and skip-levels get <em>read-only</em> visibility further down. A VP of sales sees
+              their managers' records read/write and the reps' read-only, and so on up to the CEO.
+            </p>
+            <p>
+              <strong>Position hierarchy</strong> ignores the org chart entirely. You define
+              positions, and a user in a higher position gets access to the records of users in lower
+              positions down that branch, regardless of who formally reports to whom. It's built for
+              service, where a manager needs to see cases across reps who don't report to them. Two caveats worth
+              tattooing somewhere: with manager hierarchy the manager must sit in the same business
+              unit or a parent of it, and for either model to work at all, users need at least
+              "read your own records." Miss that and the whole layer silently does nothing.
+            </p>
+          </section>
+
+          <!-- 11 -->
+          <section id="performance" class="mt-14 pt-2">
+            <div class="flex items-baseline gap-5 mb-6">
+              <span class="font-serif italic text-2xl md:text-3xl text-accent shrink-0">11.</span>
+              <h2
+                class="font-serif text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none"
+              >
+                Why it gets slow
+              </h2>
+            </div>
+            <p>
+              There's also <strong>field-level security</strong> (now branded column-level security):
+              secured columns nobody reads except people you explicitly grant, with their own
+              share-this-field flow layered on top of row access. Stack everything (access depth, team ownership, manual shares,
+              hierarchy, secured fields) and watch what it does to a single read.
+            </p>
+            <p>
+              The execution plan for retrieving one or two columns from one table, with all of it
+              switched on, touches roughly six tables, leans on a stack of indexes, and includes a
+              table scan that I'd want to keep a close eye on at scale. That's the honest answer to
+              "how hard can it be to show a row of data." Every feature in this brief is a join the
+              database runs on your behalf, on every query, forever. The model is powerful because
+              it's expressive, and that expressiveness isn't free.
+            </p>
+          </section>
+
+          <!-- 12 -->
+          <section id="takeaways" class="mt-14 pt-2">
+            <div class="flex items-baseline gap-5 mb-6">
+              <span class="font-serif italic text-2xl md:text-3xl text-accent shrink-0">12.</span>
+              <h2
+                class="font-serif text-2xl md:text-3xl font-black tracking-tighter uppercase leading-none"
+              >
+                Practitioner takeaways
+              </h2>
+            </div>
+            <div class="border-4 border-foreground bg-secondary/40 p-6 md:p-8 space-y-5 not-prose">
+              <div class="flex gap-4">
+                <span class="mt-2 inline-block h-2 w-2 shrink-0 bg-accent"></span>
+                <p class="m-0">
+                  <strong>Own with teams, not people.</strong> Team ownership survives reorgs and sidesteps
+                  the bulk owning-business-unit rewrite that follows moving a user.
+                </p>
+              </div>
+              <div class="flex gap-4">
+                <span class="mt-2 inline-block h-2 w-2 shrink-0 bg-accent"></span>
+                <p class="m-0">
+                  <strong>Never edit out-of-the-box roles.</strong> Clone them. Built-in roles carry hidden
+                  privileges you can't reliably reconstruct if you break one.
+                </p>
+              </div>
+              <div class="flex gap-4">
+                <span class="mt-2 inline-block h-2 w-2 shrink-0 bg-accent"></span>
+                <p class="m-0">
+                  <strong>Watch the leak paths.</strong> Plug-ins can run as impersonated users, calculated
+                  columns can surface data their consumers shouldn't see, and offline sync can pull down rows
+                  you'd rather keep server-side.
+                </p>
+              </div>
+              <div class="flex gap-4">
+                <span class="mt-2 inline-block h-2 w-2 shrink-0 bg-accent"></span>
+                <p class="m-0">
+                  <strong>Treat sharing as a performance budget.</strong> Cascading parental relationships
+                  plus heavy manual sharing bloat the POA table. Reach for access teams and correct roles
+                  before you reach for the share button.
+                </p>
+              </div>
+              <div class="flex gap-4">
+                <span class="mt-2 inline-block h-2 w-2 shrink-0 bg-accent"></span>
+                <p class="m-0">
+                  <strong>"Why can this person see this record?" is genuinely hard.</strong> There's no clean
+                  built-in answer: access can arrive via a role, a team, a share, or a hierarchy. The
+                  practical move is a sandbox that clones roles and users so you can reproduce what a given
+                  person actually sees.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </article>
+
+      <!-- CTA -->
+      <section
+        class="border-t-4 border-foreground bg-foreground text-background px-6 py-20 md:py-28"
+      >
+        <div class="max-w-[1100px] mx-auto">
+          <span
+            class="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8"
+          >
+            This is a sample deliverable
+          </span>
+          <h2
+            class="font-serif text-4xl md:text-5xl lg:text-6xl font-black italic leading-[0.95] tracking-tighter mb-8 max-w-3xl"
+          >
+            A Technical Brief looks like this — built for your decision.
+          </h2>
+          <p class="text-background/60 text-lg max-w-2xl mb-4">
+            Briefs like this one are written for the specific call you're trying to make on
+            Microsoft's cloud, AI, or security stack: vendor-neutral, fixed-price, and yours to
+            publish. Tell me the decision you're working on.
+          </p>
+          <p class="text-background/90 text-base font-bold mb-10">
+            Technical Brief — <span class="text-accent">$3,500</span>. Delivered in 5–10 days.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a
+              href="/#contact"
+              class="inline-flex items-center justify-between gap-3 bg-accent text-background px-8 py-4 text-sm font-black uppercase tracking-[0.2em] hover:bg-background hover:text-foreground transition-colors"
+            >
+              Commission a Technical Brief <span>→</span>
+            </a>
+            <a
+              href="/#pricing"
+              class="inline-flex items-center justify-between gap-3 border-2 border-background/40 px-8 py-4 text-sm font-black uppercase tracking-[0.2em] hover:border-accent hover:text-accent transition-colors"
+            >
+              Compare engagements <span>→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <Footer variant="page" />
+  </div>
+</Layout>

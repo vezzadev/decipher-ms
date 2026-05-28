@@ -1,26 +1,28 @@
 ---
 interface Props {
   variant?: "home" | "page";
-  active?: "about";
+  active?: "about" | "work";
 }
 
 const { variant = "page", active } = Astro.props;
 const home = variant === "home";
 
-const links: { label: string; href: string; key?: "about" }[] = home
+const links: { label: string; href: string; key?: "about" | "work" }[] = home
   ? [
-      { label: "Services", href: "#services" },
+      { label: "Pricing", href: "#pricing" },
       { label: "Topics", href: "#topics" },
       { label: "Approach", href: "#approach" },
-      { label: "About", href: "#founder" },
-      { label: "Briefing", href: "#briefing" },
+      { label: "Samples", href: "/work", key: "work" },
+      { label: "About", href: "#about" },
+      { label: "Contact", href: "#contact" },
     ]
   : [
-      { label: "Services", href: "/#services" },
+      { label: "Pricing", href: "/#pricing" },
       { label: "Topics", href: "/#topics" },
       { label: "Approach", href: "/#approach" },
+      { label: "Samples", href: "/work", key: "work" },
       { label: "About", href: "/about", key: "about" },
-      { label: "Briefing", href: "/#briefing" },
+      { label: "Contact", href: "/#contact" },
     ];
 ---
 
