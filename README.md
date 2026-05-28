@@ -14,7 +14,7 @@ Source for [decipher.ms](https://decipher.ms) — an independent Microsoft advis
 npm install
 npm run dev          # Astro dev server (Cloudflare bindings via the adapter)
 npm run build        # SSR build to ./dist/{client,server}
-npm run preview      # Preview the built worker (wrangler dev)
+npm run preview      # Preview the built SSR worker (via the Cloudflare adapter)
 npm run lint
 ```
 
