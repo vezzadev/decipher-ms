@@ -3,7 +3,7 @@ import { sendBriefingEmail } from "./graph";
 import type { Telemetry } from "./telemetry";
 import { timed } from "./telemetry";
 
-const ENGAGEMENT_TYPES = ["expert-call", "second-opinion", "technical-brief"] as const;
+const ENGAGEMENT_TYPES = ["expert-call", "second-opinion", "technical-brief", "workshop"] as const;
 type EngagementType = (typeof ENGAGEMENT_TYPES)[number];
 
 interface BriefingInput {

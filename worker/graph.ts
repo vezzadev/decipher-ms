@@ -6,7 +6,7 @@ interface BriefingPayload {
   name: string;
   email: string;
   role: string | null;
-  engagementType: "expert-call" | "second-opinion" | "technical-brief";
+  engagementType: "expert-call" | "second-opinion" | "technical-brief" | "workshop";
   topic: string;
   details: string;
 }
@@ -15,6 +15,7 @@ const ENGAGEMENT_LABEL: Record<BriefingPayload["engagementType"], string> = {
   "expert-call": "Expert Call",
   "second-opinion": "Second Opinion",
   "technical-brief": "Technical Brief",
+  "workshop": "Workshop",
 };
 
 async function getAccessToken(

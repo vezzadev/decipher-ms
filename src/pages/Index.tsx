@@ -6,23 +6,30 @@ const services = [
   {
     n: "01",
     name: "Expert Call",
-    cadence: "1 hour",
-    price: "$1,000",
-    desc: "Live call with a Microsoft insider plus a written summary you can forward.",
+    cadence: "30-min call",
+    price: "$500",
+    desc: "Quick scoping call to talk through your situation. You'll walk away with a written recap and a clear recommendation on next steps.",
   },
   {
     n: "02",
     name: "Second Opinion",
-    cadence: "Written review",
+    cadence: "Short brief",
     price: "$2,000",
-    desc: "Independent assessment of a Microsoft technology bet you're about to make.",
+    desc: "A lighter Technical Brief — 2–3 pages, no presentation, delivered in 3–5 days. For a tight vendor-neutral check on one specific decision.",
   },
   {
     n: "03",
     name: "Technical Brief",
-    cadence: "In-depth report",
+    cadence: "In-depth brief",
     price: "$3,500",
-    desc: "Long-form brief on a Microsoft cloud, AI, or security decision. $2,500 if publishable.",
+    desc: "Long-form brief on a Microsoft cloud, AI, or security decision. 5–10 page report plus a 30-minute presentation, delivered in 5–10 days. $2,500 if publishable.",
+  },
+  {
+    n: "04",
+    name: "Workshop",
+    cadence: "Full-day workshop",
+    price: "$9,000+",
+    desc: "Full-day intensive with your engineering and security teams. Architecture review, decision frameworks, deep Q&A — calibrated to your stack ahead of time. $9k–$15k depending on team size.",
   },
 ];
 
@@ -32,9 +39,9 @@ const topics = [
   "SOC 2 readiness for Azure and Azure ML",
   "Low-privilege access patterns for data scientists",
   "GitHub Copilot rollout: governance and controls",
+  "Entra tenant isolation for sensitive workloads",
   "Migrating Dynamics 365 RSO to multi-tenant",
   "Deploying Dynamics 365 to Azure Government (GCC)",
-  "Resource scheduling optimization at scale",
   "Microsoft Purview integration for compliance",
   "Network isolation for M365 and Copilot data",
 ];
@@ -44,19 +51,19 @@ const why = [
     n: "01",
     title: ["Earned", "Expertise"],
     body:
-      "Led by a former Microsoft engineer from the M365 Substrate AI Platform — the team that builds the foundation of all intelligent features across Microsoft 365.",
+      "Run by a former Microsoft engineer from the M365 Substrate AI Platform — the team that builds the foundation of all intelligent features across Microsoft 365.",
   },
   {
     n: "02",
     title: ["Vendor", "Independence"],
     body:
-      "We don't resell, partner, or take referral fees. Our only motivation is giving you the right technical answer.",
+      "I don't resell, partner, or take referral fees. My only motivation is giving you the right technical answer.",
   },
   {
     n: "03",
     title: ["Fixed Price.", "Fast."],
     body:
-      "No hourly meters, no scope creep. You know the price before you start. Most engagements close in under a week.",
+      "No hourly meters, no scope creep. You know the price before you start. Most engagements close in days, not months.",
   },
 ];
 
@@ -106,9 +113,9 @@ const Index = () => {
               DECIDE.
             </h1>
             <p className="text-xl md:text-2xl font-semibold max-w-lg leading-tight tracking-tight text-foreground/80">
-              Microsoft's cloud, AI, and security stack is a moving target. We give you clear,
-              unbiased answers — from a former Microsoft engineer who spent years inside,
-              building the platforms your teams now run on.
+              Microsoft's cloud, AI, and security stack is a moving target. I give you clear,
+              unbiased answers — drawing on years inside Microsoft, building the platforms
+              your teams now run on.
             </p>
           </div>
           <div className="flex flex-col">
@@ -120,18 +127,23 @@ const Index = () => {
                 "Our SOC 2 auditors are flagging Azure RBAC on production.
                 Forty-seven services, no clear least-privilege model. Where do we start?"
               </blockquote>
-              <div className="grid grid-cols-3 gap-4 text-[10px] uppercase tracking-widest">
-                <div>
-                  <p className="opacity-50">Turnaround</p>
-                  <p className="font-black mt-1">5–10 days</p>
-                </div>
-                <div>
-                  <p className="opacity-50">Deliverable</p>
-                  <p className="font-black mt-1">5–10 page brief +<br />30 min presentation</p>
-                </div>
-                <div>
-                  <p className="opacity-50">Referral commissions</p>
-                  <p className="font-black mt-1">$0</p>
+              <div>
+                <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-4">
+                  Sample Technical Brief
+                </p>
+                <div className="grid grid-cols-3 gap-4 text-[10px] uppercase tracking-widest">
+                  <div>
+                    <p className="opacity-50">Turnaround</p>
+                    <p className="font-black mt-1">5–10 days</p>
+                  </div>
+                  <div>
+                    <p className="opacity-50">Deliverable</p>
+                    <p className="font-black mt-1">5–10 page brief +<br />30 min presentation</p>
+                  </div>
+                  <div>
+                    <p className="opacity-50">Kickbacks accepted</p>
+                    <p className="font-black mt-1">$0</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -148,11 +160,11 @@ const Index = () => {
 
       {/* SERVICES */}
       <section id="services" className="border-t-4 border-foreground min-h-[calc(100svh-92px)] flex">
-        <div className="grid md:grid-cols-3 w-full">
+        <div className="grid lg:grid-cols-4 w-full">
           {services.map((s, i) => (
             <div
               key={s.name}
-              className={`p-10 md:p-12 border-b-4 md:border-b-0 md:[&:not(:last-child)]:border-r-2 border-foreground group ${
+              className={`p-10 md:p-12 border-b-4 lg:border-b-0 lg:[&:not(:last-child)]:border-r-2 border-foreground group ${
                 i % 2 === 0 ? "hover:bg-accent" : "hover:bg-foreground"
               } hover:text-background transition-colors duration-300 flex flex-col`}
             >
@@ -234,9 +246,9 @@ const Index = () => {
       <section className="border-t-4 border-foreground px-6 py-24 md:py-32">
         <div className="max-w-[1600px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-16">
           <Stat n="5d" l="Median turnaround" />
-          <Stat n="$0" l="Vendor referral fees" />
+          <Stat n="$0" l="Kickbacks accepted" />
           <Stat n="11yr" l="Inside Microsoft" />
-          <Stat n="1" l="Former Microsoft engineer" />
+          <Stat n="1" l="Senior doing every brief" />
         </div>
       </section>
 
@@ -290,8 +302,8 @@ const Index = () => {
               question?
             </h2>
             <p className="text-background/60 text-lg max-w-md">
-              Tell us the decision you're working on. You'll hear back from a former Microsoft
-              engineer — no sales call, no gatekeeping, no vendor agenda.
+              Tell me the decision you're working on. You'll hear back from me — a former
+              Microsoft engineer — no sales pitch, no gatekeeping, no vendor agenda.
             </p>
           </div>
           <BriefingForm />
