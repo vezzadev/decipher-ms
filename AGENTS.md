@@ -6,13 +6,27 @@ Briefing submissions are stored in Cloudflare **D1**. Two databases, both on
 account `vezza.dev` / `d1db42c1ac42b3aee886f219b8f56e16`, binding `DB` (see
 `wrangler.jsonc`):
 
-| Database | id | Used by |
-| --- | --- | --- |
-| `decipher-ms-db` | `7fa5214b-5743-43cb-86e1-b679428f1d17` | production only |
+| Database              | id                                     | Used by                       |
+| --------------------- | -------------------------------------- | ----------------------------- |
+| `decipher-ms-db`      | `7fa5214b-5743-43cb-86e1-b679428f1d17` | production only               |
 | `decipher-ms-preview` | `e13ad566-bc05-49f8-890e-1d5820189be7` | all preview branches (shared) |
 
 Production has its **own** database — branch builds never read, write, or
 migrate it. Every non-prod branch shares the single `decipher-ms-preview` DB.
+
+### Build output (Astro SSR on the Cloudflare adapter)
+
+`npm run build` runs the Astro Cloudflare adapter, which emits:
+
+- `dist/client/` — static assets (served by Workers Static Assets, bypassing the worker)
+- `dist/server/` — the SSR worker (`entry.mjs`) **plus a generated `wrangler.json`**
+
+The generated `dist/server/wrangler.json` is the deploy config: its `main`
+(`entry.mjs`) and `assets.directory` (`../client`) are relative to `dist/server/`,
+and it inherits the D1 binding + `vars` from the root `wrangler.jsonc`. Deploys
+target **that** file, not the root config. The root `wrangler.jsonc` has no
+`main` (the adapter injects one at build time) and is used only as the source of
+truth for bindings/vars and for `d1` commands.
 
 ### Migrations ship with the deploy
 
@@ -20,20 +34,26 @@ Migrations live in `migrations/` and are tracked by `wrangler`. The Cloudflare
 **Workers Builds** deploy commands (dashboard → Worker → Settings → Builds, not
 in the repo) handle them per environment:
 
-| Build | Deploy command | Database it migrates |
-| --- | --- | --- |
-| Production (main) | `npx wrangler d1 migrations apply decipher-ms-db --remote && npx wrangler deploy` | `decipher-ms-db` |
-| Non-production (branches) | `bash scripts/preview-deploy.sh` | `decipher-ms-preview` |
+| Build                     | Deploy command                                                                                                 | Database it migrates  |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------- |
+| Production (main)         | `npx wrangler d1 migrations apply decipher-ms-db --remote && npx wrangler deploy -c dist/server/wrangler.json` | `decipher-ms-db`      |
+| Non-production (branches) | `bash scripts/preview-deploy.sh`                                                                               | `decipher-ms-preview` |
+
+> **Dashboard update required (one-time):** the production deploy command must
+> now pass `-c dist/server/wrangler.json` to `wrangler deploy` (it previously
+> ran a bare `npx wrangler deploy`). The build step must run `npm run build`
+> first so `dist/server/` exists. `d1 migrations apply` still reads the root
+> `wrangler.jsonc` and needs no `-c`.
 
 Production order matters: migrate **before** deploy, so new code never runs
 against an old schema. `migrations apply` is idempotent — a clean no-op when
 nothing is pending — so it's safe on every build.
 
-`scripts/preview-deploy.sh` derives `wrangler.preview.jsonc` (gitignored) from
-`wrangler.jsonc` by swapping only the D1 name + id to the preview database, then
-migrates *that* and runs `versions upload`. `wrangler.jsonc` stays the single
-source of truth; the worker name is unchanged, so the branch preview URL
-(`<branch>-decipher-ms.*.workers.dev`) is unaffected.
+`scripts/preview-deploy.sh` migrates the preview DB using a root-derived
+`wrangler.preview.jsonc` (gitignored; only the D1 name + id swapped), then swaps
+the same D1 name + id inside the generated `dist/server/wrangler.json` and runs
+`versions upload` against it. The worker name is unchanged, so the branch
+preview URL (`<branch>-decipher-ms.*.workers.dev`) is unaffected.
 
 Auth: the migrate step needs D1 write. The Workers Builds managed token usually
 has it; if a build fails with `7403`, set `CLOUDFLARE_API_TOKEN` (D1-edit
@@ -63,13 +83,13 @@ but App Insights is the source of truth).
 
 ### Where things live
 
-| Thing | Where |
-| --- | --- |
-| App Insights resource | `ai-decipherms-wu2-1` in `rg-decipherms-wu2-1`, sub `240ae4d5-0160-4b5d-b078-e8e3074cecc2` |
-| Connection string | `APPLICATIONINSIGHTS_CONNECTION_STRING` Worker secret. Worker parses it (`worker/telemetry.ts:parseConnString`) and injects `{iKey, ingestionEndpoint, environment}` into HTML responses as `window.__telemetryConfig` for the client to consume. Set per environment via `npx wrangler secret put APPLICATIONINSIGHTS_CONNECTION_STRING`. |
-| App ID for Logs API | `00575dd1-2f5b-47ad-845d-a706d47fbfe4` |
-| Dashboard | [Azure portal dashboard](https://portal.azure.com/#@vezza.dev/dashboard/arm/subscriptions/240ae4d5-0160-4b5d-b078-e8e3074cecc2/resourcegroups/rg-decipherms-wu2-1/providers/microsoft.portal/dashboards/00575dd1-2f5b-47ad-845d-a706d47fbfe4-dashboard) — mirrors Cloudflare RUM tiles (page views, visits, web vitals p75 + rating split + top offending elements, browsers, OS, countries, exceptions). 7d window by default. |
-| Cloudflare RUM (parallel) | [siteTag c1ccb0d6…](https://dash.cloudflare.com/d1db42c1ac42b3aee886f219b8f56e16/web-analytics/overview?siteTag~in=c1ccb0d6146e49e1a9d2bbf4d4bbccfa&excludeBots=Yes) |
+| Thing                     | Where                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| App Insights resource     | `ai-decipherms-wu2-1` in `rg-decipherms-wu2-1`, sub `240ae4d5-0160-4b5d-b078-e8e3074cecc2`                                                                                                                                                                                                                                                                                                                                      |
+| Connection string         | `APPLICATIONINSIGHTS_CONNECTION_STRING` Worker secret. The telemetry middleware parses it (`src/lib/server/telemetry.ts:parseConnString`) and the Layout renders `{iKey, ingestionEndpoint, environment}` into the page head as `window.__telemetryConfig` for the client to consume. Set per environment via `npx wrangler secret put APPLICATIONINSIGHTS_CONNECTION_STRING`.                                                  |
+| App ID for Logs API       | `00575dd1-2f5b-47ad-845d-a706d47fbfe4`                                                                                                                                                                                                                                                                                                                                                                                          |
+| Dashboard                 | [Azure portal dashboard](https://portal.azure.com/#@vezza.dev/dashboard/arm/subscriptions/240ae4d5-0160-4b5d-b078-e8e3074cecc2/resourcegroups/rg-decipherms-wu2-1/providers/microsoft.portal/dashboards/00575dd1-2f5b-47ad-845d-a706d47fbfe4-dashboard) — mirrors Cloudflare RUM tiles (page views, visits, web vitals p75 + rating split + top offending elements, browsers, OS, countries, exceptions). 7d window by default. |
+| Cloudflare RUM (parallel) | [siteTag c1ccb0d6…](https://dash.cloudflare.com/d1db42c1ac42b3aee886f219b8f56e16/web-analytics/overview?siteTag~in=c1ccb0d6146e49e1a9d2bbf4d4bbccfa&excludeBots=Yes)                                                                                                                                                                                                                                                            |
 
 ### Tables
 
@@ -106,6 +126,7 @@ az monitor app-insights query --app $APP --analytics-query '<kql>' -o json
 ### Environment tag
 
 Every envelope has `customDimensions.environment` set to one of:
+
 - `production` — `decipher.ms` / `www.decipher.ms`
 - `preview:<branch>` — `<branch>-decipher-ms.*.workers.dev`
 - `preview` — any other `*.workers.dev`

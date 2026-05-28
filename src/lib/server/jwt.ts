@@ -8,7 +8,9 @@ let cachedPublicJwk: Record<string, string> | null = null;
 
 async function privateKey(env: Env): Promise<CryptoKey> {
   if (cachedPrivateKey) return cachedPrivateKey;
-  cachedPrivateKey = (await importPKCS8(env.OIDC_PRIVATE_KEY, ALG, { extractable: true })) as CryptoKey;
+  cachedPrivateKey = (await importPKCS8(env.OIDC_PRIVATE_KEY, ALG, {
+    extractable: true,
+  })) as CryptoKey;
   return cachedPrivateKey;
 }
 

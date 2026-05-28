@@ -1,5 +1,6 @@
+import type { D1Database } from "@cloudflare/workers-types";
+
 export interface Env {
-  ASSETS: Fetcher;
   DB: D1Database;
   GRAPH_TENANT_ID: string;
   GRAPH_APP_ID: string;

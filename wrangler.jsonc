@@ -3,10 +3,8 @@
   "name": "decipher-ms",
   "compatibility_date": "2026-05-17",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "worker/index.ts",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page",
     "binding": "ASSETS",
   },
   "d1_databases": [

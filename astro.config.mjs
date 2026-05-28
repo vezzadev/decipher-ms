@@ -1,12 +1,22 @@
-import { defineConfig } from "astro/config";
+import { defineConfig, sessionDrivers } from "astro/config";
+import cloudflare from "@astrojs/cloudflare";
 import tailwindcss from "@tailwindcss/vite";
 
-// Static multi-page build. Output goes to ./dist, which the Cloudflare Worker
-// (worker/index.ts) serves via its ASSETS binding alongside the /api and
-// /.well-known routes. See wrangler.jsonc.
+// SSR on Cloudflare Workers. Pages render on demand so the telemetry
+// middleware can run per request (and inject the per-request App Insights
+// client config); API + OIDC logic lives in src/pages routes. Static files in
+// public/ and built assets are served by the platform, bypassing the worker.
 export default defineConfig({
   site: "https://decipher.ms",
-  build: { format: "directory" },
+  output: "server",
+  // This app doesn't use Astro sessions; opt out of the adapter's default
+  // Cloudflare-KV session driver so no (id-less) SESSION KV binding is emitted
+  // into the generated deploy config.
+  session: { driver: sessionDrivers.memory() },
+  adapter: cloudflare({
+    // Plain <img> with build-emitted assets — no runtime image service / IMAGES binding.
+    imageService: "passthrough",
+  }),
   vite: {
     plugins: [tailwindcss()],
     resolve: {
