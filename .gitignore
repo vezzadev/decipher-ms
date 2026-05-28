@@ -18,6 +18,8 @@ dist-ssr
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
+# Derived per-deploy preview config (scripts/preview-deploy.sh)
+wrangler.preview.jsonc
 
 # Playwright CLI artifacts
 .playwright-cli/

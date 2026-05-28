@@ -1,5 +1,60 @@
 # AGENTS.md
 
+## Database & migrations (D1)
+
+Briefing submissions are stored in Cloudflare **D1**. Two databases, both on
+account `vezza.dev` / `d1db42c1ac42b3aee886f219b8f56e16`, binding `DB` (see
+`wrangler.jsonc`):
+
+| Database | id | Used by |
+| --- | --- | --- |
+| `decipher-ms-db` | `7fa5214b-5743-43cb-86e1-b679428f1d17` | production only |
+| `decipher-ms-preview` | `e13ad566-bc05-49f8-890e-1d5820189be7` | all preview branches (shared) |
+
+Production has its **own** database — branch builds never read, write, or
+migrate it. Every non-prod branch shares the single `decipher-ms-preview` DB.
+
+### Migrations ship with the deploy
+
+Migrations live in `migrations/` and are tracked by `wrangler`. The Cloudflare
+**Workers Builds** deploy commands (dashboard → Worker → Settings → Builds, not
+in the repo) handle them per environment:
+
+| Build | Deploy command | Database it migrates |
+| --- | --- | --- |
+| Production (main) | `npx wrangler d1 migrations apply decipher-ms-db --remote && npx wrangler deploy` | `decipher-ms-db` |
+| Non-production (branches) | `bash scripts/preview-deploy.sh` | `decipher-ms-preview` |
+
+Production order matters: migrate **before** deploy, so new code never runs
+against an old schema. `migrations apply` is idempotent — a clean no-op when
+nothing is pending — so it's safe on every build.
+
+`scripts/preview-deploy.sh` derives `wrangler.preview.jsonc` (gitignored) from
+`wrangler.jsonc` by swapping only the D1 name + id to the preview database, then
+migrates *that* and runs `versions upload`. `wrangler.jsonc` stays the single
+source of truth; the worker name is unchanged, so the branch preview URL
+(`<branch>-decipher-ms.*.workers.dev`) is unaffected.
+
+Auth: the migrate step needs D1 write. The Workers Builds managed token usually
+has it; if a build fails with `7403`, set `CLOUDFLARE_API_TOKEN` (D1-edit
+scoped) as a Workers Builds env var.
+
+### Manual application (and the gotcha that motivated this)
+
+If a schema change ever reaches main without the pipeline applying it — or to
+apply ahead of a deploy — run:
+
+```bash
+npx wrangler d1 migrations list decipher-ms-db --remote   # see what's pending
+npx wrangler d1 migrations apply decipher-ms-db --remote  # apply it
+```
+
+History: before the pipeline applied migrations, `0002_engagement_type.sql`
+shipped in code but never reached the DB, so every briefing-form submission
+failed with `D1_ERROR: table briefing_requests has no column named
+engagement_type`. A one-off remote `wrangler d1` call may return a transient
+`7403 account not authorized` — just retry; the OAuth token has `d1 (write)`.
+
 ## Telemetry
 
 Production telemetry flows into **Azure Application Insights**, not Cloudflare
