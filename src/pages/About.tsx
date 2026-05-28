@@ -274,7 +274,7 @@ const About = () => {
             on your Microsoft decision?
           </h2>
           <Link
-            to="/"
+            to="/#briefing"
             className="inline-flex items-center gap-3 bg-foreground text-background px-8 py-4 text-sm font-black uppercase tracking-[0.2em] hover:bg-accent transition-colors"
           >
             Request a briefing <span>→</span>
@@ -297,17 +297,17 @@ const About = () => {
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">Services</p>
                 <ul className="space-y-3 text-base font-bold">
-                  <li><Link to="/" className="hover:text-accent transition-colors">Expert Call</Link></li>
-                  <li><Link to="/" className="hover:text-accent transition-colors">Second Opinion</Link></li>
-                  <li><Link to="/" className="hover:text-accent transition-colors">Technical Brief</Link></li>
+                  <li><Link to="/#services" className="hover:text-accent transition-colors">Expert Call</Link></li>
+                  <li><Link to="/#services" className="hover:text-accent transition-colors">Second Opinion</Link></li>
+                  <li><Link to="/#services" className="hover:text-accent transition-colors">Technical Brief</Link></li>
                 </ul>
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">decipher.ms</p>
                 <ul className="space-y-3 text-base font-bold">
-                  <li><Link to="/" className="hover:text-accent transition-colors">Services</Link></li>
+                  <li><Link to="/#approach" className="hover:text-accent transition-colors">Approach</Link></li>
                   <li><Link to="/about" className="hover:text-accent transition-colors">About</Link></li>
-                  <li><Link to="/" className="hover:text-accent transition-colors">Briefing</Link></li>
+                  <li><Link to="/#briefing" className="hover:text-accent transition-colors">Briefing</Link></li>
                 </ul>
               </div>
             </div>

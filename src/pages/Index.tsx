@@ -312,11 +312,19 @@ const Index = () => {
             <div className="grid grid-cols-2 gap-12">
               <FooterCol
                 title="Services"
-                items={["Expert Call", "Second Opinion", "Technical Brief"]}
+                items={[
+                  { label: "Expert Call", href: "#services" },
+                  { label: "Second Opinion", href: "#services" },
+                  { label: "Technical Brief", href: "#services" },
+                ]}
               />
               <FooterCol
                 title="decipher.ms"
-                items={["Approach", "About", "Contact"]}
+                items={[
+                  { label: "Approach", href: "#approach" },
+                  { label: "About", href: "#founder" },
+                  { label: "Briefing", href: "#briefing" },
+                ]}
               />
             </div>
           </div>
@@ -346,15 +354,15 @@ function Stat({ n, l }: { n: string; l: string }) {
   );
 }
 
-function FooterCol({ title, items }: { title: string; items: string[] }) {
+function FooterCol({ title, items }: { title: string; items: { label: string; href: string }[] }) {
   return (
     <div>
       <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">{title}</p>
       <ul className="space-y-3 text-base font-bold">
         {items.map((i) => (
-          <li key={i}>
-            <a href="#" className="hover:text-accent transition-colors">
-              {i}
+          <li key={i.label}>
+            <a href={i.href} className="hover:text-accent transition-colors">
+              {i.label}
             </a>
           </li>
         ))}
