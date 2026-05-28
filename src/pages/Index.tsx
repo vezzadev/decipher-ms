@@ -82,9 +82,9 @@ const Index = () => {
         </a>
         <div className="hidden md:flex gap-8 text-[11px] font-extrabold uppercase tracking-[0.2em]">
           <a href="#services" className="hover:text-accent transition-colors">Services</a>
-          <a href="#approach" className="hover:text-accent transition-colors">Approach</a>
           <a href="#topics" className="hover:text-accent transition-colors">Topics</a>
-          <a href="/about" className="hover:text-accent transition-colors">About</a>
+          <a href="#approach" className="hover:text-accent transition-colors">Approach</a>
+          <a href="#founder" className="hover:text-accent transition-colors">About</a>
           <a href="#briefing" className="hover:text-accent transition-colors">Briefing</a>
         </div>
       </nav>
@@ -146,33 +146,9 @@ const Index = () => {
         </div>
       </header>
 
-      {/* PROBLEM */}
-      <section className="border-t-4 border-foreground px-6 py-24 md:py-32">
-        <div className="max-w-[1600px] mx-auto grid md:grid-cols-[1fr_1.5fr] gap-12 md:gap-20 items-start">
-          <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.9]">
-            The wrong Microsoft call is{" "}
-            <span className="text-accent italic">expensive</span>.
-          </h2>
-          <div className="space-y-6 text-lg md:text-xl leading-relaxed text-foreground/70 font-medium">
-            <p>
-              Azure, Azure ML, Copilot, Purview, Defender, Dynamics. Most teams learn this surface
-              from docs, marketing pages, and conferences. The folks who actually build these
-              platforms work inside Microsoft — and their answers stay there.
-            </p>
-            <p>
-              You end up with architectures that don't quite hold up to audit, AI rollouts that
-              surface compliance fires, or migrations that take twice as long as they should.
-            </p>
-            <p className="text-foreground font-black font-serif italic text-2xl md:text-3xl">
-              decipher.ms exists to give you a straight answer.
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* SERVICES */}
-      <section id="services" className="border-t-4 border-foreground">
-        <div className="grid md:grid-cols-3">
+      <section id="services" className="border-t-4 border-foreground min-h-[calc(100svh-92px)] flex">
+        <div className="grid md:grid-cols-3 w-full">
           {services.map((s, i) => (
             <div
               key={s.name}
@@ -199,8 +175,8 @@ const Index = () => {
       </section>
 
       {/* TOPICS */}
-      <section id="topics" className="border-t-4 border-foreground bg-secondary/40 px-6 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto">
+      <section id="topics" className="border-t-4 border-foreground bg-secondary/40 px-6 py-16 md:py-20 min-h-[calc(100svh-92px)] flex items-center">
+        <div className="max-w-[1400px] mx-auto w-full">
           <div className="mb-14">
             <span className="font-serif italic text-accent text-xl md:text-2xl block mb-3">
               Inquiry Log
@@ -228,8 +204,8 @@ const Index = () => {
       </section>
 
       {/* APPROACH / WHY */}
-      <section id="approach" className="border-t-4 border-foreground bg-foreground text-background px-6 py-24 md:py-32">
-        <div className="max-w-[1600px] mx-auto">
+      <section id="approach" className="border-t-4 border-foreground bg-foreground text-background px-6 py-16 md:py-20 min-h-[calc(100svh-92px)] flex items-center">
+        <div className="max-w-[1600px] mx-auto w-full">
           <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-16 gap-6 border-b-2 border-background/20 pb-8">
             <h2 className="font-serif text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9]">
               Why decipher
@@ -265,8 +241,8 @@ const Index = () => {
       </section>
 
       {/* FOUNDER TEASER */}
-      <section className="border-t-4 border-foreground px-6 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-20 items-start">
+      <section id="founder" className="border-t-4 border-foreground px-6 py-16 md:py-20 min-h-[calc(100svh-92px)] flex items-center">
+        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-20 items-start w-full">
           <div>
             <span className="inline-block text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">
               About the founder
@@ -299,9 +275,9 @@ const Index = () => {
       {/* BRIEFING FORM */}
       <section
         id="briefing"
-        className="border-t-4 border-foreground bg-foreground text-background px-6 py-24 md:py-32"
+        className="border-t-4 border-foreground bg-foreground text-background px-6 py-6 md:py-8 min-h-[calc(100svh-92px)] flex items-center"
       >
-        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16 lg:gap-24">
+        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16 lg:gap-24 w-full">
           <div className="border-l-8 border-accent pl-8">
             <span className="inline-block text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-8">
               Request a Briefing

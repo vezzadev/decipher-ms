@@ -147,8 +147,8 @@ export default function BriefingForm() {
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-8" noValidate>
-      <div className="grid md:grid-cols-2 gap-8">
+    <form onSubmit={onSubmit} className="space-y-6" noValidate>
+      <div className="grid md:grid-cols-2 gap-6">
         <Field label="Name" name="name" value={values.name} onChange={update("name")} error={errors.name} />
         <Field label="Work email" name="email" type="email" value={values.email} onChange={update("email")} error={errors.email} />
         <Field label="Company" name="company" value={values.company} onChange={update("company")} error={errors.company} />
@@ -162,7 +162,7 @@ export default function BriefingForm() {
         <textarea
           id="details"
           name="details"
-          rows={6}
+          rows={4}
           value={values.details}
           onChange={update("details")}
           placeholder="Describe the decision you're facing, key constraints, and timeline."
