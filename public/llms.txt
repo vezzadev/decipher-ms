@@ -8,3 +8,5 @@ decipher.ms helps companies make better Microsoft decisions. Services include ex
 
 - [Home](/): Overview of services, pricing, approach, and how to request a briefing.
 - [About](/about): Background on founder Pedro Paulo Vezza Campos, his Microsoft career, and areas of expertise.
+- [Sample Work](/work): Published sample deliverables, grouped by engagement type, that you can read before commissioning your own.
+- [Advanced Dataverse & Dynamics 365 Security Model](/briefs/advanced-dataverse-and-dynamics-365-security-model): Sample technical brief — a layer-by-layer walkthrough of the Dataverse security model.

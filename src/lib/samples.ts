@@ -3,7 +3,9 @@
 // The home page cards and the /work showcase both read from here, so adding a
 // new sample is a single entry — no page edits.
 
-export type EngagementKey = "expert-call" | "second-opinion" | "technical-brief" | "workshop";
+import type { EngagementKey } from "./engagements";
+
+export type { EngagementKey };
 
 export interface EngagementType {
   key: EngagementKey;

@@ -3,9 +3,10 @@ import type { Env } from "./env";
 import { sendBriefingEmail } from "./graph";
 import type { Telemetry } from "./telemetry";
 import { timed } from "./telemetry";
+import { ENGAGEMENT_KEYS, type EngagementKey } from "../engagements";
 
-const ENGAGEMENT_TYPES = ["expert-call", "second-opinion", "technical-brief", "workshop"] as const;
-type EngagementType = (typeof ENGAGEMENT_TYPES)[number];
+const ENGAGEMENT_TYPES = ENGAGEMENT_KEYS;
+type EngagementType = EngagementKey;
 
 interface BriefingInput {
   name: string;

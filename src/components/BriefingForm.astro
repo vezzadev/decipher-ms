@@ -1,5 +1,9 @@
 ---
-const ENGAGEMENT_OPTIONS = [
+import type { EngagementKey } from "@/lib/engagements";
+
+// Values are typed against the canonical EngagementKey so a renamed tier fails
+// to compile here instead of silently mismatching the server validation.
+const ENGAGEMENT_OPTIONS: { value: EngagementKey; label: string }[] = [
   { value: "expert-call", label: "Expert Call — 30-min call, $500" },
   { value: "second-opinion", label: "Second Opinion — short brief, $2,000" },
   { value: "technical-brief", label: "Technical Brief — in-depth brief, $3,500" },
@@ -90,6 +94,7 @@ const errorClass = "mt-2 text-xs text-accent font-bold";
 
 <script>
   import { z } from "zod";
+  import { ENGAGEMENT_KEYS } from "@/lib/engagements";
 
   // Prod sitekey is locked to decipher.ms; on localhost it errors 110200. Use
   // Cloudflare's always-pass dummy sitekey in dev so the widget actually renders.
@@ -119,7 +124,7 @@ const errorClass = "mt-2 text-xs text-accent font-bold";
     name: z.string().trim().min(1, "Required").max(120),
     email: z.string().trim().email("Invalid email").max(255),
     role: z.string().trim().max(120).optional().or(z.literal("")),
-    engagementType: z.enum(["expert-call", "second-opinion", "technical-brief", "workshop"], {
+    engagementType: z.enum(ENGAGEMENT_KEYS, {
       errorMap: () => ({ message: "Pick an engagement type" }),
     }),
     topic: z.string().trim().min(1, "Required").max(200),
