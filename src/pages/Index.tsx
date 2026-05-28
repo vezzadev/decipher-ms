@@ -42,7 +42,7 @@ const topics = [
 const why = [
   {
     n: "01",
-    title: ["Insider", "Perspective"],
+    title: ["Earned", "Expertise"],
     body:
       "Led by a former Microsoft engineer from the M365 Substrate AI Platform — the team that builds the AI/ML and security platforms behind Microsoft 365.",
   },
@@ -78,7 +78,7 @@ const Index = () => {
           href="#"
           className="font-serif text-3xl md:text-4xl font-black tracking-tighter uppercase italic"
         >
-          decipher<span className="text-accent pl-2">.ms</span>
+          decipher<span className="text-accent ml-[0.05em]">.ms</span>
         </a>
         <div className="hidden md:flex gap-8 text-[11px] font-extrabold uppercase tracking-[0.2em]">
           <a href="#services" className="hover:text-accent transition-colors">Services</a>
@@ -208,7 +208,7 @@ const Index = () => {
         <div className="max-w-[1600px] mx-auto w-full">
           <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-16 gap-6 border-b-2 border-background/20 pb-8">
             <h2 className="font-serif text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9]">
-              Why decipher
+              Why decipher<span className="text-accent ml-[0.05em]">.ms</span>
             </h2>
             <span className="font-serif italic text-xl md:text-2xl text-accent">
               Three commitments. No exceptions.
