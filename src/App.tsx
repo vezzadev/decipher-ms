@@ -15,7 +15,7 @@ function RouteTracker() {
   useEffect(() => {
     if (location.hash) {
       const el = document.getElementById(location.hash.slice(1));
-      if (el) el.scrollIntoView();
+      if (el) el.scrollIntoView({ behavior: "smooth" });
     } else {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     }
