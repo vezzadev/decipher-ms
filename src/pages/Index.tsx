@@ -92,8 +92,8 @@ const Index = () => {
       <main>
 
       {/* HERO */}
-      <header className="px-6 py-20 md:py-28 max-w-[1600px] mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+      <header className="px-6 py-8 max-w-[1600px] mx-auto min-h-[calc(100svh-92px)] flex items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
           <div className="border-l-8 border-foreground pl-6 md:pl-10 min-w-0">
             <span className="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8">
               Independent Microsoft advisory
@@ -112,7 +112,7 @@ const Index = () => {
             </p>
           </div>
           <div className="flex flex-col">
-            <div className="p-10 md:p-12 bg-foreground text-background flex flex-col justify-between aspect-square">
+            <div className="p-8 md:p-10 bg-foreground text-background flex flex-col justify-between gap-6">
               <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] opacity-60">
                 A recent question
               </span>
@@ -137,7 +137,7 @@ const Index = () => {
             </div>
             <a
               href="#briefing"
-              className="group w-full py-7 md:py-8 bg-accent text-background text-lg md:text-xl font-black uppercase tracking-widest hover:bg-foreground transition-all flex justify-between px-8 md:px-10 items-center"
+              className="group w-full py-6 md:py-7 bg-accent text-background text-lg md:text-xl font-black uppercase tracking-widest hover:bg-foreground transition-all flex justify-between px-8 md:px-10 items-center"
             >
               <span>Request Briefing</span>
               <span className="transition-transform group-hover:translate-x-2">→</span>
