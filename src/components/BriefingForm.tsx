@@ -210,7 +210,7 @@ export default function BriefingForm() {
       </div>
       {serverError === "__ok__" && (
         <p className="text-xs font-black uppercase tracking-[0.3em] text-accent">
-          Received — an analyst will respond within one business day.
+          Received — Pedro will respond within one business day.
         </p>
       )}
       {serverError && serverError !== "__ok__" && (
