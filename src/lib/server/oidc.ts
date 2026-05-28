@@ -16,8 +16,5 @@ export function discoveryDocument(env: Env): Response {
 
 export async function jwks(env: Env): Promise<Response> {
   const jwk = await publicJwk(env);
-  return Response.json(
-    { keys: [jwk] },
-    { headers: { "cache-control": "public, max-age=3600" } },
-  );
+  return Response.json({ keys: [jwk] }, { headers: { "cache-control": "public, max-age=3600" } });
 }

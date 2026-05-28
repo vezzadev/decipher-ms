@@ -1,0 +1,29 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout
+  title="Page not found — decipher.ms"
+  description="The page you're looking for doesn't exist or has been moved."
+  noindex={true}
+>
+  <div class="flex min-h-screen items-center justify-center bg-background px-4">
+    <div class="max-w-md text-center">
+      <h1 class="font-serif text-7xl font-black text-foreground">404</h1>
+      <h2 class="mt-4 text-xl font-bold uppercase tracking-widest text-foreground">
+        Page not found
+      </h2>
+      <p class="mt-2 text-sm text-muted-foreground">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+      <div class="mt-6">
+        <a
+          href="/"
+          class="inline-flex items-center justify-center bg-foreground px-6 py-3 text-xs font-black uppercase tracking-widest text-background transition-colors hover:bg-accent"
+        >
+          Go home
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>

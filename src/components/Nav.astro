@@ -1,0 +1,48 @@
+---
+interface Props {
+  variant?: "home" | "page";
+  active?: "about";
+}
+
+const { variant = "page", active } = Astro.props;
+const home = variant === "home";
+
+const links: { label: string; href: string; key?: "about" }[] = home
+  ? [
+      { label: "Services", href: "#services" },
+      { label: "Topics", href: "#topics" },
+      { label: "Approach", href: "#approach" },
+      { label: "About", href: "#founder" },
+      { label: "Briefing", href: "#briefing" },
+    ]
+  : [
+      { label: "Services", href: "/#services" },
+      { label: "Topics", href: "/#topics" },
+      { label: "Approach", href: "/#approach" },
+      { label: "About", href: "/about", key: "about" },
+      { label: "Briefing", href: "/#briefing" },
+    ];
+---
+
+<nav
+  class="border-b-4 border-foreground px-6 py-6 flex justify-between items-center sticky top-0 bg-background/95 backdrop-blur z-50"
+>
+  <a
+    href={home ? "#" : "/"}
+    class="font-serif text-3xl md:text-4xl font-black tracking-tighter uppercase italic"
+  >
+    decipher<span class="text-accent ml-[0.05em]">.ms</span>
+  </a>
+  <div class="hidden md:flex gap-8 text-[11px] font-extrabold uppercase tracking-[0.2em]">
+    {
+      links.map((l) => (
+        <a
+          href={l.href}
+          class={l.key && l.key === active ? "text-accent" : "hover:text-accent transition-colors"}
+        >
+          {l.label}
+        </a>
+      ))
+    }
+  </div>
+</nav>

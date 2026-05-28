@@ -1,3 +1,4 @@
+import type { ExecutionContext } from "@cloudflare/workers-types";
 import type { Env } from "./env";
 import { sendBriefingEmail } from "./graph";
 import type { Telemetry } from "./telemetry";
@@ -32,19 +33,18 @@ function parseInput(raw: unknown): BriefingPayload | string {
   const r = raw as Record<string, unknown>;
   if (!isNonEmptyString(r.name, 120)) return "name required (<=120 chars)";
   if (!isNonEmptyString(r.email, 255)) return "email required (<=255 chars)";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email))
-    return "email invalid";
-  if (typeof r.engagementType !== "string" || !ENGAGEMENT_TYPES.includes(r.engagementType as EngagementType))
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.email)) return "email invalid";
+  if (
+    typeof r.engagementType !== "string" ||
+    !ENGAGEMENT_TYPES.includes(r.engagementType as EngagementType)
+  )
     return "engagementType must be one of: " + ENGAGEMENT_TYPES.join(", ");
   if (!isNonEmptyString(r.topic, 200)) return "topic required (<=200)";
   if (!isNonEmptyString(r.details, 4000) || r.details.trim().length < 10)
     return "details required (10-4000 chars)";
-  if (!isNonEmptyString(r.turnstileToken, 2048))
-    return "turnstile challenge required";
+  if (!isNonEmptyString(r.turnstileToken, 2048)) return "turnstile challenge required";
   const role =
-    typeof r.role === "string" && r.role.trim().length > 0
-      ? r.role.trim().slice(0, 120)
-      : null;
+    typeof r.role === "string" && r.role.trim().length > 0 ? r.role.trim().slice(0, 120) : null;
   return {
     name: r.name.trim(),
     email: r.email.trim(),
@@ -74,10 +74,10 @@ async function verifyTurnstile(
   body.append("secret", env.TURNSTILE_SECRET_KEY);
   body.append("response", token);
   if (remoteIp) body.append("remoteip", remoteIp);
-  const res = await fetch(
-    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    { method: "POST", body },
-  );
+  const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    method: "POST",
+    body,
+  });
   if (!res.ok) {
     return {
       success: false,
@@ -109,9 +109,6 @@ export async function handleBriefing(
   tel: Telemetry,
   parentId: string,
 ): Promise<Response> {
-  if (request.method !== "POST") {
-    return new Response("Method not allowed", { status: 405 });
-  }
   let raw: unknown;
   try {
     raw = await request.json();
@@ -191,10 +188,7 @@ export async function handleBriefing(
   });
 
   if (!insert) {
-    return Response.json(
-      { error: "Could not save" },
-      { status: 500 },
-    );
+    return Response.json({ error: "Could not save" }, { status: 500 });
   }
 
   tel.trackEvent(parentId, "briefing_received", {
@@ -221,9 +215,7 @@ export async function handleBriefing(
       }
       if (emailSent) {
         try {
-          await env.DB.prepare(
-            "UPDATE briefing_requests SET email_sent = 1 WHERE id = ?",
-          )
+          await env.DB.prepare("UPDATE briefing_requests SET email_sent = 1 WHERE id = ?")
             .bind(insert.id)
             .run();
         } catch (err) {

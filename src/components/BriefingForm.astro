@@ -1,0 +1,277 @@
+---
+const ENGAGEMENT_OPTIONS = [
+  { value: "expert-call", label: "Expert Call — 30-min call, $500" },
+  { value: "second-opinion", label: "Second Opinion — short brief, $2,000" },
+  { value: "technical-brief", label: "Technical Brief — in-depth brief, $3,500" },
+  { value: "workshop", label: "Workshop — full day, $9k+" },
+];
+
+const fieldClass =
+  "w-full bg-transparent border-2 border-background/20 px-4 py-3 text-background placeholder:text-background/30 focus:outline-none focus:border-accent transition-colors font-sans";
+const labelClass =
+  "block text-[10px] font-black uppercase tracking-[0.3em] text-background/60 mb-3";
+const errorClass = "mt-2 text-xs text-accent font-bold";
+---
+
+<form id="briefing-form" class="space-y-6" novalidate>
+  <div class="grid md:grid-cols-2 gap-6">
+    <div>
+      <label for="name" class={labelClass}>Name</label>
+      <input id="name" name="name" type="text" class={fieldClass} />
+      <p class={errorClass} data-error="name" hidden></p>
+    </div>
+    <div>
+      <label for="email" class={labelClass}>Work email</label>
+      <input id="email" name="email" type="email" class={fieldClass} />
+      <p class={errorClass} data-error="email" hidden></p>
+    </div>
+    <div>
+      <label for="role" class={labelClass}>Role (optional)</label>
+      <input id="role" name="role" type="text" class={fieldClass} />
+      <p class={errorClass} data-error="role" hidden></p>
+    </div>
+    <div>
+      <label for="engagementType" class={labelClass}>Engagement type</label>
+      <select
+        id="engagementType"
+        name="engagementType"
+        class="w-full bg-transparent border-2 border-background/20 px-4 py-3 text-background focus:outline-none focus:border-accent transition-colors font-sans"
+      >
+        <option value="" class="bg-foreground text-background">Select one…</option>
+        {
+          ENGAGEMENT_OPTIONS.map((o) => (
+            <option value={o.value} class="bg-foreground text-background">
+              {o.label}
+            </option>
+          ))
+        }
+      </select>
+      <p class={errorClass} data-error="engagementType" hidden></p>
+    </div>
+  </div>
+  <div>
+    <label for="topic" class={labelClass}>Question</label>
+    <input
+      id="topic"
+      name="topic"
+      type="text"
+      placeholder="e.g. Securing Azure ML for SOC 2"
+      class={fieldClass}
+    />
+    <p class={errorClass} data-error="topic" hidden></p>
+  </div>
+  <div>
+    <label for="details" class={labelClass}>Question details</label>
+    <textarea
+      id="details"
+      name="details"
+      rows="4"
+      placeholder="Describe the decision you're facing, key constraints, and timeline."
+      class={fieldClass}></textarea>
+    <p class={errorClass} data-error="details" hidden></p>
+  </div>
+  <div class="flex flex-wrap items-center justify-between gap-6">
+    <button
+      type="submit"
+      data-submit
+      disabled
+      class="px-10 py-5 bg-accent text-background font-black uppercase tracking-widest text-xs hover:bg-background hover:text-foreground transition-all disabled:opacity-50"
+    >
+      Request Briefing
+    </button>
+    <div data-turnstile></div>
+  </div>
+  <p class="text-xs font-black uppercase tracking-[0.3em] text-accent" data-status="ok" hidden>
+    Received — Pedro will respond within one business day.
+  </p>
+  <p class="text-xs font-black uppercase tracking-[0.3em] text-accent" data-status="error" hidden>
+  </p>
+</form>
+
+<script>
+  import { z } from "zod";
+
+  const TURNSTILE_SITE_KEY = "0x4AAAAAADXZiCqy8p3HZOMu";
+
+  declare global {
+    interface Window {
+      turnstile?: {
+        render: (
+          el: HTMLElement,
+          opts: {
+            sitekey: string;
+            theme?: "light" | "dark" | "auto";
+            callback: (token: string) => void;
+            "expired-callback"?: () => void;
+            "error-callback"?: () => void;
+          },
+        ) => string;
+        reset: (widgetId?: string) => void;
+      };
+    }
+  }
+
+  const schema = z.object({
+    name: z.string().trim().min(1, "Required").max(120),
+    email: z.string().trim().email("Invalid email").max(255),
+    role: z.string().trim().max(120).optional().or(z.literal("")),
+    engagementType: z.enum(["expert-call", "second-opinion", "technical-brief", "workshop"], {
+      errorMap: () => ({ message: "Pick an engagement type" }),
+    }),
+    topic: z.string().trim().min(1, "Required").max(200),
+    details: z.string().trim().min(10, "Add a bit more detail").max(4000),
+  });
+
+  type FieldName = keyof z.infer<typeof schema>;
+
+  const form = document.getElementById("briefing-form") as HTMLFormElement | null;
+  if (form) {
+    const submitBtn = form.querySelector<HTMLButtonElement>("[data-submit]")!;
+    const turnstileEl = form.querySelector<HTMLElement>("[data-turnstile]")!;
+    const okMsg = form.querySelector<HTMLElement>('[data-status="ok"]')!;
+    const errMsg = form.querySelector<HTMLElement>('[data-status="error"]')!;
+
+    let token: string | null = null;
+    let widgetId: string | null = null;
+    let submitting = false;
+
+    const updateSubmitState = () => {
+      submitBtn.disabled = submitting || !token;
+      submitBtn.textContent = submitting ? "Submitting…" : "Request Briefing";
+    };
+
+    const setFieldError = (name: FieldName, message: string) => {
+      const el = form.querySelector<HTMLElement>(`[data-error="${name}"]`);
+      if (!el) return;
+      el.textContent = message;
+      el.hidden = false;
+    };
+
+    const clearFieldErrors = () => {
+      form.querySelectorAll<HTMLElement>("[data-error]").forEach((el) => {
+        el.textContent = "";
+        el.hidden = true;
+      });
+    };
+
+    const showServerError = (message: string) => {
+      okMsg.hidden = true;
+      errMsg.textContent = message;
+      errMsg.hidden = false;
+    };
+
+    // Load and render the Turnstile widget.
+    const scriptId = "cf-turnstile-script";
+    if (!document.getElementById(scriptId)) {
+      const s = document.createElement("script");
+      s.id = scriptId;
+      s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    }
+    const renderWhenReady = () => {
+      if (!window.turnstile || !turnstileEl) {
+        setTimeout(renderWhenReady, 100);
+        return;
+      }
+      if (widgetId) return;
+      widgetId = window.turnstile.render(turnstileEl, {
+        sitekey: TURNSTILE_SITE_KEY,
+        theme: "dark",
+        callback: (t) => {
+          token = t;
+          updateSubmitState();
+        },
+        "expired-callback": () => {
+          token = null;
+          updateSubmitState();
+        },
+        "error-callback": () => {
+          token = null;
+          updateSubmitState();
+        },
+      });
+    };
+    renderWhenReady();
+
+    const resetTurnstile = () => {
+      window.turnstile?.reset(widgetId ?? undefined);
+      token = null;
+      updateSubmitState();
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const values = {
+        name: (form.elements.namedItem("name") as HTMLInputElement).value,
+        email: (form.elements.namedItem("email") as HTMLInputElement).value,
+        role: (form.elements.namedItem("role") as HTMLInputElement).value,
+        engagementType: (form.elements.namedItem("engagementType") as HTMLSelectElement).value,
+        topic: (form.elements.namedItem("topic") as HTMLInputElement).value,
+        details: (form.elements.namedItem("details") as HTMLTextAreaElement).value,
+      };
+
+      const parsed = schema.safeParse(values);
+      if (!parsed.success) {
+        clearFieldErrors();
+        for (const issue of parsed.error.issues) {
+          setFieldError(issue.path[0] as FieldName, issue.message);
+        }
+        return;
+      }
+      clearFieldErrors();
+      errMsg.hidden = true;
+      okMsg.hidden = true;
+
+      if (!token) {
+        showServerError("Please complete the challenge before submitting.");
+        return;
+      }
+
+      submitting = true;
+      updateSubmitState();
+      let res: Response;
+      try {
+        res = await fetch("/api/briefing", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            name: parsed.data.name,
+            email: parsed.data.email,
+            role: parsed.data.role || null,
+            engagementType: parsed.data.engagementType,
+            topic: parsed.data.topic,
+            details: parsed.data.details,
+            turnstileToken: token,
+          }),
+        });
+      } catch {
+        submitting = false;
+        updateSubmitState();
+        showServerError("Network error. Please try again.");
+        return;
+      }
+      submitting = false;
+      updateSubmitState();
+
+      if (!res.ok) {
+        let msg = "Could not submit. Please try again.";
+        try {
+          const body = (await res.json()) as { error?: string };
+          if (body?.error) msg = body.error;
+        } catch {
+          /* keep generic */
+        }
+        showServerError(msg);
+        resetTurnstile();
+        return;
+      }
+
+      errMsg.hidden = true;
+      okMsg.hidden = false;
+      form.reset();
+      resetTurnstile();
+    });
+  }
+</script>

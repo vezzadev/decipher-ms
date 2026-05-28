@@ -15,22 +15,17 @@ const ENGAGEMENT_LABEL: Record<BriefingPayload["engagementType"], string> = {
   "expert-call": "Expert Call",
   "second-opinion": "Second Opinion",
   "technical-brief": "Technical Brief",
-  "workshop": "Workshop",
+  workshop: "Workshop",
 };
 
-async function getAccessToken(
-  env: Env,
-  tel: Telemetry,
-  parentId: string,
-): Promise<string> {
+async function getAccessToken(env: Env, tel: Telemetry, parentId: string): Promise<string> {
   const assertion = await mintFederatedAssertion(env);
   const url = `https://login.microsoftonline.com/${env.GRAPH_TENANT_ID}/oauth2/v2.0/token`;
   const body = new URLSearchParams({
     client_id: env.GRAPH_APP_ID,
     scope: "https://graph.microsoft.com/.default",
     grant_type: "client_credentials",
-    client_assertion_type:
-      "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+    client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
     client_assertion: assertion,
   });
   const spanId = tel.newSpanId();
@@ -75,10 +70,7 @@ async function getAccessToken(
 }
 
 function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 function buildMessage(env: Env, data: BriefingPayload) {
@@ -102,9 +94,7 @@ function buildMessage(env: Env, data: BriefingPayload) {
       body: { contentType: "HTML", content: html },
       toRecipients: [{ emailAddress: { address: env.GRAPH_TO } }],
       bccRecipients: [{ emailAddress: { address: env.GRAPH_BCC } }],
-      replyTo: [
-        { emailAddress: { address: data.email, name: data.name } },
-      ],
+      replyTo: [{ emailAddress: { address: data.email, name: data.name } }],
     },
     saveToSentItems: true,
   };

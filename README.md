@@ -1,27 +1,40 @@
 # decipher.ms
 
-Source for [decipher.ms](https://decipher.ms) — an independent Microsoft advisory operated by Vezza LLC. A marketing site plus a Cloudflare Worker that handles briefing-form intake, anonymous telemetry, and transactional email.
+Source for [decipher.ms](https://decipher.ms) — an independent Microsoft advisory operated by Vezza LLC. A marketing site plus server routes that handle briefing-form intake, anonymous telemetry, and transactional email — all running on Cloudflare Workers via Astro's SSR adapter.
 
 ## Stack
 
-- **Frontend** — Vite, React 19 + TypeScript, React Router, Tailwind CSS v4, `react-helmet-async`
-- **Backend** — Cloudflare Worker, D1 (briefing storage), Microsoft Graph (outbound email), Cloudflare Turnstile (bot protection)
+- **Frontend** — Astro (SSR) + TypeScript, Tailwind CSS v4
+- **Backend** — Astro server routes on the Cloudflare Workers adapter, D1 (briefing storage), Microsoft Graph (outbound email), Cloudflare Turnstile (bot protection)
 - **Telemetry** — Azure Application Insights, ingested directly via raw envelope POSTs (no SDK). See [`AGENTS.md`](AGENTS.md).
 
 ## Development
 
 ```bash
 npm install
-npm run dev          # Vite dev server
-npm run build        # Production build
+npm run dev          # Astro dev server (Cloudflare bindings via the adapter)
+npm run build        # SSR build to ./dist/{client,server}
+npm run preview      # Preview the built SSR worker (via the Cloudflare adapter)
 npm run lint
 ```
 
-The worker reads its configuration from [`wrangler.jsonc`](wrangler.jsonc) and the secrets declared in [`worker/env.ts`](worker/env.ts) (`GRAPH_*`, `OIDC_*`, `TURNSTILE_SECRET_KEY`, `APPLICATIONINSIGHTS_CONNECTION_STRING`). Set them per environment with `npx wrangler secret put <NAME>`.
+`npm run build` emits an SSR worker to `./dist/server` and static assets to
+`./dist/client`. Server logic lives in `src/`:
+
+- `src/pages/api/briefing.ts` — briefing intake (`POST /api/briefing`)
+- `src/pages/.well-known/*` — OIDC discovery + JWKS
+- `src/middleware.ts` — per-request App Insights telemetry
+- `src/lib/server/*` — D1, Microsoft Graph, JWT/OIDC, Turnstile, telemetry
+
+Bindings are read via `import { env } from "cloudflare:workers"`; the execution
+context is `Astro.locals.cfContext`. Secrets (`OIDC_PRIVATE_KEY`,
+`TURNSTILE_SECRET_KEY`, `APPLICATIONINSIGHTS_CONNECTION_STRING`) and `vars`
+(`GRAPH_*`, `OIDC_*`) come from [`wrangler.jsonc`](wrangler.jsonc); set secrets
+per environment with `npx wrangler secret put <NAME>`.
 
 ## Deployment
 
-Cloudflare Pages / Workers Builds. Pushes to `main` deploy production; branch pushes get a preview at `<branch>-decipher-ms.*.workers.dev`.
+Cloudflare Workers Builds. Pushes to `main` deploy production; branch pushes get a preview at `<branch>-decipher-ms.*.workers.dev`. Deploy targets the adapter-generated `dist/server/wrangler.json` — see [`AGENTS.md`](AGENTS.md) for the exact build/deploy commands.
 
 ## License
 

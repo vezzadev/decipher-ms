@@ -1,0 +1,166 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/Nav.astro";
+import Footer from "@/components/Footer.astro";
+import Block from "@/components/Block.astro";
+---
+
+<Layout
+  title="Legal — decipher.ms"
+  description="Terms of use and advisory disclaimer for decipher.ms, operated by Vezza LLC."
+  canonical="https://decipher.ms/legal"
+  noindex={true}
+>
+  <div class="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
+    <Nav variant="page" />
+
+    <main>
+      <header class="px-6 py-20 md:py-24 max-w-[1400px] mx-auto">
+        <div class="border-l-8 border-accent pl-6 md:pl-10">
+          <span
+            class="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8"
+          >
+            Terms &amp; Disclaimer
+          </span>
+          <h1
+            class="font-serif text-5xl md:text-6xl lg:text-7xl font-black leading-[0.85] tracking-tighter mb-8"
+          >
+            Legal
+          </h1>
+          <p class="text-base text-foreground/60">
+            Effective 2026-05-27 · Operated by Vezza LLC, Seattle, Washington, USA.
+          </p>
+        </div>
+      </header>
+
+      <section class="border-t-4 border-foreground px-6 py-20 md:py-24">
+        <div
+          class="max-w-[820px] mx-auto space-y-14 text-base md:text-lg leading-relaxed text-foreground/80"
+        >
+          <Block n="01" title="About this site">
+            <p>
+              <span class="text-foreground">decipher</span><span class="text-accent">.ms</span> is an
+              independent Microsoft advisory operated by <strong class="text-foreground"
+                >Vezza LLC</strong
+              >, a Washington State limited liability company. References to "we," "us," or
+              "decipher.ms" mean Vezza LLC.
+            </p>
+            <p>
+              By accessing this website or engaging our services, you agree to these terms. If you
+              don't agree, please don't use the site.
+            </p>
+          </Block>
+
+          <Block n="02" title="Advisory disclaimer">
+            <p>
+              Briefings, written reports, calls, and any other materials we produce are <strong
+                class="text-foreground">informational and advisory only</strong
+              >. They reflect our analysis and judgment as of the date delivered and are based on
+              the information you share with us.
+            </p>
+            <p>
+              We are <strong class="text-foreground">not</strong> providing legal advice, tax advice,
+              accounting advice, financial advice, or Microsoft licensing or contract advice. Nothing
+              we deliver creates an attorney-client, fiduciary, or agency relationship between you and
+              Vezza LLC.
+            </p>
+            <p>
+              Our deliverables are <strong class="text-foreground"
+                >your inputs, not your decision</strong
+              >. You remain responsible for validating our analysis against your own environment,
+              requirements, and constraints — and for consulting your own legal, tax, security, and
+              procurement advisors before acting on it.
+            </p>
+            <p>
+              We make no warranties, express or implied, regarding the accuracy, completeness,
+              fitness for a particular purpose, or non-infringement of any materials we provide.
+            </p>
+          </Block>
+
+          <Block n="03" title="Independence from Microsoft">
+            <p>
+              <span class="text-foreground">decipher</span><span class="text-accent">.ms</span> is
+              <strong class="text-foreground">
+                not affiliated with, endorsed by, or sponsored by Microsoft Corporation</strong
+              >. References to Microsoft products, services, programs, or trademarks are nominative
+              and do not imply any partnership.
+            </p>
+            <p>
+              We do not resell Microsoft products, participate in the Microsoft Partner Network as a
+              transacting partner, or accept referral commissions from Microsoft or any third party
+              for advice we give you. If that ever changes for a specific engagement, we will
+              disclose it to you in writing before the engagement begins.
+            </p>
+          </Block>
+
+          <Block n="04" title="No Microsoft confidential information">
+            <p>
+              Our founder is a former Microsoft employee. We will <strong class="text-foreground"
+                >never</strong
+              > share, reference, or rely on information that is confidential, proprietary, or otherwise
+              non-public to Microsoft in any briefing, report, call, or informal exchange with you.
+            </p>
+            <p>
+              Every deliverable is built exclusively from publicly available information, your
+              inputs, and our independent analysis and experience. Confidentiality obligations to
+              former employers remain in force and are not negotiable.
+            </p>
+          </Block>
+
+          <Block n="05" title="Engagements">
+            <p>
+              These terms govern your use of the website. The specific scope, fees, deliverables,
+              confidentiality, and ownership terms for any paid engagement are set out in the
+              separate engagement letter or statement of work we send you before work begins. In
+              case of conflict, the engagement letter controls.
+            </p>
+          </Block>
+
+          <Block n="06" title="Intellectual property">
+            <p>
+              The site's content, design, code, and trademarks are owned by Vezza LLC or licensed to
+              us. You may view and share normal excerpts for personal or internal business use.
+            </p>
+          </Block>
+
+          <Block n="07" title="Limitation of liability">
+            <p>
+              To the maximum extent permitted by law, Vezza LLC will not be liable for any indirect,
+              incidental, special, consequential, or punitive damages arising from your use of the
+              website or any free materials available on it. Liability arising from a paid
+              engagement is governed by the engagement letter.
+            </p>
+          </Block>
+
+          <Block n="08" title="Governing law">
+            <p>
+              These terms are governed by the laws of the State of Washington, USA, without regard
+              to its conflict-of-laws principles. Any dispute will be resolved exclusively in the
+              state or federal courts located in King County, Washington.
+            </p>
+          </Block>
+
+          <Block n="09" title="Changes">
+            <p>
+              We may update these terms from time to time. Material changes will be reflected by
+              updating the effective date at the top of this page. Continued use of the site after
+              the effective date means you accept the updated terms.
+            </p>
+          </Block>
+
+          <Block n="10" title="Contact">
+            <p>
+              Legal questions can be sent via the <a
+                href="/#briefing"
+                class="text-accent underline underline-offset-4 hover:text-foreground transition-colors"
+                >briefing form</a
+              > — mark your message "Legal inquiry."
+            </p>
+          </Block>
+        </div>
+      </section>
+    </main>
+
+    <Footer variant="page" />
+  </div>
+</Layout>
