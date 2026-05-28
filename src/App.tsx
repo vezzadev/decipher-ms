@@ -17,7 +17,7 @@ function RouteTracker() {
       const el = document.getElementById(location.hash.slice(1));
       if (el) el.scrollIntoView();
     } else {
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     }
     const handle = requestAnimationFrame(() => {
       trackPageview(location.pathname, document.title || location.pathname);
