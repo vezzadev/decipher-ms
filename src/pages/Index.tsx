@@ -130,7 +130,7 @@ const Index = () => {
                   <p className="font-black mt-1">5–10 page brief +<br />30 min presentation</p>
                 </div>
                 <div>
-                  <p className="opacity-50">Vendor fees</p>
+                  <p className="opacity-50">Referral commissions</p>
                   <p className="font-black mt-1">$0</p>
                 </div>
               </div>
