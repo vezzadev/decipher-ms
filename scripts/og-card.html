@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&family=Playfair+Display:ital,wght@1,900&display=swap"
+/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    background: #ffffff;
+    color: #020617;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+  }
+  .card {
+    width: 1200px;
+    height: 630px;
+    padding: 64px 80px 64px 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 16px;
+    background: #2563eb;
+  }
+  .eyebrow {
+    color: #2563eb;
+    font-size: 22px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+  }
+  .wordmark {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 200px;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    color: #020617;
+    white-space: nowrap;
+  }
+  .wordmark .accent { color: #2563eb; margin-left: 0.04em; }
+  .tagline {
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 1.2;
+    max-width: 920px;
+    letter-spacing: -0.01em;
+    color: rgba(2, 6, 23, 0.85);
+  }
+  .promises {
+    font-size: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: #2563eb;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">Independent Microsoft advisory</div>
+  <div class="wordmark">decipher<span class="accent">.ms</span></div>
+  <div class="tagline">
+    Straight answers on Azure, AI/ML, and Dynamics<br />
+    from a former Microsoft Principal Engineer.
+  </div>
+  <div class="promises">No resellers · No kickbacks · No upsell</div>
+</div>
+</body>
+</html>

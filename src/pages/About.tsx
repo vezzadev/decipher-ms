@@ -51,12 +51,22 @@ const About = () => {
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
       <Helmet>
         <title>About Pedro Paulo Vezza Campos — decipher.ms</title>
-        <meta name="description" content="Founder of decipher.ms. Former Microsoft Principal Engineer and Tech Lead on the M365 Substrate AI Platform with 11 years inside Microsoft." />
+        <meta name="description" content="Founder of decipher.ms. Former Microsoft Principal Engineer and Tech Lead on the M365 Substrate AI Platform. 11 years inside Microsoft, now running an independent advisory." />
         <link rel="canonical" href="https://decipher.ms/about" />
         <meta property="og:title" content="About the Founder — decipher.ms" />
-        <meta property="og:description" content="Pedro Paulo Vezza Campos — former Microsoft Principal Engineer, Tech Lead on the M365 Substrate AI Platform, now running an independent Microsoft advisory." />
+        <meta property="og:description" content="Pedro Paulo Vezza Campos — former Microsoft Principal Engineer, Tech Lead on the M365 Substrate AI Platform. 11 years inside Microsoft, now running an independent advisory." />
         <meta property="og:url" content="https://decipher.ms/about" />
         <meta property="og:type" content="profile" />
+        <meta property="og:site_name" content="decipher.ms" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:image" content="/og-image.png" />
+        <meta property="og:image:width" content="2400" />
+        <meta property="og:image:height" content="1260" />
+        <meta property="og:image:alt" content="decipher.ms — Independent Microsoft advisory" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About Pedro Paulo Vezza Campos — decipher.ms" />
+        <meta name="twitter:description" content="Former Microsoft Principal Engineer and Tech Lead on the M365 Substrate AI Platform. 11 years inside Microsoft, now running an independent advisory." />
+        <meta name="twitter:image" content="/og-image.png" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Person",

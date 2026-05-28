@@ -72,12 +72,22 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
       <Helmet>
         <title>decipher.ms — Independent Microsoft advisory</title>
-        <meta name="description" content="Independent Microsoft advisory by a former Principal Engineer. Straight answers on cloud security, AI/ML platform architecture, and Dynamics engineering — vendor-neutral." />
+        <meta name="description" content="Straight answers on Azure, AI/ML, and Dynamics from a former Microsoft Principal Engineer. Fixed-price briefings — no resellers, no kickbacks, no upsell." />
         <link rel="canonical" href="https://decipher.ms/" />
         <meta property="og:title" content="decipher.ms — Independent Microsoft advisory" />
-        <meta property="og:description" content="Straight answers on Azure security, AI/ML platforms, and Dynamics engineering from a former Microsoft Principal Engineer." />
+        <meta property="og:description" content="Straight answers on Azure, AI/ML, and Dynamics from a former Microsoft Principal Engineer. Fixed-price briefings — no resellers, no kickbacks, no upsell." />
         <meta property="og:url" content="https://decipher.ms/" />
         <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="decipher.ms" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:image" content="/og-image.png" />
+        <meta property="og:image:width" content="2400" />
+        <meta property="og:image:height" content="1260" />
+        <meta property="og:image:alt" content="decipher.ms — Independent Microsoft advisory" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="decipher.ms — Independent Microsoft advisory" />
+        <meta name="twitter:description" content="Straight answers on Azure, AI/ML, and Dynamics from a former Microsoft Principal Engineer. Fixed-price briefings — no resellers, no kickbacks, no upsell." />
+        <meta name="twitter:image" content="/og-image.png" />
       </Helmet>
       {/* NAV */}
       <nav className="border-b-4 border-foreground px-6 py-6 flex justify-between items-center sticky top-0 bg-background/95 backdrop-blur z-50">
