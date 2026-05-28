@@ -70,8 +70,13 @@ async function verifyTurnstile(
   token: string,
   remoteIp: string | null,
 ): Promise<TurnstileResult> {
+  // In dev the client uses Cloudflare's always-pass dummy sitekey; pair it with the
+  // matching dummy secret so siteverify succeeds without a real TURNSTILE_SECRET_KEY.
+  const secret = import.meta.env.DEV
+    ? "1x0000000000000000000000000000000AA"
+    : env.TURNSTILE_SECRET_KEY;
   const body = new FormData();
-  body.append("secret", env.TURNSTILE_SECRET_KEY);
+  body.append("secret", secret);
   body.append("response", token);
   if (remoteIp) body.append("remoteip", remoteIp);
   const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {

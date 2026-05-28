@@ -1,0 +1,120 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/Nav.astro";
+import Footer from "@/components/Footer.astro";
+import { engagementTypes, samplesFor } from "@/lib/samples";
+
+const description =
+  "Published sample deliverables from decipher.ms — real Technical Briefs and engagement output you can read before you commission your own.";
+const canonical = "https://decipher.ms/work";
+
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-US", { year: "numeric", month: "long" });
+---
+
+<Layout
+  title="Sample Work — decipher.ms"
+  description={description}
+  canonical={canonical}
+  ogTitle="Sample Work — decipher.ms"
+  ogDescription={description}
+  ogUrl={canonical}
+>
+  <div class="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
+    <Nav variant="page" active="work" />
+
+    <main>
+      <header class="px-6 py-20 md:py-28 max-w-[1400px] mx-auto">
+        <div class="border-l-8 border-accent pl-6 md:pl-10">
+          <span
+            class="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8"
+          >
+            Sample Work
+          </span>
+          <h1
+            class="font-serif text-5xl md:text-6xl lg:text-7xl font-black leading-[0.85] tracking-tighter mb-8"
+          >
+            See the work
+            <br />
+            <span class="text-accent italic">before</span> you commission it.
+          </h1>
+          <p
+            class="text-xl md:text-2xl font-semibold max-w-2xl leading-tight tracking-tight text-foreground/80"
+          >
+            Selected deliverables, published in full. Each one was written for a real decision —
+            grouped below by the engagement that produced it.
+          </p>
+        </div>
+      </header>
+
+      {
+        engagementTypes
+          .filter((t) => samplesFor(t.key).length > 0)
+          .map((t) => {
+            const items = samplesFor(t.key);
+            return (
+              <section id={t.key} class="border-t-4 border-foreground px-6 py-16 md:py-20 scroll-mt-28">
+                <div class="max-w-[1400px] mx-auto">
+                  <div class="flex items-baseline gap-5 mb-10">
+                    <span class="font-serif italic text-3xl md:text-4xl text-accent shrink-0">
+                      {t.n}.
+                    </span>
+                    <h2 class="font-serif text-3xl md:text-5xl font-black tracking-tighter uppercase leading-none">
+                      {t.name}
+                    </h2>
+                  </div>
+
+                  <div class="grid md:grid-cols-2 gap-6">
+                    {items.map((s) => (
+                      <a
+                        href={s.href}
+                        class="group bg-background border-4 border-foreground p-8 md:p-10 flex flex-col hover:bg-accent hover:text-background hover:border-accent transition-colors"
+                      >
+                        <div class="flex items-center justify-between gap-4 mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/50 group-hover:text-background/70">
+                          <span>{s.format}</span>
+                          <span>{fmtDate(s.date)}</span>
+                        </div>
+                        <h3 class="font-serif text-2xl md:text-3xl font-black tracking-tighter leading-none mb-5">
+                          {s.title}
+                        </h3>
+                        <p class="text-base leading-relaxed text-foreground/70 group-hover:text-background/80 flex-1">
+                          {s.summary}
+                        </p>
+                        <span class="mt-8 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-accent group-hover:text-background">
+                          Read it
+                          <span class="transition-transform group-hover:translate-x-1">→</span>
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            );
+          })
+      }
+
+      <section class="border-t-4 border-foreground bg-foreground text-background px-6 py-20 md:py-28">
+        <div class="max-w-[1400px] mx-auto">
+          <h2
+            class="font-serif text-4xl md:text-5xl lg:text-6xl font-black italic leading-[0.95] tracking-tighter mb-8 max-w-3xl"
+          >
+            Want one of these written for your decision?
+          </h2>
+          <p class="text-background/60 text-lg max-w-2xl mb-10">
+            Whether you need a quick expert call, a second opinion on a decision already in
+            motion, a written technical brief, or a working session with your team, tell me the
+            Microsoft call you're working on and I'll scope it.
+          </p>
+          <a
+            href="/#contact"
+            class="inline-flex items-center gap-3 bg-accent text-background px-8 py-4 text-sm font-black uppercase tracking-[0.2em] hover:bg-background hover:text-foreground transition-colors"
+          >
+            Request a briefing <span>→</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <Footer variant="page" />
+  </div>
+</Layout>

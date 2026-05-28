@@ -91,7 +91,11 @@ const errorClass = "mt-2 text-xs text-accent font-bold";
 <script>
   import { z } from "zod";
 
-  const TURNSTILE_SITE_KEY = "0x4AAAAAADXZiCqy8p3HZOMu";
+  // Prod sitekey is locked to decipher.ms; on localhost it errors 110200. Use
+  // Cloudflare's always-pass dummy sitekey in dev so the widget actually renders.
+  const TURNSTILE_SITE_KEY = import.meta.env.DEV
+    ? "1x00000000000000000000AA"
+    : "0x4AAAAAADXZiCqy8p3HZOMu";
 
   declare global {
     interface Window {

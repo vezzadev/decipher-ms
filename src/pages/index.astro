@@ -3,10 +3,21 @@ import Layout from "@/layouts/Layout.astro";
 import Nav from "@/components/Nav.astro";
 import Footer from "@/components/Footer.astro";
 import BriefingForm from "@/components/BriefingForm.astro";
+import { type EngagementKey, sampleCountFor } from "@/lib/samples";
 
-const services = [
+interface Service {
+  n: string;
+  key: EngagementKey;
+  name: string;
+  cadence: string;
+  price: string;
+  desc: string;
+}
+
+const services: Service[] = [
   {
     n: "01",
+    key: "expert-call",
     name: "Expert Call",
     cadence: "30-min call",
     price: "$500",
@@ -14,6 +25,7 @@ const services = [
   },
   {
     n: "02",
+    key: "second-opinion",
     name: "Second Opinion",
     cadence: "Short brief",
     price: "$2,000",
@@ -21,13 +33,15 @@ const services = [
   },
   {
     n: "03",
+    key: "technical-brief",
     name: "Technical Brief",
     cadence: "In-depth brief",
     price: "$3,500",
-    desc: "Long-form brief on a Microsoft cloud, AI, or security decision. 5–10 page report plus a 30-minute presentation, delivered in 5–10 days. $2,500 if publishable.",
+    desc: "Long-form brief on a Microsoft cloud, AI, or security decision. 5–10 page report plus a 30-minute presentation, delivered in 5–10 days.",
   },
   {
     n: "04",
+    key: "workshop",
     name: "Workshop",
     cadence: "Full-day workshop",
     price: "$9,000+",
@@ -148,7 +162,7 @@ const description =
               </div>
             </div>
             <a
-              href="#briefing"
+              href="#contact"
               class="group w-full py-6 md:py-7 bg-accent text-background text-lg md:text-xl font-black uppercase tracking-widest hover:bg-foreground transition-all flex justify-between px-8 md:px-10 items-center"
             >
               <span>Request Briefing</span>
@@ -158,7 +172,7 @@ const description =
         </div>
       </header>
 
-      <section id="services" class="border-t-4 border-foreground min-h-[calc(100svh-92px)] flex">
+      <section id="pricing" class="border-t-4 border-foreground min-h-[calc(100svh-92px)] flex">
         <div class="grid lg:grid-cols-4 w-full">
           {
             services.map((s, i) => (
@@ -177,7 +191,18 @@ const description =
                 <h3 class="font-serif text-3xl md:text-4xl font-black uppercase leading-none mb-6">
                   {s.name}
                 </h3>
-                <p class="font-medium leading-snug mb-10 opacity-80 flex-1">{s.desc}</p>
+                <p class="font-medium leading-snug mb-6 opacity-80 flex-1">{s.desc}</p>
+                {sampleCountFor(s.key) > 0 && (
+                  <a
+                    href={`/work#${s.key}`}
+                    class="group/sample mb-8 flex items-center justify-between gap-3 border-2 border-current px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-accent group-hover:text-background transition-colors"
+                  >
+                    <span>
+                      {sampleCountFor(s.key)} sample{sampleCountFor(s.key) > 1 ? "s" : ""} published
+                    </span>
+                    <span class="transition-transform group-hover/sample:translate-x-1">→</span>
+                  </a>
+                )}
                 <p class="font-serif font-black italic text-5xl md:text-6xl tracking-tighter">
                   {s.price}
                 </p>
@@ -272,7 +297,7 @@ const description =
       </section>
 
       <section
-        id="founder"
+        id="about"
         class="border-t-4 border-foreground px-6 py-16 md:py-20 min-h-[calc(100svh-92px)] flex items-center"
       >
         <div
@@ -315,7 +340,7 @@ const description =
       </section>
 
       <section
-        id="briefing"
+        id="contact"
         class="border-t-4 border-foreground bg-foreground text-background px-6 py-6 md:py-8 min-h-[calc(100svh-92px)] flex items-center"
       >
         <div class="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16 lg:gap-24 w-full">
