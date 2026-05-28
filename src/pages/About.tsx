@@ -13,7 +13,7 @@ const roles = [
       "Spearheaded removal of overprivileged Azure RBAC role assignments across production subscriptions, establishing a least-privilege framework.",
       "Architected low-privilege access for the M365 internal AI/ML platform on Azure Machine Learning, enabling data scientists to work securely under SOC 2.",
       "Led unification of critical internal dataset environments and migration of internal Kubernetes clusters with zero downtime.",
-      "Drove SOC 2023 audit readiness with comprehensive controls, audit logging, and compliance monitoring.",
+      "Drove readiness for the 2023 SOC 2 audit with comprehensive controls, audit logging, and compliance monitoring.",
     ],
   },
   {
@@ -43,7 +43,7 @@ const expertise = [
   "Secret and identity management, Entra tenant isolation",
   "Resource Scheduling Optimization & Operations Research",
   "Enterprise Software Architecture & SRE",
-  "Technical Leadership & Cross-Team Collaboration",
+  "Azure Government / GCC High deployment",
 ];
 
 const About = () => {
@@ -51,12 +51,22 @@ const About = () => {
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
       <Helmet>
         <title>About Pedro Paulo Vezza Campos — decipher.ms</title>
-        <meta name="description" content="Founder of decipher.ms. Former Microsoft Principal Engineer and Tech Lead on the M365 Substrate AI Platform with 11 years inside Microsoft." />
+        <meta name="description" content="Founder of decipher.ms. Former Microsoft Principal Engineer and Tech Lead on the M365 Substrate AI Platform. 11 years inside Microsoft, now running an independent advisory." />
         <link rel="canonical" href="https://decipher.ms/about" />
         <meta property="og:title" content="About the Founder — decipher.ms" />
-        <meta property="og:description" content="Pedro Paulo Vezza Campos — former Microsoft Principal Engineer, Tech Lead on the M365 Substrate AI Platform, now running an independent Microsoft advisory." />
+        <meta property="og:description" content="Pedro Paulo Vezza Campos — former Microsoft Principal Engineer, Tech Lead on the M365 Substrate AI Platform. 11 years inside Microsoft, now running an independent advisory." />
         <meta property="og:url" content="https://decipher.ms/about" />
         <meta property="og:type" content="profile" />
+        <meta property="og:site_name" content="decipher.ms" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:image" content="/og-image.png" />
+        <meta property="og:image:width" content="2400" />
+        <meta property="og:image:height" content="1260" />
+        <meta property="og:image:alt" content="decipher.ms — Independent Microsoft advisory" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About Pedro Paulo Vezza Campos — decipher.ms" />
+        <meta name="twitter:description" content="Former Microsoft Principal Engineer and Tech Lead on the M365 Substrate AI Platform. 11 years inside Microsoft, now running an independent advisory." />
+        <meta name="twitter:image" content="/og-image.png" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Person",
@@ -142,7 +152,7 @@ const About = () => {
             </h2>
             <div className="space-y-6 text-lg md:text-xl leading-relaxed text-foreground/70 font-medium">
               <p>
-                Most Microsoft advisors learned the product matrix from the outside —
+                Many Microsoft advisors learned the product matrix from the outside —
                 reading docs, attending Ignite, going through a Microsoft Partner program.
               </p>
               <p>
@@ -240,8 +250,8 @@ const About = () => {
               Award
             </h3>
             <p className="text-base leading-relaxed text-foreground/70 mb-4">
-              "What Makes BAG, BAG — We succeed when the customer succeeds." Issued by
-              the Dynamics 365 Business Applications Group, July 2020.
+              Issued by the Dynamics 365 Business Applications Group (BAG), July 2020 —
+              under their "What Makes BAG, BAG: We succeed when the customer succeeds" program.
             </p>
             <p className="text-base italic text-foreground/50">
               "Pedro always strives to help our customers succeed, he researches new

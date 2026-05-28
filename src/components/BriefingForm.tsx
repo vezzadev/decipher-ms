@@ -3,16 +3,17 @@ import { z } from "zod";
 
 
 const ENGAGEMENT_OPTIONS = [
-  { value: "expert-call", label: "Expert Call — 1 hour, $1,000" },
-  { value: "second-opinion", label: "Second Opinion — written review, $2,000" },
-  { value: "technical-brief", label: "Technical Brief — in-depth report, $3,500" },
+  { value: "expert-call", label: "Expert Call — 30-min call, $500" },
+  { value: "second-opinion", label: "Second Opinion — short brief, $2,000" },
+  { value: "technical-brief", label: "Technical Brief — in-depth brief, $3,500" },
+  { value: "workshop", label: "Workshop — full day, $9k+" },
 ] as const;
 
 const schema = z.object({
   name: z.string().trim().min(1, "Required").max(120),
   email: z.string().trim().email("Invalid email").max(255),
   role: z.string().trim().max(120).optional().or(z.literal("")),
-  engagementType: z.enum(["expert-call", "second-opinion", "technical-brief"], {
+  engagementType: z.enum(["expert-call", "second-opinion", "technical-brief", "workshop"], {
     errorMap: () => ({ message: "Pick an engagement type" }),
   }),
   topic: z.string().trim().min(1, "Required").max(200),
