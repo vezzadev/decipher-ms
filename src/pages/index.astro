@@ -1,0 +1,347 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/Nav.astro";
+import Footer from "@/components/Footer.astro";
+import BriefingForm from "@/components/BriefingForm.astro";
+
+const services = [
+  {
+    n: "01",
+    name: "Expert Call",
+    cadence: "30-min call",
+    price: "$500",
+    desc: "Quick scoping call to talk through your situation. You'll walk away with a written recap and a clear recommendation on next steps.",
+  },
+  {
+    n: "02",
+    name: "Second Opinion",
+    cadence: "Short brief",
+    price: "$2,000",
+    desc: "A lighter Technical Brief — 2–3 pages, no presentation, delivered in 3–5 days. For a tight vendor-neutral check on one specific decision.",
+  },
+  {
+    n: "03",
+    name: "Technical Brief",
+    cadence: "In-depth brief",
+    price: "$3,500",
+    desc: "Long-form brief on a Microsoft cloud, AI, or security decision. 5–10 page report plus a 30-minute presentation, delivered in 5–10 days. $2,500 if publishable.",
+  },
+  {
+    n: "04",
+    name: "Workshop",
+    cadence: "Full-day workshop",
+    price: "$9,000+",
+    desc: "Full-day intensive with your engineering and security teams. Architecture review, decision frameworks, deep Q&A — calibrated to your stack ahead of time. $9k–$15k depending on team size.",
+  },
+];
+
+const topics = [
+  "Securing Azure ML for AI/ML workloads",
+  "Least-privilege Azure RBAC at production scale",
+  "SOC 2 readiness for Azure and Azure ML",
+  "Low-privilege access patterns for data scientists",
+  "GitHub Copilot rollout: governance and controls",
+  "Entra tenant isolation for sensitive workloads",
+  "Migrating Dynamics 365 RSO to multi-tenant",
+  "Deploying Dynamics 365 to Azure Government (GCC)",
+  "Microsoft Purview integration for compliance",
+  "Network isolation for M365 and Copilot data",
+];
+
+const why = [
+  {
+    n: "01",
+    title: ["Earned", "Expertise"],
+    body: "Run by a former Microsoft engineer from the M365 Substrate AI Platform — the team that builds the foundation of all intelligent features across Microsoft 365.",
+  },
+  {
+    n: "02",
+    title: ["Vendor", "Independence"],
+    body: "I don't resell, partner, or take referral fees. My only motivation is giving you the right technical answer.",
+  },
+  {
+    n: "03",
+    title: ["Fixed Price.", "Fast."],
+    body: "No hourly meters, no scope creep. You know the price before you start. Most engagements close in days, not months.",
+  },
+];
+
+const stats = [
+  { n: "5d", l: "Median turnaround" },
+  { n: "$0", l: "Kickbacks accepted" },
+  { n: "11yr", l: "Inside Microsoft" },
+  { n: "1", l: "Senior doing every brief" },
+];
+
+const description =
+  "Straight answers on Azure, AI/ML, and Dynamics from a former Microsoft Principal Engineer. Fixed-price briefings — no resellers, no kickbacks, no upsell.";
+---
+
+<Layout
+  title="decipher.ms — Independent Microsoft advisory"
+  description={description}
+  canonical="https://decipher.ms/"
+  ogUrl="https://decipher.ms/"
+>
+  <div class="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
+    <Nav variant="home" />
+
+    <main>
+      <header class="px-6 py-8 max-w-[1600px] mx-auto min-h-[calc(100svh-92px)] flex items-center">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
+          <div class="border-l-8 border-foreground pl-6 md:pl-10 min-w-0">
+            <span
+              class="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8"
+            >
+              Independent Microsoft advisory
+            </span>
+            <h1
+              class="font-serif text-5xl sm:text-7xl md:text-8xl xl:text-7xl 2xl:text-8xl font-black leading-[0.85] tracking-tighter mb-10 break-words lg:text-7xl"
+            >
+              DECODE
+              <br />
+              <span class="text-accent italic">MICROSOF<span class="ml-[0.06em]">T</span>.</span>
+              <br />
+              DECIDE.
+            </h1>
+            <p
+              class="text-xl md:text-2xl font-semibold max-w-lg leading-tight tracking-tight text-foreground/80"
+            >
+              Microsoft's cloud, AI, and security stack is a moving target. I give you clear,
+              unbiased answers — drawing on years inside Microsoft, building the platforms your
+              teams now run on.
+            </p>
+          </div>
+          <div class="flex flex-col">
+            <div
+              class="p-8 md:p-10 bg-foreground text-background flex flex-col justify-between gap-6"
+            >
+              <span class="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] opacity-60">
+                A recent question
+              </span>
+              <blockquote
+                class="font-serif italic font-black leading-[0.95] text-3xl md:text-4xl xl:text-5xl border-l-4 border-accent pl-5"
+              >
+                "Our SOC 2 auditors are flagging Azure RBAC on production. Forty-seven services, no
+                clear least-privilege model. Where do we start?"
+              </blockquote>
+              <div>
+                <p
+                  class="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-4"
+                >
+                  Sample Technical Brief
+                </p>
+                <div class="grid grid-cols-3 gap-4 text-[10px] uppercase tracking-widest">
+                  <div>
+                    <p class="opacity-50">Turnaround</p>
+                    <p class="font-black mt-1">5–10 days</p>
+                  </div>
+                  <div>
+                    <p class="opacity-50">Deliverable</p>
+                    <p class="font-black mt-1">5–10 page brief +<br />30 min presentation</p>
+                  </div>
+                  <div>
+                    <p class="opacity-50">Kickbacks accepted</p>
+                    <p class="font-black mt-1">$0</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <a
+              href="#briefing"
+              class="group w-full py-6 md:py-7 bg-accent text-background text-lg md:text-xl font-black uppercase tracking-widest hover:bg-foreground transition-all flex justify-between px-8 md:px-10 items-center"
+            >
+              <span>Request Briefing</span>
+              <span class="transition-transform group-hover:translate-x-2">→</span>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <section id="services" class="border-t-4 border-foreground min-h-[calc(100svh-92px)] flex">
+        <div class="grid lg:grid-cols-4 w-full">
+          {
+            services.map((s, i) => (
+              <div
+                class:list={[
+                  "p-10 md:p-12 border-b-4 lg:border-b-0 lg:[&:not(:last-child)]:border-r-2 border-foreground group hover:text-background transition-colors duration-300 flex flex-col",
+                  i % 2 === 0 ? "hover:bg-accent" : "hover:bg-foreground",
+                ]}
+              >
+                <span class="text-5xl md:text-6xl font-serif font-black italic block mb-10">
+                  {s.n}
+                </span>
+                <span class="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 mb-3">
+                  {s.cadence}
+                </span>
+                <h3 class="font-serif text-3xl md:text-4xl font-black uppercase leading-none mb-6">
+                  {s.name}
+                </h3>
+                <p class="font-medium leading-snug mb-10 opacity-80 flex-1">{s.desc}</p>
+                <p class="font-serif font-black italic text-5xl md:text-6xl tracking-tighter">
+                  {s.price}
+                </p>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <section
+        id="topics"
+        class="border-t-4 border-foreground bg-secondary/40 px-6 py-16 md:py-20 min-h-[calc(100svh-92px)] flex items-center"
+      >
+        <div class="max-w-[1400px] mx-auto w-full">
+          <div class="mb-14">
+            <span class="font-serif italic text-accent text-xl md:text-2xl block mb-3">
+              Inquiry Log
+            </span>
+            <h2
+              class="font-serif text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9]"
+            >
+              Recent questions
+              <br />
+              on the desk.
+            </h2>
+            <p class="mt-6 text-foreground/60 text-lg max-w-xl">
+              A snapshot of what teams are wrestling with right now.
+            </p>
+          </div>
+          <ul class="flex flex-wrap gap-3">
+            {
+              topics.map((t) => (
+                <li class="border-2 border-foreground bg-background px-5 py-3 text-sm md:text-base font-bold font-serif hover:bg-accent hover:text-background hover:border-accent transition-colors cursor-default">
+                  {t}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+
+      <section
+        id="approach"
+        class="border-t-4 border-foreground bg-foreground text-background px-6 py-16 md:py-20 min-h-[calc(100svh-92px)] flex items-center"
+      >
+        <div class="max-w-[1600px] mx-auto w-full">
+          <div
+            class="flex flex-col md:flex-row md:justify-between md:items-end mb-16 gap-6 border-b-2 border-background/20 pb-8"
+          >
+            <h2
+              class="font-serif text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9]"
+            >
+              Why decipher<span class="text-accent ml-[0.05em]">.ms</span>
+            </h2>
+            <span class="font-serif italic text-xl md:text-2xl text-accent">
+              Three commitments. No exceptions.
+            </span>
+          </div>
+          <div class="grid md:grid-cols-3 gap-px bg-background/20">
+            {
+              why.map((w) => (
+                <div class="bg-foreground p-10 md:p-12">
+                  <span class="font-serif italic text-3xl text-accent block mb-8">{w.n}.</span>
+                  <h3 class="font-serif text-3xl md:text-4xl font-black uppercase leading-none mb-6">
+                    {w.title[0]}
+                    <br />
+                    {w.title[1]}
+                  </h3>
+                  <p class="text-background/70 leading-relaxed">{w.body}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="border-t-4 border-foreground px-6 py-24 md:py-32">
+        <div class="max-w-[1600px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-16">
+          {
+            stats.map((s) => (
+              <div>
+                <span class="font-serif font-black text-5xl md:text-6xl lg:text-7xl tracking-tighter block">
+                  {s.n}
+                </span>
+                <p class="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-foreground/50 mt-3">
+                  {s.l}
+                </p>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <section
+        id="founder"
+        class="border-t-4 border-foreground px-6 py-16 md:py-20 min-h-[calc(100svh-92px)] flex items-center"
+      >
+        <div
+          class="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.5fr] gap-12 lg:gap-20 items-start w-full"
+        >
+          <div>
+            <span
+              class="inline-block text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6"
+            >
+              About the founder
+            </span>
+            <h2
+              class="font-serif text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.9]"
+            >
+              Pedro Paulo
+              <br />
+              <span class="text-accent italic">Vezza Campos</span>
+            </h2>
+          </div>
+          <div class="space-y-6 text-lg md:text-xl leading-relaxed text-foreground/70 font-medium">
+            <p>
+              Eleven years inside Microsoft. Six on Dynamics 365 Resource Scheduling Optimization —
+              algorithm core, multi-tenant migration to Azure, and the Azure Government deployment
+              that ran NY State's COVID-19 testing operations. More recently, platform security and
+              AI/ML infrastructure for M365.
+            </p>
+            <p>
+              I built <span class="text-foreground">decipher</span><span class="text-accent"
+                >.ms</span
+              > because the best Microsoft answers shouldn't be locked inside Microsoft.
+            </p>
+            <a
+              href="/about"
+              class="inline-flex items-center gap-3 text-sm font-black uppercase tracking-[0.2em] hover:text-accent transition-colors mt-4"
+            >
+              Read full bio <span>→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="briefing"
+        class="border-t-4 border-foreground bg-foreground text-background px-6 py-6 md:py-8 min-h-[calc(100svh-92px)] flex items-center"
+      >
+        <div class="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.4fr] gap-16 lg:gap-24 w-full">
+          <div class="border-l-8 border-accent pl-8">
+            <span
+              class="inline-block text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-8"
+            >
+              Request a Briefing
+            </span>
+            <h2
+              class="font-serif text-5xl md:text-6xl lg:text-7xl font-black italic leading-[0.95] tracking-tighter mb-8"
+            >
+              Got a Microsoft
+              <br />
+              question?
+            </h2>
+            <p class="text-background/60 text-lg max-w-md">
+              Tell me the decision you're working on. You'll hear back from me — a former Microsoft
+              engineer — no sales pitch, no gatekeeping, no vendor agenda.
+            </p>
+          </div>
+          <BriefingForm />
+        </div>
+      </section>
+    </main>
+
+    <Footer variant="home" />
+  </div>
+</Layout>

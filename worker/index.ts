@@ -6,6 +6,7 @@ import { Telemetry } from "./telemetry";
 const STATIC_ASSET_EXT = /\.(?:js|css|map|png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|otf)$/i;
 
 function isStaticAssetPath(pathname: string): boolean {
+  if (pathname.startsWith("/_astro/")) return true;
   if (pathname.startsWith("/assets/")) return true;
   if (pathname === "/favicon.ico") return true;
   return STATIC_ASSET_EXT.test(pathname);

@@ -1,0 +1,291 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/Nav.astro";
+import Footer from "@/components/Footer.astro";
+import pedro from "@/assets/pedro.jpg";
+
+const roles = [
+  {
+    period: "Recent",
+    title: "Principal Software Engineer · Tech Lead",
+    org: "Microsoft — Substrate AI Platform (M365)",
+    body: "Tech Lead driving security and infrastructure excellence for Microsoft's Substrate AI Platform — a SOC 2 Type II compliant platform enabling secure AI/ML development with both eyes-on and eyes-off training data access across Microsoft 365.",
+    bullets: [
+      "Spearheaded removal of overprivileged Azure RBAC role assignments across production subscriptions, establishing a least-privilege framework.",
+      "Architected low-privilege access for the M365 internal AI/ML platform on Azure Machine Learning, enabling data scientists to work securely under SOC 2.",
+      "Led unification of critical internal dataset environments and migration of internal Kubernetes clusters with zero downtime.",
+      "Drove readiness for the 2023 SOC 2 audit with comprehensive controls, audit logging, and compliance monitoring.",
+    ],
+  },
+  {
+    period: "Sep 2019 — Aug 2023",
+    title: "Senior Software Engineer",
+    org: "Microsoft — Dynamics 365 Resource Scheduling Optimization",
+    body: "Expanded the Resource Scheduling Optimization (RSO) product with task dependencies and interactive optimization. Architected a multi-tenant migration to reduce infra cost and accelerate feature delivery.",
+    bullets: [
+      "Deployed RSO to Azure Government in record time to support NY State COVID-19 testing operations.",
+      "Mentored three engineers (junior and mid-level) and acted as program manager for engineering-quality features.",
+    ],
+  },
+  {
+    period: "Mar 2017 — Aug 2019",
+    title: "Software Engineer II",
+    org: "Microsoft — Dynamics 365 RSO",
+    body: "Core algorithm specialist for resource allocation. Worked directly with Microsoft Research to develop and benchmark new capabilities. Team security champion.",
+    bullets: [],
+  },
+];
+
+const expertise = [
+  "Cloud Security & Compliance (SOC 2, Azure RBAC, Zero Trust)",
+  "AI/ML Platform Engineering on Azure ML",
+  "Secret and identity management, Entra tenant isolation",
+  "Resource Scheduling Optimization & Operations Research",
+  "Enterprise Software Architecture & SRE",
+  "Azure Government / GCC High deployment",
+];
+
+const personLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Pedro Paulo Vezza Campos",
+  jobTitle: "Founder, decipher.ms",
+  description:
+    "Former Microsoft Principal Software Engineer and Tech Lead on the M365 Substrate AI Platform.",
+  url: "https://decipher.ms/about",
+  worksFor: {
+    "@type": "Organization",
+    name: "decipher.ms",
+    url: "https://decipher.ms/",
+  },
+  alumniOf: {
+    "@type": "Organization",
+    name: "Microsoft",
+  },
+};
+---
+
+<Layout
+  title="About Pedro Paulo Vezza Campos — decipher.ms"
+  description="Founder of decipher.ms. Former Microsoft Principal Engineer and Tech Lead on the M365 Substrate AI Platform. 11 years inside Microsoft, now running an independent advisory."
+  canonical="https://decipher.ms/about"
+  ogTitle="About the Founder — decipher.ms"
+  ogDescription="Pedro Paulo Vezza Campos — former Microsoft Principal Engineer, Tech Lead on the M365 Substrate AI Platform. 11 years inside Microsoft, now running an independent advisory."
+  ogType="profile"
+  ogUrl="https://decipher.ms/about"
+  twitterDescription="Former Microsoft Principal Engineer and Tech Lead on the M365 Substrate AI Platform. 11 years inside Microsoft, now running an independent advisory."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(personLd)} slot="head" />
+
+  <div class="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20">
+    <Nav variant="page" active="about" />
+
+    <main>
+      <header class="px-6 py-20 md:py-28 max-w-[1600px] mx-auto">
+        <div class="grid lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-16 items-start">
+          <div class="border-l-8 border-accent pl-6 md:pl-10">
+            <span
+              class="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8"
+            >
+              About
+            </span>
+            <h1
+              class="font-serif text-5xl md:text-6xl lg:text-7xl font-black leading-[0.85] tracking-tighter mb-10"
+            >
+              Pedro Paulo
+              <br />
+              <span class="text-accent italic">Vezza Campos</span>
+            </h1>
+            <p
+              class="text-xl md:text-2xl font-semibold max-w-lg leading-tight tracking-tight text-foreground/80"
+            >
+              Former Microsoft Principal Software Engineer and Tech Lead on the Substrate AI
+              Platform — the team behind M365's AI/ML capabilities.
+            </p>
+            <p class="mt-6 text-base text-foreground/60 max-w-lg">
+              I built <span class="text-foreground">decipher</span><span class="text-accent"
+                >.ms</span
+              > because the best Microsoft answers shouldn't be locked inside Microsoft.
+            </p>
+            <p class="mt-4 text-sm text-foreground/70 font-medium">Lives in Seattle, WA</p>
+          </div>
+
+          <div class="border-4 border-foreground">
+            <img
+              src={pedro.src}
+              width={pedro.width}
+              height={pedro.height}
+              alt="Pedro Paulo Vezza Campos"
+              class="w-full object-cover"
+              loading="eager"
+            />
+          </div>
+        </div>
+      </header>
+
+      <section class="border-t-4 border-foreground bg-secondary/40 px-6 py-24 md:py-32">
+        <div class="max-w-[1400px] mx-auto">
+          <div class="grid md:grid-cols-[1fr_1.5fr] gap-12 md:gap-20 items-start">
+            <h2
+              class="font-serif text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.9]"
+            >
+              Why this
+              <br />
+              <span class="text-accent italic">background</span>
+              <br />
+              matters
+            </h2>
+            <div
+              class="space-y-6 text-lg md:text-xl leading-relaxed text-foreground/70 font-medium"
+            >
+              <p>
+                Many Microsoft advisors learned the product matrix from the outside — reading docs,
+                attending Ignite, going through a Microsoft Partner program.
+              </p>
+              <p>
+                I've spent years on the inside, building the platforms that ship as M365 features.
+                I've sat in the architecture reviews, written the security controls that SOC 2
+                auditors review, and watched first-hand how Microsoft prices, packages, and
+                positions its products.
+              </p>
+              <p class="text-foreground font-black font-serif italic text-2xl md:text-3xl">
+                That perspective is the product. You get a straight answer informed by what's
+                actually being built — not what's being sold this quarter.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="border-t-4 border-foreground px-6 py-24 md:py-32">
+        <div class="max-w-[1400px] mx-auto">
+          <span
+            class="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8"
+          >
+            Areas of Expertise
+          </span>
+          <h2
+            class="font-serif text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.9] mb-14"
+          >
+            What I know
+          </h2>
+          <div class="grid md:grid-cols-2 gap-4">
+            {
+              expertise.map((e) => (
+                <div class="border-2 border-foreground px-6 py-5 text-base font-bold hover:bg-accent hover:text-background hover:border-accent transition-colors">
+                  {e}
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="border-t-4 border-foreground bg-foreground text-background px-6 py-24 md:py-32"
+      >
+        <div class="max-w-[1400px] mx-auto">
+          <span
+            class="inline-block text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-accent mb-8"
+          >
+            Experience at Microsoft
+          </span>
+          <h2
+            class="font-serif text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.9] mb-16"
+          >
+            Career
+          </h2>
+          <div class="space-y-0">
+            {
+              roles.map((r, i) => (
+                <div
+                  class:list={[
+                    "grid gap-6 md:grid-cols-[200px_1fr] py-10",
+                    i > 0 ? "border-t-2 border-background/20" : "",
+                  ]}
+                >
+                  <div>
+                    <p class="text-sm text-background/50 font-black uppercase tracking-[0.2em]">
+                      {r.period}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 class="font-serif text-2xl md:text-3xl font-black uppercase leading-none mb-2">
+                      {r.title}
+                    </h3>
+                    <p class="text-sm text-background/60 font-bold">{r.org}</p>
+                    <p class="mt-4 text-base leading-relaxed text-background/80">{r.body}</p>
+                    {r.bullets.length > 0 && (
+                      <ul class="mt-4 space-y-2 text-base text-background/80">
+                        {r.bullets.map((b) => (
+                          <li class="flex gap-3">
+                            <span class="mt-2 inline-block h-2 w-2 shrink-0 bg-accent" />
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="border-t-4 border-foreground px-6 py-24 md:py-32">
+        <div class="max-w-[1400px] mx-auto grid md:grid-cols-2 gap-0 border-4 border-foreground">
+          <div class="p-10 md:p-12 border-b-4 md:border-b-0 md:border-r-2 border-foreground">
+            <span class="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6 block">
+              Recognition
+            </span>
+            <h3 class="font-serif text-3xl md:text-4xl font-black uppercase leading-none mb-6">
+              Award
+            </h3>
+            <p class="text-base leading-relaxed text-foreground/70 mb-4">
+              Issued by the Dynamics 365 Business Applications Group (BAG), July 2020 — under their
+              "What Makes BAG, BAG: We succeed when the customer succeeds" program.
+            </p>
+            <p class="text-base italic text-foreground/50">
+              "Pedro always strives to help our customers succeed, he researches new technologies,
+              stays in touch with MS best practices and constantly shares them with the team."
+            </p>
+          </div>
+
+          <div class="p-10 md:p-12">
+            <span class="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6 block">
+              Education
+            </span>
+            <h3 class="font-serif text-3xl md:text-4xl font-black uppercase leading-none mb-6">
+              Degree
+            </h3>
+            <p class="text-base leading-relaxed text-foreground/70">
+              Computer Science — Institute of Mathematics and Statistics, University of São Paulo
+              (IME-USP). Graduated with honorable mention.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="border-t-4 border-foreground px-6 py-24 md:py-32 text-center">
+        <div class="max-w-[1400px] mx-auto">
+          <h2
+            class="font-serif text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-[0.9] mb-10"
+          >
+            Want a straight answer
+            <br />
+            on your Microsoft decision?
+          </h2>
+          <a
+            href="/#briefing"
+            class="inline-flex items-center gap-3 bg-foreground text-background px-8 py-4 text-sm font-black uppercase tracking-[0.2em] hover:bg-accent transition-colors"
+          >
+            Request a briefing <span>→</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <Footer variant="page" />
+  </div>
+</Layout>

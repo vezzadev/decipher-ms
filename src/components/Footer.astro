@@ -1,0 +1,79 @@
+---
+interface Props {
+  variant?: "home" | "page";
+}
+
+const { variant = "page" } = Astro.props;
+const home = variant === "home";
+const prefix = home ? "" : "/";
+const pad = home ? "" : "px-6";
+
+const services = [
+  { label: "Expert Call", href: `${prefix}#services` },
+  { label: "Second Opinion", href: `${prefix}#services` },
+  { label: "Technical Brief", href: `${prefix}#services` },
+];
+const company = [
+  { label: "Approach", href: `${prefix}#approach` },
+  { label: "About", href: home ? "#founder" : "/about" },
+  { label: "Briefing", href: `${prefix}#briefing` },
+];
+---
+
+<footer class="p-6">
+  <div class="bg-background border-t-4 border-foreground pt-12 md:pt-16">
+    <div class:list={["grid md:grid-cols-2 gap-12 md:gap-16 mb-16", pad]}>
+      <div>
+        <p
+          class="font-serif italic text-3xl md:text-4xl font-black tracking-tighter leading-tight max-w-md"
+        >
+          Independent Microsoft decision support.
+        </p>
+      </div>
+      <div class="grid grid-cols-2 gap-12">
+        <div>
+          <p class="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">Services</p>
+          <ul class="space-y-3 text-base font-bold">
+            {
+              services.map((i) => (
+                <li>
+                  <a href={i.href} class="hover:text-accent transition-colors">
+                    {i.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <p class="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">
+            decipher.ms
+          </p>
+          <ul class="space-y-3 text-base font-bold">
+            {
+              company.map((i) => (
+                <li>
+                  <a href={i.href} class="hover:text-accent transition-colors">
+                    {i.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div
+      class:list={[
+        "pt-8 border-t border-foreground/10 flex flex-col md:flex-row justify-between gap-6 text-[10px] font-black uppercase tracking-[0.4em] opacity-50",
+        pad,
+      ]}
+    >
+      <span>© 2026 Vezza LLC</span>
+      <div class="flex gap-12">
+        <a href="/legal" class="hover:text-accent">Legal</a>
+        <a href="/privacy" class="hover:text-accent">Privacy</a>
+      </div>
+    </div>
+  </div>
+</footer>
