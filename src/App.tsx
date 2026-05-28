@@ -11,11 +11,14 @@ const queryClient = new QueryClient();
 function RouteTracker() {
   const location = useLocation();
   useEffect(() => {
+    if (!location.hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
     const handle = requestAnimationFrame(() => {
       trackPageview(location.pathname, document.title || location.pathname);
     });
     return () => cancelAnimationFrame(handle);
-  }, [location.pathname]);
+  }, [location.pathname, location.hash]);
   return null;
 }
 
