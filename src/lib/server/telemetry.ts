@@ -63,6 +63,10 @@ export class Telemetry {
   }
 
   private push(baseType: string, baseData: Record<string, unknown>, parentId?: string): void {
+    // Don't emit from local dev (no real hostname): keeps localhost preview from
+    // POSTing to the shared App Insights ingestion endpoint, matching the prior
+    // "disabled without a connection string" behavior.
+    if (this.environment === "development") return;
     const tags: Record<string, string> = {
       "ai.operation.id": this.operationId,
       "ai.cloud.role": this.cloudRole,

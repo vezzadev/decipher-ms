@@ -252,10 +252,15 @@ export function initTelemetry(): void {
   initialized = true;
   // Identifiers are public constants; the environment is derived client-side so
   // prerendered static pages need no per-request server-injected config.
+  const environment = resolveEnvironment(location.hostname);
+  // Stay silent on localhost: historically dev had no injected config and so
+  // never emitted; sending here would pollute the shared App Insights resource
+  // (and fire surprising cross-origin beacons during local work).
+  if (environment === "development") return;
   config = {
     iKey: AI_IKEY,
     ingestionEndpoint: AI_INGESTION_ENDPOINT,
-    environment: resolveEnvironment(location.hostname),
+    environment,
   };
 
   onCLS(trackVital);

@@ -129,19 +129,25 @@ const errorClass = "mt-2 text-xs text-accent font-bold";
 
   const validate = (v: FormValues): Partial<Record<FieldName, string>> => {
     const e: Partial<Record<FieldName, string>> = {};
-    if (!v.name.trim()) e.name = "Required";
-    else if (v.name.length > 120) e.name = "Keep this under 120 characters";
-    if (!v.email.trim()) e.email = "Required";
-    else if (v.email.length > 255) e.email = "Keep this under 255 characters";
-    else if (!EMAIL_RE.test(v.email.trim())) e.email = "Invalid email";
-    if (v.role.length > 120) e.role = "Keep this under 120 characters";
+    // Validate the trimmed values — that's what gets submitted, and what the
+    // server checks — so leading/trailing whitespace never blocks a valid input.
+    const name = v.name.trim();
+    if (!name) e.name = "Required";
+    else if (name.length > 120) e.name = "Keep this under 120 characters";
+    const email = v.email.trim();
+    if (!email) e.email = "Required";
+    else if (email.length > 255) e.email = "Keep this under 255 characters";
+    else if (!EMAIL_RE.test(email)) e.email = "Invalid email";
+    if (v.role.trim().length > 120) e.role = "Keep this under 120 characters";
     if (!(ENGAGEMENT_KEYS as readonly string[]).includes(v.engagementType))
       e.engagementType = "Pick an engagement type";
-    if (!v.topic.trim()) e.topic = "Required";
-    else if (v.topic.length > 200) e.topic = "Keep this under 200 characters";
-    if (!v.details.trim()) e.details = "Required";
-    else if (v.details.trim().length < 10) e.details = "Add a bit more detail";
-    else if (v.details.length > 4000) e.details = "Keep this under 4000 characters";
+    const topic = v.topic.trim();
+    if (!topic) e.topic = "Required";
+    else if (topic.length > 200) e.topic = "Keep this under 200 characters";
+    const details = v.details.trim();
+    if (!details) e.details = "Required";
+    else if (details.length < 10) e.details = "Add a bit more detail";
+    else if (details.length > 4000) e.details = "Keep this under 4000 characters";
     return e;
   };
 
