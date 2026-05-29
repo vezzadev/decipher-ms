@@ -1,5 +1,4 @@
 import { defineMiddleware } from "astro:middleware";
-import { env } from "cloudflare:workers";
 import { Telemetry } from "@/lib/server/telemetry";
 
 // Server-side request telemetry, ported from the old worker entrypoint. Runs
@@ -14,7 +13,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return next();
   }
 
-  const tel = new Telemetry(env, ctx, url.hostname);
+  const tel = new Telemetry(ctx, url.hostname);
   const requestId = tel.newSpanId();
   locals.telemetry = tel;
   locals.requestId = requestId;

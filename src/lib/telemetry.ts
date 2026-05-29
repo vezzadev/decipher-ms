@@ -10,6 +10,7 @@ import {
   type LCPMetricWithAttribution,
   type TTFBMetricWithAttribution,
 } from "web-vitals/attribution";
+import { AI_IKEY, AI_INGESTION_ENDPOINT, resolveEnvironment } from "./telemetry-config";
 
 type VitalMetric =
   | CLSMetricWithAttribution
@@ -24,12 +25,6 @@ interface TelemetryConfig {
   iKey: string;
   ingestionEndpoint: string;
   environment: string;
-}
-
-declare global {
-  interface Window {
-    __telemetryConfig?: TelemetryConfig;
-  }
 }
 
 interface Envelope {
@@ -255,8 +250,13 @@ let initialized = false;
 export function initTelemetry(): void {
   if (initialized) return;
   initialized = true;
-  config = window.__telemetryConfig ?? null;
-  if (!config) return;
+  // Identifiers are public constants; the environment is derived client-side so
+  // prerendered static pages need no per-request server-injected config.
+  config = {
+    iKey: AI_IKEY,
+    ingestionEndpoint: AI_INGESTION_ENDPOINT,
+    environment: resolveEnvironment(location.hostname),
+  };
 
   onCLS(trackVital);
   onINP(trackVital);

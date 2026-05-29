@@ -49,10 +49,6 @@ const websiteLd = {
   name: "decipher.ms",
   url: "https://decipher.ms/",
 };
-
-// Per-request App Insights client config, derived at render time from the
-// connection-string secret + request hostname (see middleware / Telemetry).
-const telemetryConfig = Astro.locals.telemetry?.clientConfig() ?? null;
 ---
 
 <!doctype html>
@@ -90,15 +86,6 @@ const telemetryConfig = Astro.locals.telemetry?.clientConfig() ?? null;
 
     <script type="application/ld+json" set:html={JSON.stringify(organizationLd)} />
     <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />
-
-    {
-      telemetryConfig && (
-        <script
-          is:inline
-          set:html={`window.__telemetryConfig=${JSON.stringify(telemetryConfig)}`}
-        />
-      )
-    }
 
     <slot name="head" />
 

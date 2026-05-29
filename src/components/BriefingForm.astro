@@ -93,7 +93,6 @@ const errorClass = "mt-2 text-xs text-accent font-bold";
 </form>
 
 <script>
-  import { z } from "zod";
   import { ENGAGEMENT_KEYS } from "@/lib/engagements";
 
   // Prod sitekey is locked to decipher.ms; on localhost it errors 110200. Use
@@ -120,18 +119,31 @@ const errorClass = "mt-2 text-xs text-accent font-bold";
     }
   }
 
-  const schema = z.object({
-    name: z.string().trim().min(1, "Required").max(120),
-    email: z.string().trim().email("Invalid email").max(255),
-    role: z.string().trim().max(120).optional().or(z.literal("")),
-    engagementType: z.enum(ENGAGEMENT_KEYS, {
-      errorMap: () => ({ message: "Pick an engagement type" }),
-    }),
-    topic: z.string().trim().min(1, "Required").max(200),
-    details: z.string().trim().min(10, "Add a bit more detail").max(4000),
-  });
+  // Lightweight client-side validation mirroring the server checks in
+  // server/briefing.ts (the authority). Hand-rolled so zod stays out of the
+  // client bundle — this only provides instant inline feedback.
+  type FieldName = "name" | "email" | "role" | "engagementType" | "topic" | "details";
+  type FormValues = Record<FieldName, string>;
 
-  type FieldName = keyof z.infer<typeof schema>;
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const validate = (v: FormValues): Partial<Record<FieldName, string>> => {
+    const e: Partial<Record<FieldName, string>> = {};
+    if (!v.name.trim()) e.name = "Required";
+    else if (v.name.length > 120) e.name = "Keep this under 120 characters";
+    if (!v.email.trim()) e.email = "Required";
+    else if (v.email.length > 255) e.email = "Keep this under 255 characters";
+    else if (!EMAIL_RE.test(v.email.trim())) e.email = "Invalid email";
+    if (v.role.length > 120) e.role = "Keep this under 120 characters";
+    if (!(ENGAGEMENT_KEYS as readonly string[]).includes(v.engagementType))
+      e.engagementType = "Pick an engagement type";
+    if (!v.topic.trim()) e.topic = "Required";
+    else if (v.topic.length > 200) e.topic = "Keep this under 200 characters";
+    if (!v.details.trim()) e.details = "Required";
+    else if (v.details.trim().length < 10) e.details = "Add a bit more detail";
+    else if (v.details.length > 4000) e.details = "Keep this under 4000 characters";
+    return e;
+  };
 
   const form = document.getElementById("briefing-form") as HTMLFormElement | null;
   if (form) {
@@ -212,7 +224,7 @@ const errorClass = "mt-2 text-xs text-accent font-bold";
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const values = {
+      const values: FormValues = {
         name: (form.elements.namedItem("name") as HTMLInputElement).value,
         email: (form.elements.namedItem("email") as HTMLInputElement).value,
         role: (form.elements.namedItem("role") as HTMLInputElement).value,
@@ -221,12 +233,11 @@ const errorClass = "mt-2 text-xs text-accent font-bold";
         details: (form.elements.namedItem("details") as HTMLTextAreaElement).value,
       };
 
-      const parsed = schema.safeParse(values);
-      if (!parsed.success) {
+      const errors = validate(values);
+      const failed = Object.keys(errors) as FieldName[];
+      if (failed.length > 0) {
         clearFieldErrors();
-        for (const issue of parsed.error.issues) {
-          setFieldError(issue.path[0] as FieldName, issue.message);
-        }
+        for (const field of failed) setFieldError(field, errors[field]!);
         return;
       }
       clearFieldErrors();
@@ -246,12 +257,12 @@ const errorClass = "mt-2 text-xs text-accent font-bold";
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({
-            name: parsed.data.name,
-            email: parsed.data.email,
-            role: parsed.data.role || null,
-            engagementType: parsed.data.engagementType,
-            topic: parsed.data.topic,
-            details: parsed.data.details,
+            name: values.name.trim(),
+            email: values.email.trim(),
+            role: values.role.trim() || null,
+            engagementType: values.engagementType,
+            topic: values.topic.trim(),
+            details: values.details.trim(),
             turnstileToken: token,
           }),
         });
