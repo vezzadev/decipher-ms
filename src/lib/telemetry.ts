@@ -76,12 +76,24 @@ function send(envelopes: Envelope[]): void {
   if (!config || envelopes.length === 0) return;
   const url = `${config.ingestionEndpoint}/v2.1/track`;
   const payload = envelopes.map((e) => JSON.stringify(e)).join("\n");
+  // sendBeacon is a background-priority transport, so the ingestion POST stays
+  // off the page's critical request chain. A plain fetch defaults to High
+  // priority, which Lighthouse counts as critical (this slow westus2 round-trip
+  // was dominating the chain). Beacon also reliably survives page unload, which
+  // is exactly what the visibilitychange/pagehide flush relies on.
+  if (typeof navigator.sendBeacon === "function") {
+    const blob = new Blob([payload], { type: "text/plain" });
+    if (navigator.sendBeacon(url, blob)) return;
+  }
+  // Fallback for the rare browser without sendBeacon: an explicitly
+  // low-priority keepalive fetch so the request still stays off the chain.
   fetch(url, {
     method: "POST",
     body: payload,
     headers: { "content-type": "text/plain" },
     keepalive: true,
     credentials: "omit",
+    priority: "low",
   }).catch(() => {});
 }
 
