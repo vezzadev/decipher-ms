@@ -35,8 +35,10 @@
   --color-paper: var(--paper);
   --color-ink: var(--ink);
   --color-electric: var(--electric);
-  --font-serif: "Playfair Display", Georgia, serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  /* Resolve to the self-hosted families registered via Astro's fonts config
+     (astro.config.mjs). Each var already carries optimized fallback metrics. */
+  --font-serif: var(--font-playfair, "Playfair Display", Georgia, serif);
+  --font-sans: var(--font-inter, "Inter", system-ui, sans-serif);
 }
 
 :root {

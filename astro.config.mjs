@@ -1,4 +1,4 @@
-import { defineConfig, sessionDrivers } from "astro/config";
+import { defineConfig, fontProviders, sessionDrivers } from "astro/config";
 import cloudflare from "@astrojs/cloudflare";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -13,10 +13,38 @@ export default defineConfig({
   // Cloudflare-KV session driver so no (id-less) SESSION KV binding is emitted
   // into the generated deploy config.
   session: { driver: sessionDrivers.memory() },
+  // Self-host the two webfonts (downloaded + subset at build time, served as
+  // static /_astro assets by the platform). This removes the render-blocking
+  // cross-origin Google Fonts stylesheet from the critical path; the <Font>
+  // component instead inlines @font-face CSS and preloads the body font.
+  fonts: [
+    {
+      provider: fontProviders.google(),
+      name: "Inter",
+      cssVariable: "--font-inter",
+      weights: ["400 800"],
+      styles: ["normal"],
+      subsets: ["latin"],
+      fallbacks: ["system-ui", "sans-serif"],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "Playfair Display",
+      cssVariable: "--font-playfair",
+      weights: ["700 900"],
+      styles: ["normal", "italic"],
+      subsets: ["latin"],
+      fallbacks: ["Georgia", "serif"],
+    },
+  ],
   adapter: cloudflare({
     // Plain <img> with build-emitted assets — no runtime image service / IMAGES binding.
     imageService: "passthrough",
   }),
+  // Inline the (small, ~6KB) global stylesheet into each page's <head> instead
+  // of emitting a render-blocking <link>. Pages are SSR'd per request, so there
+  // is no shared-CSS-cache benefit to give up, and FCP/LCP improve.
+  build: { inlineStylesheets: "always" },
   vite: {
     plugins: [tailwindcss()],
     resolve: {
