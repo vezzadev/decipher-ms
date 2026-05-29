@@ -44,7 +44,12 @@ export default defineConfig({
   // Inline the (small, ~6KB) global stylesheet into each page's <head> instead
   // of emitting a render-blocking <link>. Pages are SSR'd per request, so there
   // is no shared-CSS-cache benefit to give up, and FCP/LCP improve.
-  build: { inlineStylesheets: "always" },
+  // inlineStylesheets: small global CSS goes inline (no render-blocking <link>).
+  // format "file": prerendered pages emit as `about.html` (served at /about with
+  // no trailing slash) rather than `about/index.html` (which 307-redirects
+  // /about -> /about/). This keeps the prerendered URLs identical to the
+  // existing canonical/sitemap/nav scheme, so no redirect hop is introduced.
+  build: { inlineStylesheets: "always", format: "file" },
   vite: {
     plugins: [tailwindcss()],
     resolve: {

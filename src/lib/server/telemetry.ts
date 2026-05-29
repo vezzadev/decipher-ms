@@ -1,5 +1,5 @@
 import type { ExecutionContext } from "@cloudflare/workers-types";
-import type { Env } from "./env";
+import { AI_IKEY, AI_INGESTION_ENDPOINT, resolveEnvironment } from "../telemetry-config";
 
 interface Envelope {
   name: string;
@@ -9,38 +9,7 @@ interface Envelope {
   data: { baseType: string; baseData: Record<string, unknown> };
 }
 
-interface ParsedConnString {
-  iKey: string;
-  ingestionEndpoint: string;
-}
-
 const SDK_VERSION = "decipher-ms:1.0";
-
-function resolveEnvironment(hostname: string): string {
-  if (hostname === "decipher.ms" || hostname === "www.decipher.ms") return "production";
-  const previewMatch = hostname.match(/^([a-z0-9-]+)-decipher-ms\.[^.]+\.workers\.dev$/i);
-  if (previewMatch) return `preview:${previewMatch[1]}`;
-  if (hostname.endsWith(".workers.dev")) return "preview";
-  return "development";
-}
-
-function parseConnString(s: unknown): ParsedConnString {
-  if (typeof s !== "string" || s.length === 0) {
-    throw new Error("APPLICATIONINSIGHTS_CONNECTION_STRING is empty or not a string");
-  }
-  const map: Record<string, string> = {};
-  for (const part of s.split(";")) {
-    const eq = part.indexOf("=");
-    if (eq < 0) continue;
-    map[part.slice(0, eq).trim().toLowerCase()] = part.slice(eq + 1).trim();
-  }
-  const iKey = map["instrumentationkey"];
-  const ingestionEndpoint = (map["ingestionendpoint"] || "").replace(/\/$/, "");
-  if (!iKey || !ingestionEndpoint) {
-    throw new Error("APPLICATIONINSIGHTS_CONNECTION_STRING missing iKey or IngestionEndpoint");
-  }
-  return { iKey, ingestionEndpoint };
-}
 
 function randomHex(bytes: number): string {
   const arr = new Uint8Array(bytes);
@@ -63,7 +32,6 @@ function formatDuration(ms: number): string {
 
 export class Telemetry {
   private envelopes: Envelope[] = [];
-  private readonly conn: ParsedConnString | null;
   private readonly requestProperties: Record<string, string> = {};
   readonly operationId = randomHex(16);
 
@@ -83,27 +51,11 @@ export class Telemetry {
   private readonly cloudRole: string;
 
   constructor(
-    env: Env,
     private readonly ctx: ExecutionContext,
     hostname: string,
   ) {
     this.environment = resolveEnvironment(hostname);
     this.cloudRole = `decipher-ms-${this.environment}`;
-    try {
-      this.conn = parseConnString(env.APPLICATIONINSIGHTS_CONNECTION_STRING);
-    } catch (err) {
-      console.error("Telemetry disabled:", err);
-      this.conn = null;
-    }
-  }
-
-  clientConfig(): { iKey: string; ingestionEndpoint: string; environment: string } | null {
-    if (!this.conn) return null;
-    return {
-      iKey: this.conn.iKey,
-      ingestionEndpoint: this.conn.ingestionEndpoint,
-      environment: this.environment,
-    };
   }
 
   newSpanId(): string {
@@ -111,7 +63,10 @@ export class Telemetry {
   }
 
   private push(baseType: string, baseData: Record<string, unknown>, parentId?: string): void {
-    if (!this.conn) return;
+    // Don't emit from local dev (no real hostname): keeps localhost preview from
+    // POSTing to the shared App Insights ingestion endpoint, matching the prior
+    // "disabled without a connection string" behavior.
+    if (this.environment === "development") return;
     const tags: Record<string, string> = {
       "ai.operation.id": this.operationId,
       "ai.cloud.role": this.cloudRole,
@@ -121,7 +76,7 @@ export class Telemetry {
     this.envelopes.push({
       name: `Microsoft.ApplicationInsights.${baseType.replace(/Data$/, "")}`,
       time: new Date().toISOString(),
-      iKey: this.conn.iKey,
+      iKey: AI_IKEY,
       tags,
       data: { baseType, baseData: { ver: 2, ...baseData } },
     });
@@ -207,10 +162,10 @@ export class Telemetry {
   }
 
   async flushNow(): Promise<void> {
-    if (!this.conn || this.envelopes.length === 0) return;
+    if (this.envelopes.length === 0) return;
     const payload = this.envelopes.map((e) => JSON.stringify(e)).join("\n");
     this.envelopes = [];
-    const url = `${this.conn.ingestionEndpoint}/v2.1/track`;
+    const url = `${AI_INGESTION_ENDPOINT}/v2.1/track`;
     try {
       const res = await fetch(url, {
         method: "POST",

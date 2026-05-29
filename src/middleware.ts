@@ -1,11 +1,12 @@
 import { defineMiddleware } from "astro:middleware";
-import { env } from "cloudflare:workers";
 import { Telemetry } from "@/lib/server/telemetry";
 
 // Server-side request telemetry, ported from the old worker entrypoint. Runs
-// for every on-demand route (static assets are served by the platform and
-// never reach here). The Telemetry instance is stashed on locals so endpoints
-// and the Layout can attach spans / read the client config for the same span.
+// for every on-demand route (prerendered pages and static assets are served by
+// the platform and never reach here). The Telemetry instance is stashed on
+// locals so endpoints can attach spans/exceptions to the same request span; the
+// per-request client config injection is gone — the browser RUM client now
+// self-configures from public constants (see lib/telemetry.ts).
 export const onRequest = defineMiddleware(async (context, next) => {
   const { request, url, locals } = context;
   const ctx = locals.cfContext;
@@ -14,7 +15,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return next();
   }
 
-  const tel = new Telemetry(env, ctx, url.hostname);
+  const tel = new Telemetry(ctx, url.hostname);
   const requestId = tel.newSpanId();
   locals.telemetry = tel;
   locals.requestId = requestId;
