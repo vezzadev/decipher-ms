@@ -111,9 +111,21 @@ const telemetryConfig = Astro.locals.telemetry?.clientConfig() ?? null;
   <body>
     <slot />
     <script>
-      import { initTelemetry, trackPageview } from "@/lib/telemetry";
-      initTelemetry();
-      trackPageview(location.pathname, document.title);
+      // Telemetry is pure analytics — never let it sit on the load critical
+      // path. Lazy-import the chunk (web-vitals + AI client) and fire the first
+      // pageview only once the main thread is idle, so the slow App Insights
+      // /track round-trip happens well after load. web-vitals reads buffered
+      // LCP/FCP/CLS entries, so deferring registration doesn't lose metrics.
+      const startTelemetry = () =>
+        import("@/lib/telemetry").then(({ initTelemetry, trackPageview }) => {
+          initTelemetry();
+          trackPageview(location.pathname, document.title);
+        });
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(startTelemetry, { timeout: 4000 });
+      } else {
+        window.addEventListener("load", () => setTimeout(startTelemetry, 1), { once: true });
+      }
     </script>
   </body>
 </html>
